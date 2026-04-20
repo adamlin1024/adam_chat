@@ -2,10 +2,20 @@
 set -e
 
 DATA_DIR="/home/vocechat/data"
+CONFIG_FILE="/home/vocechat/config.toml"
+
 mkdir -p "$DATA_DIR/wwwroot"
 cp -rf /app/default-wwwroot/. "$DATA_DIR/wwwroot/"
 
-SERVER="/home/vocechat-server/vocechat-server"
+# Generate config file
+cat > "$CONFIG_FILE" << EOF
+[network]
+bind = "0.0.0.0:3000"
 
-echo "Starting: $SERVER $DATA_DIR"
-exec "$SERVER" "$DATA_DIR"
+[system]
+data_path = "$DATA_DIR"
+EOF
+
+SERVER="/home/vocechat-server/vocechat-server"
+echo "Starting: $SERVER $CONFIG_FILE"
+exec "$SERVER" "$CONFIG_FILE"
