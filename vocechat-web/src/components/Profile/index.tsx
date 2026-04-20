@@ -53,7 +53,7 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
   const isCard = type == "card";
   const canRemoveFromServer = !isCard && canRemove;
   const hasMore = email || canRemoveFromChannel || canRemoveFromServer;
-  const iconClass = `cursor-pointer flex flex-col items-center gap-1 rounded-md px-4 py-3 text-fg-secondary bg-bg-surface hover:border-border-strong border border-border text-[14px] font-mono transition-colors duration-200`;
+  const iconClass = `cursor-pointer flex flex-col items-center gap-1 rounded-md px-4 py-3 text-fg-secondary bg-bg-surface hover:border-border-strong border border-border text-[12px] transition-colors duration-200`;
   const containerClass = clsx(
     `flex-center flex-col gap-1 z-[99] select-none`,
     isCard
