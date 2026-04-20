@@ -29,7 +29,7 @@ export interface UIState {
 const initialState: UIState = {
   SSEStatus: "disconnected",
   online: true,
-  msgSound: true,
+  msgSound: false,
   ready: false,
   inputMode: "text",
   menuExpand: false,
@@ -54,7 +54,7 @@ const uiSlice = createSlice({
         SSEStatus,
         ready,
         online,
-        msgSound = true,
+        msgSound = false,
         fileListView = "item",
         ...rest
       } = action.payload;
