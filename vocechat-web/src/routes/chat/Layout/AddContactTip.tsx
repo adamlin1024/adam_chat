@@ -43,31 +43,29 @@ const AddContactTip = (props: Props) => {
   const handleContactStatus = (action: ContactAction) => {
     updateContactStatus({ target_uid: props.uid, action });
   };
-  const itemClass = `cursor-pointer flex flex-col items-center gap-1 rounded-lg w-32 text-primary-400 bg-gray-50 dark:bg-gray-800 text-sm pt-3.5 pb-3`;
   if (!targetUser || !enableContact) return null;
   if (targetUser.status == "added") return null;
   const blocked = targetUser.status == "blocked";
   return (
-    <div className="py-4 px-10 flex flex-col items-center gap-3 bg-slate-100 dark:bg-slate-600">
-      <h3 className="text-gray-700 dark:text-gray-300 text-sm font-semibold">
+    <div className="px-6 py-2.5 flex items-center justify-between border-b border-border-subtle bg-bg-canvas">
+      <span className="text-[11px] text-fg-muted tracking-[-0.005em]">
         {blocked ? t("contact_block_tip") : t("contact_tip")}
-      </h3>
-      <ul className="flex gap-4">
+      </span>
+      <ul className="flex gap-2">
         {!blocked && (isAdmin || addFriendEnable) && (
-          <li className={itemClass} onClick={handleContactStatus.bind(null, "add")}>
-            <IconAdd className="fill-primary-400" />
+          <li
+            className="cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-medium text-accent border border-border bg-bg-surface hover:border-border-strong transition-colors duration-[120ms]"
+            onClick={handleContactStatus.bind(null, "add")}
+          >
+            <IconAdd className="w-3.5 h-3.5 stroke-accent fill-none" />
             <span>{t("add_contact")}</span>
           </li>
         )}
         <li
-          className={itemClass}
-          onClick={
-            blocked
-              ? handleContactStatus.bind(null, "unblock")
-              : handleContactStatus.bind(null, "block")
-          }
+          className="cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-medium text-fg-secondary border border-border bg-bg-surface hover:border-border-strong transition-colors duration-[120ms]"
+          onClick={blocked ? handleContactStatus.bind(null, "unblock") : handleContactStatus.bind(null, "block")}
         >
-          <IconBlock className="stroke-primary-400" />
+          <IconBlock className="w-3.5 h-3.5 stroke-current fill-none" />
           <span>{blocked ? t("unblock") : t("block")}</span>
         </li>
       </ul>
