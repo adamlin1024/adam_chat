@@ -3,6 +3,7 @@ FROM node:20-alpine AS frontend-builder
 WORKDIR /build
 RUN npm install -g pnpm@10.14.0
 COPY vocechat-web/package.json vocechat-web/pnpm-lock.yaml ./
+COPY vocechat-web/patches/ ./patches/
 RUN pnpm install --frozen-lockfile
 COPY vocechat-web/ .
 ENV REACT_APP_BUILD_TIME=0
