@@ -89,7 +89,7 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
               )}
             >
               <NavLink to={`/chat/dm/${uid}`} className={isCard ? "block" : "md:flex-1"}>
-                <li className={clsx(iconClass, "justify-center", isCard && "w-full bg-accent text-accent-on border-accent hover:opacity-90")}>
+                <li className={clsx(iconClass, "w-full justify-center", isCard && "bg-accent text-accent-on border-accent hover:opacity-90")}>
                   <IconMessage className={isCard ? "fill-accent-on w-5 h-5" : "fill-accent w-5 h-5"} />
                   <span>{t("send_msg")}</span>
                 </li>
