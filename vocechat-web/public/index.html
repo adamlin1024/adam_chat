@@ -6,8 +6,8 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
-    <meta name="theme-color" content="#527ff1" />
-    <meta name="description" content="Your private chat APP" />
+    <meta name="theme-color" content="#08090b" />
+    <meta name="description" content="Neko-talk — Your private chat space" />
 
     <!-- Suppress ResizeObserver errors - must be first script -->
     <script>
@@ -126,7 +126,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>VoceChat WebAPP</title>
+    <title>Neko-talk</title>
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/github.min.css"> -->
     <style>
       html {
@@ -225,6 +225,11 @@
     if (window.location !== window.parent.location) {
       // The page is in an iframe
       document.body.classList.add("iframe");
+    }
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
     }
   </script>
 </html>
