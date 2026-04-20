@@ -1,6 +1,6 @@
 import Tippy from "@tippyjs/react";
 import { useState } from "react";
-import LanguageList, { LangMap, LanguageType } from "../routes/setting/Overview/Language";
+import LanguageList, { LangMap, LanguageType } from "../routes/setting/Overview/language";
 import StyledButton from "./styled/Button";
 import { useTranslation } from "react-i18next";
 import ArrowDown from "@/assets/icons/arrow.down.svg";
