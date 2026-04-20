@@ -1,0 +1,94 @@
+import { memo, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { NavLink, useLocation, useParams } from "react-router-dom";
+import { ViewportList } from "react-viewport-list";
+import clsx from "clsx";
+
+import { updateRememberedNavs } from "@/app/slices/ui";
+import BlankPlaceholder from "@/components/BlankPlaceholder";
+import GoBackNav from "@/components/GoBackNav";
+import Profile from "@/components/Profile";
+import SearchUser from "@/components/SearchUser";
+import User from "@/components/User";
+import useFilteredUsers from "@/hooks/useFilteredUsers";
+import Search from "./Search";
+import { getGroupData } from "@/utils";
+
+function UsersPage() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+  const [modalVisible, setModalVisible] = useState(false);
+  const { input, updateInput, users, uids } = useFilteredUsers();
+  const { user_id } = useParams();
+  // 记住路由
+  useEffect(() => {
+    dispatch(updateRememberedNavs({ key: "user" }));
+    return () => {
+      dispatch(updateRememberedNavs({ key: "user", path: pathname }));
+    };
+  }, [pathname]);
+  const toggleModal = () => {
+    setModalVisible((prev) => !prev);
+  };
+  if (!users) return null;
+  const adminCount = users.filter(({ is_admin, is_bot }) => is_admin && !is_bot).length;
+  const botCount = users.filter(({ is_bot }) => is_bot).length;
+  const memberCount = users.length - adminCount - botCount;
+  const isUserDetail = !!user_id;
+  return (
+    <div className={clsx("flex h-screen md:h-full md:pt-2 md:pb-2.5 md:pr-12")}>
+      <div
+        className={clsx(
+          "md:rounded-l-lg bg-bg-sidebar border-r border-border-subtle relative flex flex-col w-full md:w-auto md:min-w-[232px]",
+          isUserDetail && "hidden md:flex"
+        )}
+      >
+        <Search input={input} updateInput={updateInput} openModal={toggleModal} />
+        {modalVisible && <SearchUser closeModal={toggleModal} />}
+        <div className="flex flex-col md:gap-0.5 px-2 pt-2 pb-20 md:py-2 overflow-scroll no-scrollbar" ref={ref}>
+          <ViewportList viewportRef={ref} items={uids}>
+            {(id, idx) => {
+              const curr = users.find(({ uid }) => uid === id);
+              if (!curr) return null;
+              const prevUid = uids[idx - 1];
+              const prev = users.find(({ uid }) => uid === prevUid);
+              const { role, title } = getGroupData({
+                current: curr,
+                prev,
+                adminCount,
+                botCount,
+                memberCount,
+                isFirst: idx === 0
+              });
+              return (
+                <NavLink
+                  data-role={role}
+                  data-group-title={title}
+                  key={id}
+                  className={({ isActive }) =>
+                    `rounded-md hover:bg-[#0f1014] ${isActive ? "bg-bg-surface shadow-inset-hairline" : ""}`
+                  }
+                  to={`/users/${id}`}
+                >
+                  <User uid={id} enableContextMenu={true} />
+                </NavLink>
+              );
+            }}
+          </ViewportList>
+        </div>
+      </div>
+      <div
+        className={clsx(
+          `md:rounded-r-lg bg-bg-canvas w-full flex justify-center items-start`,
+          !user_id && "h-full items-center",
+          !isUserDetail && "hidden md:flex"
+        )}
+      >
+        {isUserDetail ? <Profile uid={+user_id} /> : <BlankPlaceholder type="user" />}
+        <GoBackNav />
+      </div>
+    </div>
+  );
+}
+export default memo(UsersPage);
