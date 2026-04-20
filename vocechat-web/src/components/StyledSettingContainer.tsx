@@ -36,13 +36,13 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
       <div className="w-screen h-screen flex">
         <div
           className={clsx(
-            "h-full w-full overflow-y-scroll md:max-w-[212px] px-4 py-8 bg-neutral-100 dark:bg-gray-800",
+            "h-full w-full overflow-y-scroll md:max-w-[212px] px-4 py-8 bg-bg-sidebar",
             nav && "hidden md:block"
           )}
         >
           <h2
             onClick={closeModal}
-            className="hidden md:flex gap-2 items-center text-sm md:text-base cursor-pointer mb-8 font-bold text-gray-800 dark:text-white"
+            className="hidden md:flex gap-2 items-center text-sm md:text-base cursor-pointer mb-8 font-bold text-fg-primary"
           >
             <IconBack className="dark:fill-gray-400" /> {title}
           </h2>
@@ -59,8 +59,8 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                       <li
                         key={name}
                         className={clsx(
-                          `md:text-sm font-semibold text-gray-600 whitespace-nowrap dark:text-gray-200  md:rounded md:hover:bg-stone-200 md:dark:hover:bg-slate-500/20`,
-                          name == nav?.name && "bg-stone-200 dark:bg-slate-500/20"
+                          `md:text-sm font-semibold text-fg-secondary whitespace-nowrap md:rounded md:hover:bg-bg-surface transition-colors duration-200`,
+                          name == nav?.name && "bg-bg-surface shadow-inset-hairline text-fg-primary"
                         )}
                       >
                         <a
@@ -77,8 +77,8 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                     <li
                       key={name}
                       className={clsx(
-                        `md:text-sm font-semibold text-gray-600 whitespace-nowrap dark:text-gray-200  md:rounded md:hover:bg-stone-200 md:dark:hover:bg-slate-500/20`,
-                        name == nav?.name && "bg-stone-200 dark:bg-slate-500/20"
+                        `md:text-sm font-semibold text-fg-secondary whitespace-nowrap md:rounded md:hover:bg-bg-surface transition-colors duration-200`,
+                        name == nav?.name && "bg-bg-surface shadow-inset-hairline text-fg-primary"
                       )}
                     >
                       <NavLink to={`${pathPrefix}/${name}`} className="block md:px-3 py-1">
@@ -110,13 +110,13 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
         </div>
         <div
           className={clsx(
-            "relative bg-white w-full max-h-full overflow-auto px-4 md:px-8 py-2 md:py-8 dark:bg-gray-700",
+            "relative bg-bg-canvas w-full max-h-full overflow-auto px-4 md:px-8 py-2 md:py-8",
             !nav ? "hidden md:block" : "!pb-4"
           )}
         >
           <GoBackNav path={pathPrefix} className="!left-1 top-1.5" />
           {nav && (
-            <h4 className="font-bold text-xl text-center md:text-left text-gray-600 mb-4 md:mb-8 pl-4 md:pl-0 dark:text-gray-100">
+            <h4 className="font-bold text-xl text-center md:text-left text-fg-primary mb-4 md:mb-8 pl-4 md:pl-0">
               {nav.title}
             </h4>
           )}

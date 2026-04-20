@@ -35,7 +35,7 @@ const MobileNavs = () => {
   return (
     <ul
       className={clsx(
-        "flex justify-around py-2 fixed bottom-0 left-0 w-full bg-gray-100 dark:bg-gray-800 md:hidden",
+        "flex justify-around pt-2 pb-safe fixed bottom-0 left-0 w-full bg-bg-elevated border-t border-border-subtle md:hidden",
         isChattingPage && "hidden"
       )}
     >
@@ -44,9 +44,9 @@ const MobileNavs = () => {
           {({ isActive }) => {
             const active = isActive || isChatPage;
             return (
-              <div className="flex flex-col gap-1 items-center">
-                <ChatIcon className={!active ? "fill-gray-500" : "fill-primary-500"} />
-                <span className={clsx("text-xs", !active ? "text-gray-500" : "text-primary-500")}>
+              <div className="flex flex-col gap-1 items-center px-4 py-1">
+                <ChatIcon className={!active ? "fill-fg-subtle" : "fill-accent"} />
+                <span className={clsx("text-xs", !active ? "text-fg-muted" : "text-accent")}>
                   {t("chat")}
                 </span>
               </div>
@@ -58,9 +58,9 @@ const MobileNavs = () => {
         <NavLink className={() => `${linkClass}`} to={userNav}>
           {({ isActive: active }) => {
             return (
-              <div className="flex flex-col gap-1 items-center">
-                <UserIcon className={!active ? "fill-gray-500" : "fill-primary-500"} />
-                <span className={clsx("text-xs", !active ? "text-gray-500" : "text-primary-500")}>
+              <div className="flex flex-col gap-1 items-center px-4 py-1">
+                <UserIcon className={!active ? "fill-fg-subtle" : "fill-accent"} />
+                <span className={clsx("text-xs", !active ? "text-fg-muted" : "text-accent")}>
                   {t("members")}
                 </span>
               </div>
@@ -72,11 +72,11 @@ const MobileNavs = () => {
         <NavLink className={() => `${linkClass}`} to={"/setting"}>
           {({ isActive: active }) => {
             return (
-              <div className="flex flex-col gap-1 items-center">
+              <div className="flex flex-col gap-1 items-center px-4 py-1">
                 <SettingIcon
-                  className={clsx("w-6 h-6", !active ? "fill-gray-500" : "fill-primary-500")}
+                  className={clsx("w-6 h-6", !active ? "fill-fg-subtle" : "fill-accent")}
                 />
-                <span className={clsx("text-xs", !active ? "text-gray-500" : "text-primary-500")}>
+                <span className={clsx("text-xs", !active ? "text-fg-muted" : "text-accent")}>
                   {t("setting")}
                 </span>
               </div>
