@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adam_chat 元件地圖</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+
+/* ── Tab bar ── */
+.tabbar { display: flex; padding: 20px 40px 0; border-bottom: 1px solid #1e293b; gap: 4px; }
+.tab-btn {
+  padding: 10px 28px; font-size: 13px; font-weight: 600;
+  color: #475569; background: none; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s; border-radius: 6px 6px 0 0;
+}
+.tab-btn.active { color: #22CCEE; border-bottom-color: #22CCEE; background: #22CCEE08; }
+.tab-btn:hover:not(.active) { color: #94a3b8; background: #ffffff05; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ════════════════ TAB 1: 畫面總覽 ════════════════ */
+#tab-overview { padding: 32px 40px; }
+#tab-overview .hint { font-size: 12px; color: #475569; margin-bottom: 14px; }
+
+.app-frame {
+  border: 2px solid #334155; border-radius: 14px; overflow: hidden;
+  background: #1e293b; width: 100%; max-width: 900px; margin: 0 auto;
+}
+.app-inner { display: flex; height: 680px; }
+
+.col-icon {
+  width: 64px; background: #171717; border-right: 1px solid #1f2937;
+  display: flex; flex-direction: column; align-items: center; padding: 14px 0; gap: 6px; flex-shrink: 0;
+}
+.icon-av { width: 38px; height: 38px; border-radius: 50%; background: #22CCEE; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 15px; margin-bottom: 10px; }
+.icon-nav { width: 38px; height: 38px; border-radius: 10px; background: #1f2937; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.icon-nav.on { background: #22CCEE; }
+
+.col-session {
+  width: 220px; background: #1f2937; border-right: 1px solid #2d3748;
+  display: flex; flex-direction: column; flex-shrink: 0;
+}
+.ses-hdr { padding: 14px 12px 10px; font-size: 13px; font-weight: 700; color: #e2e8f0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #1f2937; }
+.ses-sec { padding: 10px 12px 4px; font-size: 10px; color: #4b5563; text-transform: uppercase; letter-spacing: .07em; font-weight: 700; }
+.ses-item { display: flex; align-items: center; gap: 9px; padding: 7px 10px; border-radius: 7px; margin: 2px 7px; cursor: pointer; }
+.ses-item.on { background: #ffffff15; }
+.ses-av { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff; }
+.ses-info { flex: 1; overflow: hidden; }
+.ses-name { font-size: 12px; font-weight: 600; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ses-prev { font-size: 10px; color: #4b5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+.ses-badge { background: #22CCEE; color: #111; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 9px; }
+
+.col-chat { flex: 1; display: flex; flex-direction: column; background: #374151; min-width: 0; }
+.chat-hdr { height: 50px; border-bottom: 1px solid #4b5563; padding: 0 18px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.chat-feed { flex: 1; padding: 16px 18px; overflow: hidden; display: flex; flex-direction: column; gap: 14px; }
+.msg-row { display: flex; gap: 12px; }
+.msg-av { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: #fff; }
+.msg-body { flex: 1; }
+.msg-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.msg-text { font-size: 13px; color: #d1d5db; line-height: 1.55; }
+.msg-time { font-size: 10px; color: #9ca3af; margin-left: 6px; font-weight: 400; }
+.chip { display: inline-flex; align-items: center; gap: 3px; background: #4b5563; border: 1px solid #6b7280; border-radius: 12px; padding: 2px 7px; font-size: 11px; margin-top: 5px; margin-right: 4px; }
+.chat-input-area { border-top: 1px solid #4b5563; padding: 12px 14px; background: #374151; flex-shrink: 0; }
+.input-box { background: #4b5563; border: 1px solid #6b7280; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+.input-ph { font-size: 13px; color: #9ca3af; flex: 1; }
+.input-ic { width: 18px; height: 18px; background: #6b7280; border-radius: 4px; flex-shrink: 0; }
+
+/* region overlay */
+.rg { position: relative; cursor: pointer; border-radius: 4px; transition: outline .1s; }
+.rg:hover { outline: 2px solid #22CCEE; }
+.rg.sel { outline: 2px solid #22CCEE; background: #22CCEE0d; }
+.rg-label {
+  position: absolute; top: 4px; left: 4px; z-index: 10;
+  background: #22CCEE; color: #0f1117; font-size: 9px; font-weight: 800;
+  padding: 2px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap;
+}
+
+/* ════════════════ TAB 2: 元件細節 ════════════════ */
+#tab-components { padding: 32px 40px; max-width: 860px; }
+
+.comp-section-title {
+  font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase;
+  letter-spacing: .08em; margin: 28px 0 10px; padding-bottom: 8px;
+  border-bottom: 1px solid #1e293b;
+}
+.comp-section-title:first-child { margin-top: 0; }
+
+.comp-row {
+  border: 1px solid #1e293b; border-radius: 10px; background: #0d1424;
+  margin-bottom: 8px; overflow: hidden; cursor: pointer;
+  transition: border-color .15s;
+}
+.comp-row:hover { border-color: #334155; }
+.comp-row.open { border-color: #22CCEE40; }
+
+.comp-row-header {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+}
+.comp-id {
+  width: 36px; height: 28px; border-radius: 6px;
+  background: #1e293b; border: 1px solid #334155;
+  font-size: 11px; font-weight: 800; color: #22CCEE;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-family: monospace;
+}
+.comp-title { font-size: 14px; font-weight: 600; color: #e2e8f0; flex: 1; }
+.comp-file { font-size: 10px; color: #334155; font-family: monospace; }
+.comp-arrow { font-size: 12px; color: #334155; transition: transform .2s; }
+.comp-row.open .comp-arrow { transform: rotate(180deg); color: #22CCEE; }
+
+.comp-body { display: none; padding: 0 16px 18px; }
+.comp-row.open .comp-body { display: block; }
+.comp-desc { font-size: 12px; color: #64748b; margin-bottom: 16px; line-height: 1.65; }
+.preview-label { font-size: 10px; color: #334155; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; font-weight: 700; }
+.preview-area {
+  background: #111827; border: 1px solid #1f2937; border-radius: 8px;
+  padding: 28px 24px; display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 16px; min-height: 80px;
+}
+
+/* ════════════════ TAB 3: 設計系統配色 ════════════════ */
+#tab-colors { padding: 32px 40px; max-width: 860px; }
+
+.color-group { margin-bottom: 36px; }
+.color-group-title { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #1e293b; }
+
+.color-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 16px; border-radius: 10px; border: 1px solid #1e293b;
+  background: #0d1424; margin-bottom: 8px;
+}
+.color-swatch { width: 48px; height: 48px; border-radius: 10px; flex-shrink: 0; border: 1px solid #ffffff10; }
+.color-info { flex: 1; }
+.color-name { font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 3px; }
+.color-hex { font-size: 12px; color: #475569; font-family: monospace; }
+.color-usage { font-size: 11px; color: #334155; margin-top: 4px; }
+.color-tag {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+  font-family: monospace; align-self: flex-start; margin-top: 2px;
+}
+
+/* ════ shared preview styles ════ */
+.pv-session-list { display: flex; flex-direction: column; gap: 2px; background: #1f2937; padding: 8px; border-radius: 8px; width: 220px; }
+.pv-s-item { display: flex; align-items: center; gap: 9px; padding: 7px 10px; border-radius: 7px; }
+.pv-s-item.on { background: #ffffff15; }
+.pv-s-av { width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff; }
+.pv-s-name { font-size: 12px; font-weight: 600; color: #cbd5e1; }
+.pv-s-prev { font-size: 10px; color: #4b5563; margin-top: 1px; }
+.pv-badge { background: #22CCEE; color: #111; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 9px; }
+
+.pv-msg { display: flex; gap: 12px; background: #374151; padding: 14px; border-radius: 8px; width: 100%; max-width: 460px; }
+.pv-msg-av { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; color: #fff; }
+.pv-msg-name { font-size: 13px; font-weight: 700; color: #22CCEE; margin-bottom: 4px; }
+.pv-msg-time { font-size: 10px; color: #9ca3af; margin-left: 6px; font-weight: 400; }
+.pv-msg-text { font-size: 13px; color: #d1d5db; line-height: 1.55; }
+.pv-reply { border-left: 2px solid #22CCEE; padding: 3px 10px; margin-bottom: 5px; background: #4b5563; border-radius: 0 5px 5px 0; }
+.pv-reply-name { font-size: 10px; font-weight: 700; color: #06AED4; }
+.pv-reply-text { font-size: 10px; color: #475569; }
+
+.pv-hdr { background: #374151; border: 1px solid #4b5563; border-radius: 8px; padding: 0 18px; height: 50px; display: flex; align-items: center; gap: 10px; width: 100%; max-width: 460px; }
+
+.pv-input { background: #374151; padding: 14px; border-radius: 8px; width: 100%; max-width: 460px; }
+.pv-input-box { background: #4b5563; border: 1px solid #6b7280; border-radius: 10px; padding: 11px 14px; display: flex; align-items: center; gap: 10px; }
+.pv-input-ph { font-size: 13px; color: #9ca3af; flex: 1; }
+
+.pv-profile { background: #1e293b; border: 1px solid #334155; border-radius: 12px; width: 200px; overflow: hidden; }
+.pv-banner { height: 55px; background: linear-gradient(135deg, #22CCEE, #0e7090); }
+.pv-profile-body { padding: 0 14px 14px; }
+.pv-profile-av { width: 48px; height: 48px; border-radius: 50%; background: #22CCEE; border: 3px solid #1e293b; margin-top: -24px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; font-size: 17px; }
+.pv-profile-name { font-size: 13px; font-weight: 700; color: #f1f5f9; margin-top: 8px; }
+.pv-profile-status { font-size: 11px; color: #64748b; }
+.pv-profile-btn { margin-top: 10px; background: #22CCEE; color: #0f1117; border: none; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: 700; cursor: pointer; width: 100%; }
+
+.pv-ctx { background: #1e293b; border: 1px solid #334155; border-radius: 10px; overflow: hidden; width: 180px; box-shadow: 0 8px 24px #00000060; }
+.pv-ctx-item { padding: 9px 14px; font-size: 12px; color: #94a3b8; display: flex; align-items: center; gap: 8px; }
+.pv-ctx-item.danger { color: #f87171; }
+.pv-ctx-sep { height: 1px; background: #334155; }
+.pv-ctx-ic { width: 14px; height: 14px; background: #374151; border-radius: 3px; }
+
+.pv-modal-overlay { width: 340px; height: 190px; background: #00000070; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.pv-modal { background: #1e293b; border: 1px solid #334155; border-radius: 12px; width: 260px; overflow: hidden; }
+.pv-modal-hdr { padding: 12px 16px; border-bottom: 1px solid #334155; font-size: 13px; font-weight: 700; color: #f1f5f9; display: flex; justify-content: space-between; }
+.pv-modal-body { padding: 14px 16px; font-size: 12px; color: #64748b; }
+.pv-modal-footer { padding: 10px 16px; border-top: 1px solid #1f2937; display: flex; justify-content: flex-end; gap: 8px; }
+.pv-btn { padding: 6px 14px; border-radius: 7px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; }
+.pv-btn.cancel { background: #374151; color: #9ca3af; }
+.pv-btn.ok { background: #22CCEE; color: #0f1117; }
+.pv-btn.danger { background: #ef4444; color: #fff; }
+
+.pv-login { background: #171717; border: 1px solid #1f2937; border-radius: 12px; width: 280px; padding: 28px 22px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.pv-login-logo { width: 44px; height: 44px; border-radius: 12px; background: #22CCEE; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #0f1117; font-size: 17px; }
+.pv-login-title { font-size: 17px; font-weight: 700; color: #f1f5f9; }
+.pv-login-sub { font-size: 11px; color: #475569; }
+.pv-field { width: 100%; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 9px 12px; font-size: 12px; color: #64748b; }
+.pv-login-btn { width: 100%; background: #22CCEE; color: #0f1117; border: none; border-radius: 8px; padding: 10px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+.pv-members { background: #1f2937; border: 1px solid #374151; border-radius: 12px; width: 340px; }
+.pv-members-hdr { padding: 12px 16px; border-bottom: 1px solid #1e293b; font-size: 13px; font-weight: 700; color: #f1f5f9; display: flex; justify-content: space-between; }
+.pv-member-row { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid #0f172a; }
+.pv-member-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff; flex-shrink: 0; }
+.pv-member-name { font-size: 13px; font-weight: 600; color: #cbd5e1; }
+.pv-member-email { font-size: 10px; color: #334155; }
+.pv-member-role { font-size: 10px; color: #22CCEE; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="tabbar">
+  <button class="tab-btn active" onclick="switchTab(0)">畫面總覽</button>
+  <button class="tab-btn" onclick="switchTab(1)">元件細節</button>
+  <button class="tab-btn" onclick="switchTab(2)">設計系統配色</button>
+  <button class="tab-btn" onclick="switchTab(3)">補上的元件</button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1：畫面總覽
+══════════════════════════════════════════════ -->
+<div class="panel active" id="tab-overview">
+  <p class="hint">點擊任一標示區域 → 自動跳到「元件細節」分頁並展開該元件</p>
+  <div class="app-frame">
+    <div class="app-inner">
+
+      <!-- Icon 欄 -->
+      <div class="col-icon">
+        <div class="rg" id="r-1-1" onclick="goComp('1-1')" title="1-1 帳號頭像" style="border-radius:50%;margin-bottom:10px">
+          <div class="rg-label">1-1</div>
+          <div class="icon-av">A</div>
+        </div>
+        <div class="rg" id="r-1-2" onclick="goComp('1-2')" title="1-2 主導航" style="display:flex;flex-direction:column;gap:6px;padding:4px">
+          <div class="rg-label">1-2</div>
+          <div class="icon-nav on"><svg width="16" height="16" viewBox="0 0 20 20"><path fill="#0f1117" d="M2 5h16v2H2V5zm0 4h16v2H2V9zm0 4h10v2H2v-2z"/></svg></div>
+          <div class="icon-nav"><svg width="16" height="16" viewBox="0 0 20 20"><circle fill="#9ca3af" cx="10" cy="8" r="3"/><path fill="#9ca3af" d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6H4z"/></svg></div>
+          <div class="icon-nav"><svg width="16" height="16" viewBox="0 0 20 20"><path fill="#9ca3af" d="M5 3v14l5-3 5 3V3H5z"/></svg></div>
+        </div>
+        <div style="flex:1"></div>
+        <div class="rg" id="r-1-3" onclick="goComp('1-3')" title="1-3 底部 Menu" style="margin:4px">
+          <div class="rg-label" style="top:auto;bottom:4px;left:4px">1-3</div>
+          <div class="icon-nav"><svg width="16" height="16" viewBox="0 0 20 20"><path fill="#9ca3af" d="M3 9h14v2H3V9zm4-4h6v2H7V5zm-4 8h14v2H3v-2z"/></svg></div>
+        </div>
+      </div>
+
+      <!-- Session 欄 -->
+      <div class="col-session">
+        <div class="rg ses-hdr" id="r-2-1" onclick="goComp('2-1')" title="2-1 Session Header">
+          <div class="rg-label">2-1</div>
+          <span>Adam_chat</span>
+          <div style="width:20px;height:20px;border-radius:5px;background:#374151;display:flex;align-items:center;justify-content:center;font-size:14px;color:#9ca3af">＋</div>
+        </div>
+        <div style="overflow-y:auto;flex:1">
+          <div class="ses-sec">頻道</div>
+          <div class="rg ses-item on" id="r-2-2" onclick="goComp('2-2')" title="2-2 Session 項目">
+            <div class="rg-label" style="font-size:8px">2-2</div>
+            <div class="ses-av" style="background:#3b82f6;border-radius:8px;font-size:14px">#</div>
+            <div class="ses-info"><div class="ses-name">general</div><div class="ses-prev">Adam: 大家好</div></div>
+            <div class="ses-badge">3</div>
+          </div>
+          <div class="ses-item">
+            <div class="ses-av" style="background:#1f2937;border-radius:8px;font-size:14px;color:#6b7280">#</div>
+            <div class="ses-info"><div class="ses-name">公告</div><div class="ses-prev">歡迎加入</div></div>
+          </div>
+          <div class="ses-sec" style="margin-top:6px">私訊</div>
+          <div class="ses-item">
+            <div class="rg" id="r-2-3" onclick="goComp('2-3')" title="2-3 Avatar" style="border-radius:50%">
+              <div class="rg-label" style="font-size:7px">2-3</div>
+              <div class="ses-av" style="background:#10b981">T</div>
+            </div>
+            <div class="ses-info" style="margin-left:9px"><div class="ses-name">TestUser</div><div class="ses-prev">收到了！</div></div>
+          </div>
+          <div class="ses-item">
+            <div class="ses-av" style="background:#8b5cf6">小</div>
+            <div class="ses-info"><div class="ses-name">小明</div><div class="ses-prev">明天開會</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 聊天區 -->
+      <div class="col-chat">
+        <div class="rg chat-hdr" id="r-3-1" onclick="goComp('3-1')" title="3-1 聊天室 Header">
+          <div class="rg-label">3-1</div>
+          <span style="font-size:18px;color:#9ca3af">#</span>
+          <span style="font-size:14px;font-weight:700;color:#f9fafb">general</span>
+          <span style="font-size:11px;color:#9ca3af;margin-left:2px">5 位成員</span>
+          <div style="margin-left:auto;display:flex;gap:8px">
+            <div style="width:20px;height:20px;background:#4b5563;border-radius:4px"></div>
+            <div style="width:20px;height:20px;background:#4b5563;border-radius:4px"></div>
+          </div>
+        </div>
+        <div class="chat-feed">
+          <div class="rg msg-row" id="r-3-2" onclick="goComp('3-2')" title="3-2 單一訊息">
+            <div class="rg-label" style="font-size:8px">3-2</div>
+            <div class="msg-av" style="background:#22CCEE">A</div>
+            <div class="msg-body">
+              <div class="msg-name" style="color:#22CCEE">Adam <span class="msg-time">10:32</span></div>
+              <div class="msg-text">大家好，這是我們的聊天室 👋</div>
+              <div><span class="chip">👍 2</span><span class="chip">🎉 1</span></div>
+            </div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-av" style="background:#10b981">T</div>
+            <div class="msg-body">
+              <div class="msg-name" style="color:#6ee7b7">TestUser <span class="msg-time">10:34</span></div>
+              <div class="msg-text">哈囉！收到了</div>
+            </div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-av" style="background:#22CCEE">A</div>
+            <div class="msg-body">
+              <div class="msg-name" style="color:#22CCEE">Adam <span class="msg-time">10:36</span></div>
+              <div style="border-left:2px solid #22CCEE;padding:3px 8px;margin-bottom:5px;background:#4b5563;border-radius:0 5px 5px 0">
+                <div style="font-size:10px;font-weight:700;color:#22CCEE">TestUser</div>
+                <div style="font-size:10px;color:#d1d5db">收到了！</div>
+              </div>
+              <div class="msg-text">這個介面我想改一下樣式</div>
+            </div>
+          </div>
+        </div>
+        <div class="rg chat-input-area" id="r-3-3" onclick="goComp('3-3')" title="3-3 訊息輸入框">
+          <div class="rg-label">3-3</div>
+          <div class="input-box">
+            <span class="input-ph">輸入訊息到 #general</span>
+            <div class="input-ic"></div>
+            <div class="input-ic"></div>
+            <div class="input-ic" style="background:#22CCEE"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2：元件細節
+══════════════════════════════════════════════ -->
+<div class="panel" id="tab-components">
+
+  <div class="comp-section-title">① 最左 Icon 欄</div>
+
+  <div class="comp-row" id="comp-1-1" onclick="toggleComp('1-1')">
+    <div class="comp-row-header">
+      <div class="comp-id">1-1</div>
+      <div class="comp-title">帳號頭像</div>
+      <div class="comp-file">routes/home/User.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">最左欄頂部，顯示目前登入用戶的頭像縮寫。右下角有上線狀態圓點（綠色=在線）。點擊可前往個人設定。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div style="background:#171717;padding:20px 16px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:8px">
+          <div style="width:44px;height:44px;border-radius:50%;background:#22CCEE;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0f1117;font-size:17px;position:relative">
+            A
+            <div style="width:11px;height:11px;background:#22c55e;border-radius:50%;border:2px solid #111827;position:absolute;bottom:0;right:0"></div>
+          </div>
+          <div style="font-size:10px;color:#475569">Adam（管理員）</div>
+        </div>
+        <div style="font-size:11px;color:#334155">Tailwind：<code style="color:#22CCEE">w-10 h-10 rounded-full</code></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-1-2" onclick="toggleComp('1-2')">
+    <div class="comp-row-header">
+      <div class="comp-id">1-2</div>
+      <div class="comp-title">主導航 Icon</div>
+      <div class="comp-file">routes/home/index.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">左側欄的四個導航按鈕：聊天、成員、收藏、檔案（管理員才看得到檔案）。Active 狀態套用 bg-primary-400（#22CCEE）。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div style="background:#171717;padding:14px 10px;border-radius:8px;display:flex;flex-direction:column;gap:6px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:10px;background:#22CCEE;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 20 20"><path fill="#0f1117" d="M2 5h16v2H2V5zm0 4h16v2H2V9zm0 4h10v2H2v-2z"/></svg></div>
+          <div style="width:40px;height:40px;border-radius:10px;background:#1f2937;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 20 20"><circle fill="#9ca3af" cx="10" cy="8" r="3"/><path fill="#9ca3af" d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6H4z"/></svg></div>
+          <div style="width:40px;height:40px;border-radius:10px;background:#1f2937;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 20 20"><path fill="#9ca3af" d="M5 3v14l5-3 5 3V3H5z"/></svg></div>
+          <div style="width:40px;height:40px;border-radius:10px;background:#1f2937;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 20 20"><path fill="#9ca3af" d="M4 3h8l4 4v10H4V3zm7 0v5h5"/></svg></div>
+        </div>
+        <div style="font-size:11px;color:#334155">Active：<code style="color:#22CCEE">bg-primary-400</code> = #22CCEE</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-1-3" onclick="toggleComp('1-3')">
+    <div class="comp-row-header">
+      <div class="comp-id">1-3</div>
+      <div class="comp-title">底部 Menu</div>
+      <div class="comp-file">routes/home/Menu.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">最左欄底部。包含「新增頻道」＋ 按鈕和設定入口（只有管理員可見設定圖示）。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div style="background:#171717;padding:14px 10px;border-radius:8px;display:flex;flex-direction:column;gap:6px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:10px;background:#1f2937;display:flex;align-items:center;justify-content:center;font-size:22px;color:#6b7280">＋</div>
+          <div style="width:40px;height:40px;border-radius:10px;background:#1f2937;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 20 20"><path fill="#9ca3af" d="M10 12a2 2 0 100-4 2 2 0 000 4zm7-2a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-section-title">② Session 欄（左側頻道列表）</div>
+
+  <div class="comp-row" id="comp-2-1" onclick="toggleComp('2-1')">
+    <div class="comp-row-header">
+      <div class="comp-id">2-1</div>
+      <div class="comp-title">Session Header</div>
+      <div class="comp-file">routes/chat/SessionList/index.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">Session 欄頂部，顯示伺服器組織名稱「Adam_chat」。右側「＋」按鈕新增頻道（管理員才能操作）。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div style="background:#1f2937;border-radius:8px;overflow:hidden;width:240px">
+          <div style="padding:14px 12px;font-size:13px;font-weight:700;color:#e2e8f0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1f2937">
+            <span>Adam_chat</span>
+            <div style="width:22px;height:22px;border-radius:5px;background:#374151;display:flex;align-items:center;justify-content:center;font-size:15px;color:#9ca3af">＋</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-2-2" onclick="toggleComp('2-2')">
+    <div class="comp-row-header">
+      <div class="comp-id">2-2</div>
+      <div class="comp-title">Session 列表項目</div>
+      <div class="comp-file">routes/chat/SessionList/Session.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">頻道或私訊的單一列表項目。包含：頭像、名稱、最後訊息預覽、時間戳、未讀數字 badge、靜音圖示。Active 狀態為半透明白色背景。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-session-list">
+          <div class="pv-s-item on">
+            <div class="pv-s-av" style="background:#3b82f6;border-radius:8px;font-size:14px">#</div>
+            <div style="flex:1;overflow:hidden">
+              <div style="display:flex;justify-content:space-between"><span class="pv-s-name">general</span><span style="font-size:10px;color:#4b5563">10:36</span></div>
+              <div class="pv-s-prev">Adam: 這個介面我想改</div>
+            </div>
+            <div class="pv-badge">3</div>
+          </div>
+          <div class="pv-s-item">
+            <div class="pv-s-av" style="background:#1f2937;border-radius:8px;font-size:14px;color:#6b7280">#</div>
+            <div style="flex:1;overflow:hidden"><div class="pv-s-name">公告</div><div class="pv-s-prev">歡迎加入</div></div>
+          </div>
+          <div class="pv-s-item">
+            <div class="pv-s-av" style="background:#10b981">T</div>
+            <div style="flex:1;overflow:hidden"><div class="pv-s-name">TestUser</div><div class="pv-s-prev">收到了！</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-2-3" onclick="toggleComp('2-3')">
+    <div class="comp-row-header">
+      <div class="comp-id">2-3</div>
+      <div class="comp-title">頭像（Avatar）</div>
+      <div class="comp-file">components/Avatar.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">通用頭像元件，用於 app 所有頭像顯示位置。支援：user（圓形）、channel（方形圓角），無圖片時顯示名稱縮寫。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area" style="gap:20px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:48px;height:48px;border-radius:50%;background:#22CCEE;display:flex;align-items:center;justify-content:center;font-weight:700;color:#0f1117;font-size:17px">A</div><div style="font-size:9px;color:#475569">user 48px</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:36px;height:36px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px">T</div><div style="font-size:9px;color:#475569">user 36px</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:28px;height:28px;border-radius:50%;background:#8b5cf6;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:10px">小</div><div style="font-size:9px;color:#475569">user 28px</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="width:36px;height:36px;border-radius:10px;background:#3b82f6;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px">#</div><div style="font-size:9px;color:#475569">channel</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-section-title">③ 聊天主區</div>
+
+  <div class="comp-row" id="comp-3-1" onclick="toggleComp('3-1')">
+    <div class="comp-row-header">
+      <div class="comp-id">3-1</div>
+      <div class="comp-title">聊天室 Header</div>
+      <div class="comp-file">routes/chat/ChannelChat/index.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">聊天主區頂部。頻道版顯示「# 頻道名」和成員數；DM 版顯示對方名字和上線狀態。右側有搜尋、成員列表等操作按鈕。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area" style="flex-direction:column;align-items:stretch;gap:10px">
+        <div>
+          <div style="font-size:10px;color:#334155;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">頻道版</div>
+          <div class="pv-hdr">
+            <span style="font-size:18px;color:#9ca3af">#</span>
+            <span style="font-size:14px;font-weight:700;color:#f9fafb">general</span>
+            <span style="font-size:11px;color:#9ca3af;margin-left:4px">5 位成員</span>
+            <div style="margin-left:auto;display:flex;gap:8px"><div style="width:18px;height:18px;background:#4b5563;border-radius:4px"></div><div style="width:18px;height:18px;background:#4b5563;border-radius:4px"></div></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#6b7280;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">DM 版</div>
+          <div class="pv-hdr">
+            <div style="width:28px;height:28px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff">T</div>
+            <span style="font-size:14px;font-weight:700;color:#f9fafb">TestUser</span>
+            <span style="font-size:10px;color:#22c55e;margin-left:4px">● 在線</span>
+            <div style="margin-left:auto;display:flex;gap:8px"><div style="width:18px;height:18px;background:#4b5563;border-radius:4px"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-3-2" onclick="toggleComp('3-2')">
+    <div class="comp-row-header">
+      <div class="comp-id">3-2</div>
+      <div class="comp-title">單一訊息</div>
+      <div class="comp-file">components/Message/index.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">一則訊息的完整呈現：發送者頭像、名字、時間、訊息內容、Reaction 表情回應、回覆引用。這是視覺改動最多的核心元件。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area" style="flex-direction:column;align-items:stretch;gap:12px">
+        <div style="font-size:10px;color:#334155;text-transform:uppercase;letter-spacing:.05em">一般訊息</div>
+        <div class="pv-msg">
+          <div class="pv-msg-av" style="background:#22CCEE">A</div>
+          <div style="flex:1">
+            <div class="pv-msg-name">Adam <span class="pv-msg-time">10:32</span></div>
+            <div class="pv-msg-text">大家好，這是我們的聊天室 👋</div>
+            <div style="margin-top:5px"><span style="display:inline-flex;align-items:center;gap:3px;background:#4b5563;border:1px solid #6b7280;border-radius:12px;padding:2px 7px;font-size:11px;color:#d1d5db">👍 2</span> <span style="display:inline-flex;align-items:center;gap:3px;background:#4b5563;border:1px solid #6b7280;border-radius:12px;padding:2px 7px;font-size:11px;color:#d1d5db">🎉 1</span></div>
+          </div>
+        </div>
+        <div style="font-size:10px;color:#334155;text-transform:uppercase;letter-spacing:.05em">含回覆引用</div>
+        <div class="pv-msg">
+          <div class="pv-msg-av" style="background:#22CCEE">A</div>
+          <div style="flex:1">
+            <div class="pv-msg-name">Adam <span class="pv-msg-time">10:36</span></div>
+            <div class="pv-reply"><div class="pv-reply-name">TestUser</div><div class="pv-reply-text">收到了！</div></div>
+            <div class="pv-msg-text">這個介面我想改一下樣式</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-3-3" onclick="toggleComp('3-3')">
+    <div class="comp-row-header">
+      <div class="comp-id">3-3</div>
+      <div class="comp-title">訊息輸入框</div>
+      <div class="comp-file">components/MessageInput/index.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">聊天室底部輸入區。使用 Plate.js 富文字編輯器。包含：附件（圖片/檔案）、文字輸入、表情符號、發送按鈕。支援 Markdown 模式切換。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-input">
+          <div class="pv-input-box">
+            <div style="width:22px;height:22px;background:#6b7280;border-radius:5px"></div>
+            <span class="pv-input-ph">輸入訊息到 #general</span>
+            <div style="width:22px;height:22px;background:#6b7280;border-radius:5px"></div>
+            <div style="width:30px;height:30px;background:#22CCEE;border-radius:7px;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 20 20"><path fill="#0f1117" d="M3 10l14-7-4 7 4 7L3 10z"/></svg></div>
+          </div>
+          <div style="font-size:9px;color:#6b7280;margin-top:5px;text-align:right">Enter 發送 · Shift+Enter 換行</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-section-title">④ 彈出視窗 / Modal</div>
+
+  <div class="comp-row" id="comp-4-1" onclick="toggleComp('4-1')">
+    <div class="comp-row-header">
+      <div class="comp-id">4-1</div>
+      <div class="comp-title">個人資料卡</div>
+      <div class="comp-file">components/Profile/</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">點擊任何用戶頭像後彈出的浮動卡片。顯示頭像、名稱、個人狀態、傳送訊息按鈕。管理員可看到「修改暱稱」選項。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-profile">
+          <div class="pv-banner"></div>
+          <div class="pv-profile-body">
+            <div class="pv-profile-av">A</div>
+            <div class="pv-profile-name">Adam</div>
+            <div class="pv-profile-status">管理員 · 在線</div>
+            <button class="pv-profile-btn">傳送訊息</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-4-2" onclick="toggleComp('4-2')">
+    <div class="comp-row-header">
+      <div class="comp-id">4-2</div>
+      <div class="comp-title">邀請 Modal</div>
+      <div class="comp-file">components/InviteModal/</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">邀請新成員加入頻道的彈出視窗。產生一次性邀請連結，用戶複製後分享給對方。連結有有效期設定。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;width:300px;overflow:hidden">
+          <div style="padding:14px 16px;border-bottom:1px solid #334155;font-size:14px;font-weight:700;color:#f1f5f9">邀請成員加入 #general</div>
+          <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:11px;color:#64748b">邀請連結</div>
+            <div style="background:#374151;border:1px solid #4b5563;border-radius:7px;padding:9px 12px;font-size:11px;color:#9ca3af;font-family:monospace;display:flex;justify-content:space-between;align-items:center">
+              <span>localhost:3001/?magic_t...</span>
+              <button style="background:#22CCEE;color:#0f1117;border:none;border-radius:6px;padding:4px 10px;font-size:10px;font-weight:700;cursor:pointer">複製</button>
+            </div>
+            <div style="font-size:10px;color:#334155">有效期：24 小時 · 最多 10 次</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-4-3" onclick="toggleComp('4-3')">
+    <div class="comp-row-header">
+      <div class="comp-id">4-3</div>
+      <div class="comp-title">右鍵選單</div>
+      <div class="comp-file">components/Message/ContextMenu.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">右鍵點擊訊息或 Session 後出現的操作選單。訊息選單：回覆、編輯、轉發、固定、刪除。Session 選單：靜音、固定、刪除頻道。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-ctx">
+          <div class="pv-ctx-item"><div class="pv-ctx-ic"></div>回覆</div>
+          <div class="pv-ctx-item"><div class="pv-ctx-ic"></div>編輯訊息</div>
+          <div class="pv-ctx-item"><div class="pv-ctx-ic"></div>轉發</div>
+          <div class="pv-ctx-item"><div class="pv-ctx-ic"></div>固定訊息</div>
+          <div class="pv-ctx-item"><div class="pv-ctx-ic"></div>複製文字</div>
+          <div class="pv-ctx-sep"></div>
+          <div class="pv-ctx-item danger"><div class="pv-ctx-ic" style="background:#7f1d1d"></div>刪除訊息</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-4-4" onclick="toggleComp('4-4')">
+    <div class="comp-row-header">
+      <div class="comp-id">4-4</div>
+      <div class="comp-title">Modal 框架</div>
+      <div class="comp-file">components/Modal.tsx</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">所有彈出視窗共用的底層框架：半透明背景遮罩、圓角容器、Header / Body / Footer 結構、ESC 關閉邏輯。改這個會影響全部 Modal 外觀。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-modal-overlay">
+          <div class="pv-modal">
+            <div class="pv-modal-hdr"><span>確認刪除頻道</span><span style="cursor:pointer;color:#475569">✕</span></div>
+            <div class="pv-modal-body">此操作無法復原，頻道內所有訊息都將被刪除。</div>
+            <div class="pv-modal-footer"><button class="pv-btn cancel">取消</button><button class="pv-btn danger">刪除</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-section-title">⑤ 獨立頁面</div>
+
+  <div class="comp-row" id="comp-5-1" onclick="toggleComp('5-1')">
+    <div class="comp-row-header">
+      <div class="comp-id">5-1</div>
+      <div class="comp-title">登入頁</div>
+      <div class="comp-file">routes/login/</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">完整登入頁面（/login 路由）。支援帳號密碼登入和 Magic Link（email 一次性連結）兩種方式。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-login">
+          <div class="pv-login-logo">A</div>
+          <div class="pv-login-title">登入 Adam_chat</div>
+          <div class="pv-login-sub">輸入帳號密碼繼續</div>
+          <input class="pv-field" placeholder="Email" disabled>
+          <input class="pv-field" placeholder="密碼" type="password" disabled>
+          <button class="pv-login-btn">登入</button>
+          <div style="font-size:11px;color:#334155;cursor:pointer">或使用 Magic Link 登入</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-5-2" onclick="toggleComp('5-2')">
+    <div class="comp-row-header">
+      <div class="comp-id">5-2</div>
+      <div class="comp-title">註冊頁</div>
+      <div class="comp-file">routes/reg/</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">透過邀請連結進入後的帳號建立頁面（/#/register 路由）。需要有效的 magic_token 才能開啟。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-login">
+          <div class="pv-login-logo">A</div>
+          <div class="pv-login-title">建立帳號</div>
+          <div class="pv-login-sub" style="color:#22c55e">✓ 邀請連結有效</div>
+          <input class="pv-field" placeholder="你的名稱" disabled>
+          <input class="pv-field" placeholder="設定密碼" type="password" disabled>
+          <button class="pv-login-btn">建立帳號</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-row" id="comp-5-3" onclick="toggleComp('5-3')">
+    <div class="comp-row-header">
+      <div class="comp-id">5-3</div>
+      <div class="comp-title">成員列表頁</div>
+      <div class="comp-file">routes/users/</div>
+      <div class="comp-arrow">▼</div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-desc">點左側 Icon 欄「成員」圖示進入的完整頁面。列出所有成員，可點擊查看個人資料或發起私訊。管理員可在此修改成員權限。</div>
+      <div class="preview-label">目前長相</div>
+      <div class="preview-area">
+        <div class="pv-members">
+          <div class="pv-members-hdr"><span>所有成員（2）</span><span style="font-size:11px;color:#475569">搜尋</span></div>
+          <div class="pv-member-row">
+            <div class="pv-member-av" style="background:#22CCEE">A</div>
+            <div style="flex:1"><div class="pv-member-name">Adam</div><div class="pv-member-email">baker0169@gmail.com</div></div>
+            <div class="pv-member-role">管理員</div>
+          </div>
+          <div class="pv-member-row">
+            <div class="pv-member-av" style="background:#10b981">T</div>
+            <div style="flex:1"><div class="pv-member-name">TestUser</div><div class="pv-member-email">test@test.com</div></div>
+            <div class="pv-member-role" style="color:#64748b">成員</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3：設計系統配色
+══════════════════════════════════════════════ -->
+<div class="panel" id="tab-colors">
+  <div style="padding:32px 40px;max-width:640px">
+
+    <div class="color-group">
+      <div class="color-group-title">Primary — 主色（青藍）</div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#CFF9FE"></div>
+        <div class="color-info">
+          <div class="color-name">primary-100</div>
+          <div class="color-hex">#CFF9FE</div>
+          <div class="color-usage">淺色背景、hover 狀態提示</div>
+        </div>
+        <div class="color-tag" style="background:#CFF9FE20;color:#CFF9FE;border:1px solid #CFF9FE30">bg-primary-100</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#22CCEE"></div>
+        <div class="color-info">
+          <div class="color-name">primary-400 ★ 主要用色</div>
+          <div class="color-hex">#22CCEE</div>
+          <div class="color-usage">按鈕、active 狀態、badge、連結、border accent</div>
+        </div>
+        <div class="color-tag" style="background:#22CCEE20;color:#22CCEE;border:1px solid #22CCEE40">bg-primary-400</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#06AED4"></div>
+        <div class="color-info">
+          <div class="color-name">primary-500</div>
+          <div class="color-hex">#06AED4</div>
+          <div class="color-usage">按鈕 hover、回覆引用名稱文字</div>
+        </div>
+        <div class="color-tag" style="background:#06AED420;color:#06AED4;border:1px solid #06AED440">bg-primary-500</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#088AB2"></div>
+        <div class="color-info">
+          <div class="color-name">primary-600</div>
+          <div class="color-hex">#088AB2</div>
+          <div class="color-usage">按鈕 active 按下、深色強調</div>
+        </div>
+        <div class="color-tag" style="background:#088AB220;color:#088AB2;border:1px solid #088AB240">bg-primary-600</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#0E7090"></div>
+        <div class="color-info">
+          <div class="color-name">primary-700</div>
+          <div class="color-hex">#0E7090</div>
+          <div class="color-usage">深色版面的邊框、圖示</div>
+        </div>
+        <div class="color-tag" style="background:#0E709020;color:#0E7090;border:1px solid #0E709040">bg-primary-700</div>
+      </div>
+    </div>
+
+    <div class="color-group">
+      <div class="color-group-title">Neutral / Gray — 中性色（dark mode 介面背景）</div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#171717;border:1px solid #374151"></div>
+        <div class="color-info">
+          <div class="color-name">neutral-900 ★ icon 欄底色</div>
+          <div class="color-hex">#171717</div>
+          <div class="color-usage">最左 icon 欄背景（dark:bg-neutral-900）、整體 app 外框</div>
+        </div>
+        <div class="color-tag" style="background:#17171730;color:#6b7280;border:1px solid #374151">bg-neutral-900</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#1f2937;border:1px solid #374151"></div>
+        <div class="color-info">
+          <div class="color-name">gray-800 ★ session 列表底色</div>
+          <div class="color-hex">#1f2937</div>
+          <div class="color-usage">Session 列表欄背景（dark:!bg-gray-800）、nav icon 按鈕底色</div>
+        </div>
+        <div class="color-tag" style="background:#1f293730;color:#6b7280;border:1px solid #374151">bg-gray-800</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#374151"></div>
+        <div class="color-info">
+          <div class="color-name">gray-700 ★ 主聊天區底色</div>
+          <div class="color-hex">#374151</div>
+          <div class="color-usage">主聊天區背景（dark:!bg-gray-700）、訊息列表底色</div>
+        </div>
+        <div class="color-tag" style="background:#37415120;color:#9ca3af;border:1px solid #374151">bg-gray-700</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#4b5563"></div>
+        <div class="color-info">
+          <div class="color-name">gray-600</div>
+          <div class="color-hex">#4b5563</div>
+          <div class="color-usage">訊息輸入框底色（dark:bg-gray-600）、次要卡片背景</div>
+        </div>
+        <div class="color-tag" style="background:#4b556320;color:#9ca3af;border:1px solid #4b5563">bg-gray-600</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#111827;border:1px solid #374151"></div>
+        <div class="color-info">
+          <div class="color-name">gray-900</div>
+          <div class="color-hex">#111827</div>
+          <div class="color-usage">深色 Modal 背景、overlay 底層</div>
+        </div>
+        <div class="color-tag" style="background:#11182730;color:#6b7280;border:1px solid #374151">bg-gray-900</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#6b7280"></div>
+        <div class="color-info">
+          <div class="color-name">gray-500</div>
+          <div class="color-hex">#6b7280</div>
+          <div class="color-usage">次要文字、圖示填色</div>
+        </div>
+        <div class="color-tag" style="background:#6b728020;color:#9ca3af;border:1px solid #6b728040">text-gray-500</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#9ca3af"></div>
+        <div class="color-info">
+          <div class="color-name">gray-400</div>
+          <div class="color-hex">#9ca3af</div>
+          <div class="color-usage">placeholder 文字、靜音圖示</div>
+        </div>
+        <div class="color-tag" style="background:#9ca3af20;color:#9ca3af;border:1px solid #9ca3af40">text-gray-400</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#f9fafb;border:1px solid #374151"></div>
+        <div class="color-info">
+          <div class="color-name">gray-50</div>
+          <div class="color-hex">#f9fafb</div>
+          <div class="color-usage">Light mode 背景（dark mode 時不顯示）</div>
+        </div>
+        <div class="color-tag" style="background:#f9fafb20;color:#9ca3af;border:1px solid #374151">bg-gray-50</div>
+      </div>
+    </div>
+
+    <div class="color-group">
+      <div class="color-group-title">語意色（狀態與警示）</div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#22c55e"></div>
+        <div class="color-info">
+          <div class="color-name">在線狀態</div>
+          <div class="color-hex">#22c55e</div>
+          <div class="color-usage">用戶在線圓點、連結成功提示</div>
+        </div>
+        <div class="color-tag" style="background:#22c55e20;color:#22c55e;border:1px solid #22c55e40">bg-green-500</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#ef4444"></div>
+        <div class="color-info">
+          <div class="color-name">危險 / 刪除</div>
+          <div class="color-hex">#ef4444</div>
+          <div class="color-usage">刪除按鈕、錯誤提示、危險操作確認</div>
+        </div>
+        <div class="color-tag" style="background:#ef444420;color:#ef4444;border:1px solid #ef444440">bg-red-500</div>
+      </div>
+
+      <div class="color-row">
+        <div class="color-swatch" style="background:#f59e0b"></div>
+        <div class="color-info">
+          <div class="color-name">警告</div>
+          <div class="color-hex">#f59e0b</div>
+          <div class="color-usage">License 即將到期、非致命性警告</div>
+        </div>
+        <div class="color-tag" style="background:#f59e0b20;color:#f59e0b;border:1px solid #f59e0b40">bg-amber-500</div>
+      </div>
+    </div>
+
+    <div style="padding:14px 16px;border:1px solid #1e293b;border-radius:8px;background:#0d1424;font-size:12px;color:#475569;line-height:1.7">
+      <strong style="color:#64748b">Dark Mode 說明</strong><br>
+      VoceChat 使用 Tailwind 的 <code style="color:#22CCEE">darkMode: "class"</code>，在根元素加上 <code style="color:#22CCEE">.dark</code> class 即切換暗色主題。<br>
+      深色版面以 <code>dark:bg-gray-800</code>、<code>dark:text-white</code> 等 class 覆蓋，改色時需同步修改 light 和 dark 兩個版本。
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4：補上的元件（遺漏元件補全）
+══════════════════════════════════════════════ -->
+<div class="panel" id="tab-missing" style="padding:32px 40px;max-width:1000px">
+
+  <p style="font-size:11px;color:#475569;margin-bottom:28px">第二輪補上的遺漏元件，全部套用 Linear 設計系統。</p>
+
+  <!-- ─── A: 訊息 Hover Action Bar ─── -->
+  <div class="comp-section-title">A · 訊息互動欄 — Message/Commands.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap">
+    <!-- action bar -->
+    <div style="display:flex;align-items:center;gap:2px;padding:2px;background:#08090b;border:1px solid #27272a;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.4)">
+      <div style="width:24px;height:24px;border-radius:3px;border:1px solid #27272a;background:#08090b;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;">😊</div>
+      <div style="width:24px;height:24px;border-radius:3px;border:1px solid #27272a;background:#08090b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="12" height="12" viewBox="0 0 20 20"><path fill="#52525b" d="M3 17l1-4 10-10 3 3-10 10-4 1z"/></svg>
+      </div>
+      <div style="width:24px;height:24px;border-radius:3px;border:1px solid #27272a;background:#08090b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="12" height="12" viewBox="0 0 20 20"><path fill="#52525b" d="M4 5h8v2H4V5zm12 6H4v2h12v-2zM4 9h12v2H4V9z"/></svg>
+      </div>
+      <div style="width:24px;height:24px;border-radius:3px;border:1px solid #27272a;background:#08090b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="12" height="12" viewBox="0 0 20 20"><path fill="#52525b" d="M5 2h10v3l-5 5-5-5V2zm5 8l5 5v3H5v-3l5-5z"/></svg>
+      </div>
+      <div style="width:24px;height:24px;border-radius:3px;border:1px solid #3f3f46;background:#08090b;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="12" height="12" viewBox="0 0 20 20"><circle fill="#a1a1aa" cx="4" cy="10" r="2"/><circle fill="#a1a1aa" cx="10" cy="10" r="2"/><circle fill="#a1a1aa" cx="16" cy="10" r="2"/></svg>
+      </div>
+    </div>
+    <div style="font-family:monospace;font-size:11px;color:#52525b">← hover 時顯示 / 緊湊 24px 按鈕</div>
+  </div>
+
+  <!-- ─── B: 成員頁面 ─── -->
+  <div class="comp-section-title" style="margin-top:32px">B · 成員頁面 — routes/users/index.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+    <!-- left sidebar -->
+    <div style="width:200px;background:#0c0d10;border:1px solid #18191d;border-radius:8px;overflow:hidden">
+      <!-- search bar -->
+      <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #18191d">
+        <svg width="14" height="14" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" fill="none" stroke="#52525b" stroke-width="2"/><path d="M15 15l3 3" stroke="#52525b" stroke-width="2" stroke-linecap="round"/></svg>
+        <span style="font-family:monospace;font-size:11px;color:#3f3f46">搜尋成員...</span>
+      </div>
+      <!-- group title -->
+      <div style="font-family:monospace;font-size:9px;color:#667085;text-transform:uppercase;letter-spacing:.07em;padding:8px 12px 4px;font-weight:700">管理員</div>
+      <!-- member rows -->
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;margin:2px 6px;background:#141519;box-shadow:inset 0 0 0 1px #27272a">
+        <div style="width:24px;height:24px;border-radius:50%;background:#5eead4;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#042f2e">A</div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:#e4e4e7">Adam</div>
+          <div style="font-family:monospace;font-size:9px;color:#5eead4">admin</div>
+        </div>
+      </div>
+      <div style="font-family:monospace;font-size:9px;color:#667085;text-transform:uppercase;letter-spacing:.07em;padding:8px 12px 4px;font-weight:700">成員</div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;margin:2px 6px">
+        <div style="width:24px;height:24px;border-radius:50%;background:#8b5cf6;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">B</div>
+        <div style="font-size:12px;color:#a1a1aa">Brian</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;margin:2px 6px">
+        <div style="width:24px;height:24px;border-radius:50%;background:#ec4899;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">C</div>
+        <div style="font-size:12px;color:#a1a1aa">Cindy</div>
+      </div>
+    </div>
+    <!-- right profile area -->
+    <div style="flex:1;min-width:220px;display:flex;align-items:center;justify-content:center">
+      <div style="width:220px;background:#141519;border:1px solid #27272a;border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5)">
+        <div style="height:48px;background:#141519"></div>
+        <div style="padding:0 14px 14px">
+          <div style="width:48px;height:48px;border-radius:50%;background:#5eead4;border:3px solid #141519;margin-top:-24px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#042f2e;font-size:17px">A</div>
+          <div style="font-size:13px;font-weight:700;color:#f4f4f5;margin-top:8px">Adam</div>
+          <div style="font-family:monospace;font-size:10px;color:#52525b">admin@example.com</div>
+          <button style="margin-top:10px;background:#5eead4;color:#042f2e;border:none;border-radius:7px;padding:7px 14px;font-size:11.5px;font-weight:700;cursor:pointer;width:100%;font-family:monospace">SEND MESSAGE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── C: 收藏頁面 ─── -->
+  <div class="comp-section-title" style="margin-top:32px">C · 收藏頁面 — routes/favs/index.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px;display:flex;gap:16px;flex-wrap:wrap">
+    <!-- filter nav -->
+    <div style="width:160px;display:flex;flex-direction:column;gap:2px">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;background:#141519;box-shadow:inset 0 0 0 1px #27272a;cursor:pointer">
+        <span style="font-size:12px">📄</span>
+        <span style="font-family:monospace;font-size:11.5px;font-weight:600;color:#f4f4f5">全部</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer">
+        <span style="font-size:12px">🖼</span>
+        <span style="font-family:monospace;font-size:11.5px;color:#71717a">圖片</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer">
+        <span style="font-size:12px">🎬</span>
+        <span style="font-family:monospace;font-size:11.5px;color:#71717a">影片</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer">
+        <span style="font-size:12px">🎵</span>
+        <span style="font-family:monospace;font-size:11.5px;color:#71717a">音訊</span>
+      </div>
+    </div>
+    <!-- content area -->
+    <div style="flex:1;min-width:280px;display:flex;flex-direction:column;gap:12px">
+      <div>
+        <div style="font-family:monospace;font-size:10px;color:#3f3f46;margin-bottom:6px">From <strong style="color:#a1a1aa">Adam</strong> · 2026-04-20</div>
+        <div style="border:1px solid #27272a;border-radius:6px;padding:12px;background:#08090b">
+          <div style="display:flex;gap:10px">
+            <div style="width:24px;height:24px;border-radius:50%;background:#5eead4;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#042f2e">A</div>
+            <div>
+              <span style="font-size:12.5px;font-weight:700;color:#f4f4f5">Adam</span>
+              <span style="font-family:monospace;font-size:10px;color:#3f3f46;margin-left:6px">14:30</span>
+              <div style="font-size:13px;color:#d4d4d8;margin-top:2px">這是一則已收藏的訊息範例。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── D: 訊息搜尋 ─── -->
+  <div class="comp-section-title" style="margin-top:32px">D · 訊息搜尋 — components/MessageSearch/index.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px;display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+    <!-- trigger button -->
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+      <div style="font-family:monospace;font-size:10px;color:#52525b">觸發按鈕</div>
+      <div style="width:28px;height:28px;border-radius:6px;border:1px solid #27272a;background:#141519;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg width="14" height="14" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" fill="none" stroke="#a1a1aa" stroke-width="2"/><path d="M15 15l3 3" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <!-- dropdown -->
+    <div style="width:300px;background:#141519;border:1px solid #27272a;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.5);overflow:hidden">
+      <div style="padding:10px 12px;border-bottom:1px solid #18191d;display:flex;align-items:center;gap:8px">
+        <svg width="13" height="13" viewBox="0 0 20 20"><circle cx="9" cy="9" r="6" fill="none" stroke="#52525b" stroke-width="2"/><path d="M15 15l3 3" stroke="#52525b" stroke-width="2" stroke-linecap="round"/></svg>
+        <span style="font-family:monospace;font-size:12px;color:#3f3f46;flex:1">搜尋訊息...</span>
+        <span style="font-size:14px;color:#52525b;cursor:pointer">✕</span>
+      </div>
+      <!-- result rows -->
+      <div style="padding:10px 12px;display:flex;gap:10px;border-bottom:1px solid #18191d;cursor:pointer">
+        <div style="width:24px;height:24px;border-radius:50%;background:#5eead4;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#042f2e;flex-shrink:0;margin-top:2px">A</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+            <span style="font-size:12px;font-weight:600;color:#f4f4f5">Adam</span>
+            <span style="font-family:monospace;font-size:10px;color:#3f3f46">14:30</span>
+          </div>
+          <div style="font-size:12px;color:#71717a">設計系統的關鍵在於一致性...</div>
+        </div>
+      </div>
+      <div style="padding:10px 12px;display:flex;gap:10px;cursor:pointer;background:#0d0e11">
+        <div style="width:24px;height:24px;border-radius:50%;background:#8b5cf6;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px">B</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+            <span style="font-size:12px;font-weight:600;color:#f4f4f5">Brian</span>
+            <span style="font-family:monospace;font-size:10px;color:#3f3f46">13:05</span>
+          </div>
+          <div style="font-size:12px;color:#71717a">好的，我看一下設計稿。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── E: FavList / PinList 側欄浮層 ─── -->
+  <div class="comp-section-title" style="margin-top:32px">E · 側欄浮層 — FavList / PinList</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start">
+    <!-- FavList -->
+    <div>
+      <div style="font-family:monospace;font-size:10px;color:#52525b;margin-bottom:8px">FavList</div>
+      <div style="width:340px;background:#141519;border:1px solid #27272a;border-radius:12px;padding:12px;box-shadow:0 16px 48px rgba(0,0,0,.5)">
+        <div style="font-family:monospace;font-size:10px;font-weight:700;color:#71717a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding:0 4px">收藏訊息 · 2</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="border:1px solid #27272a;border-radius:6px;padding:10px;background:#08090b">
+            <div style="font-size:12px;color:#d4d4d8">這是收藏的訊息 #1</div>
+          </div>
+          <div style="border:1px solid #27272a;border-radius:6px;padding:10px;background:#08090b">
+            <div style="font-size:12px;color:#d4d4d8">這是收藏的訊息 #2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PinList -->
+    <div>
+      <div style="font-family:monospace;font-size:10px;color:#52525b;margin-bottom:8px">PinList</div>
+      <div style="width:340px;background:#141519;border:1px solid #27272a;border-radius:12px;padding:12px;box-shadow:0 16px 48px rgba(0,0,0,.5)">
+        <div style="font-family:monospace;font-size:10px;font-weight:700;color:#71717a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding:0 4px">已釘選訊息 · 1</div>
+        <div style="border:1px solid #27272a;border-radius:6px;padding:10px;background:#08090b">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-size:12px;color:#d4d4d8">重要公告：下週三全體會議</div>
+            <div style="width:20px;height:20px;border:1px solid #27272a;background:#141519;border-radius:3px;display:flex;align-items:center;justify-content:center;cursor:pointer">✕</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── F: 建立頻道 Modal ─── -->
+  <div class="comp-section-title" style="margin-top:32px">F · 建立頻道 Modal — components/ChannelModal/index.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px;display:flex;justify-content:center">
+    <div style="display:flex;background:#141519;border:1px solid #27272a;border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5)">
+      <!-- members list -->
+      <div style="width:220px;border-right:1px solid #18191d;display:flex;flex-direction:column">
+        <div style="padding:10px 12px;border-bottom:1px solid #18191d">
+          <input style="font-family:monospace;font-size:12px;color:#a1a1aa;background:transparent;border:none;outline:none;width:100%" placeholder="搜尋用戶..." />
+        </div>
+        <div style="display:flex;align-items:center;padding:8px 12px;cursor:pointer">
+          <div style="width:16px;height:16px;border:1px solid #27272a;border-radius:3px;margin-right:10px;background:#141519"></div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#5eead4;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#042f2e;margin-right:8px">A</div>
+          <span style="font-size:12px;color:#d4d4d8">Adam</span>
+        </div>
+        <div style="display:flex;align-items:center;padding:8px 12px;cursor:pointer;background:#0d0e11">
+          <div style="width:16px;height:16px;border:1px solid #5eead4;border-radius:3px;margin-right:10px;background:#5eead4;display:flex;align-items:center;justify-content:center">
+            <span style="font-size:9px;color:#042f2e;font-weight:900">✓</span>
+          </div>
+          <div style="width:22px;height:22px;border-radius:50%;background:#8b5cf6;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;margin-right:8px">B</div>
+          <span style="font-size:12px;color:#d4d4d8">Brian</span>
+        </div>
+      </div>
+      <!-- form -->
+      <div style="padding:28px;width:320px;display:flex;flex-direction:column;gap:18px">
+        <div>
+          <div style="font-weight:700;font-size:14px;color:#f4f4f5;margin-bottom:4px">建立頻道</div>
+          <div style="font-family:monospace;font-size:11px;color:#52525b">建立一個公開或私有頻道</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="font-family:monospace;font-size:10px;color:#3f3f46;text-transform:uppercase;letter-spacing:.08em">頻道名稱</div>
+          <div style="display:flex;align-items:center;gap:8px;background:#0c0d10;border:1px solid #27272a;border-radius:6px;padding:8px 10px">
+            <span style="font-family:monospace;font-size:12px;color:#52525b">#</span>
+            <input style="font-family:monospace;font-size:12px;color:#d4d4d8;background:transparent;border:none;outline:none;flex:1" placeholder="new-channel" />
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-family:monospace;font-size:11.5px;color:#a1a1aa">私有頻道</span>
+          <div style="width:36px;height:20px;border-radius:10px;background:#5eead4;position:relative;cursor:pointer">
+            <div style="position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#042f2e"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button style="padding:7px 14px;border-radius:6px;border:1px solid #27272a;background:transparent;color:#a1a1aa;font-family:monospace;font-size:11.5px;font-weight:700;cursor:pointer">取消</button>
+          <button style="padding:7px 14px;border-radius:6px;border:none;background:#5eead4;color:#042f2e;font-family:monospace;font-size:11.5px;font-weight:700;cursor:pointer">建立</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── G: 邀請 Modal ─── -->
+  <div class="comp-section-title" style="margin-top:32px">G · 邀請 Modal — components/InviteModal/index.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px;display:flex;justify-content:center">
+    <div style="width:408px;background:#141519;border:1px solid #27272a;border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5)">
+      <div style="padding:16px 20px;border-bottom:1px solid #18191d;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-weight:700;font-size:14px;color:#f4f4f5">邀請加入 Adam_chat</span>
+        <span style="color:#52525b;cursor:pointer;font-size:16px">✕</span>
+      </div>
+      <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+        <div style="background:#0c0d10;border:1px solid #27272a;border-radius:8px;padding:12px">
+          <div style="font-family:monospace;font-size:10px;color:#3f3f46;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Email 邀請</div>
+          <div style="display:flex;gap:8px">
+            <input style="flex:1;background:#08090b;border:1px solid #27272a;border-radius:6px;padding:7px 10px;font-family:monospace;font-size:12px;color:#a1a1aa;outline:none" placeholder="輸入 email 地址..." />
+            <button style="padding:7px 12px;border-radius:6px;border:none;background:#5eead4;color:#042f2e;font-family:monospace;font-size:11px;font-weight:700;cursor:pointer">發送</button>
+          </div>
+        </div>
+        <div style="background:#0c0d10;border:1px solid #27272a;border-radius:8px;padding:12px">
+          <div style="font-family:monospace;font-size:10px;color:#3f3f46;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">邀請連結</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="flex:1;background:#08090b;border:1px solid #27272a;border-radius:6px;padding:7px 10px;font-family:monospace;font-size:10px;color:#52525b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">https://chat.example.com/invite/abc123</div>
+            <button style="padding:7px 10px;border-radius:6px;border:1px solid #27272a;background:transparent;color:#a1a1aa;font-family:monospace;font-size:11px;font-weight:700;cursor:pointer">複製</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── H: 歡迎畫面 ─── -->
+  <div class="comp-section-title" style="margin-top:32px">H · 歡迎畫面 — components/BlankPlaceholder.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:40px 24px;margin-bottom:8px;display:flex;flex-direction:column;align-items:center;gap:24px">
+    <div style="text-align:center">
+      <div style="font-size:22px;font-weight:700;color:#f4f4f5;letter-spacing:-.02em;margin-bottom:6px">歡迎來到 Adam_chat</div>
+      <div style="font-family:monospace;font-size:11.5px;color:#52525b">開始一段對話，或建立第一個頻道</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+      <div style="width:188px;height:144px;background:#141519;border:1px solid #27272a;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer">
+        <span style="font-size:24px">✉️</span>
+        <span style="font-family:monospace;font-size:11px;font-weight:600;color:#a1a1aa;text-align:center">邀請成員</span>
+      </div>
+      <div style="width:188px;height:144px;background:#141519;border:1px solid #27272a;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer">
+        <span style="font-size:24px">💬</span>
+        <span style="font-family:monospace;font-size:11px;font-weight:600;color:#a1a1aa;text-align:center">建立頻道</span>
+      </div>
+      <div style="width:188px;height:144px;background:#141519;border:1px solid #27272a;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer">
+        <span style="font-size:24px">📱</span>
+        <span style="font-family:monospace;font-size:11px;font-weight:600;color:#a1a1aa;text-align:center">下載 App</span>
+      </div>
+      <div style="width:188px;height:144px;background:#141519;border:1px solid #27272a;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer">
+        <span style="font-size:24px">📖</span>
+        <span style="font-family:monospace;font-size:11px;font-weight:600;color:#a1a1aa;text-align:center">說明文件</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── I: 檔案頁面 ─── -->
+  <div class="comp-section-title" style="margin-top:32px">I · 檔案頁面 — routes/files/index.tsx</div>
+  <div style="background:#0c0d10;border:1px solid #1e293b;border-radius:10px;padding:28px 24px;margin-bottom:8px">
+    <div style="background:#0a0b0e;border:1px solid #18191d;border-radius:8px;overflow:hidden;max-width:640px;margin:0 auto">
+      <!-- toolbar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #18191d">
+        <div style="display:flex;gap:6px">
+          <button style="padding:5px 10px;border-radius:5px;border:1px solid #27272a;background:#141519;color:#a1a1aa;font-family:monospace;font-size:10.5px;cursor:pointer">全部</button>
+          <button style="padding:5px 10px;border-radius:5px;border:1px solid #5eead4;background:#5eead4/10;color:#5eead4;font-family:monospace;font-size:10.5px;cursor:pointer">圖片</button>
+          <button style="padding:5px 10px;border-radius:5px;border:1px solid #27272a;background:transparent;color:#71717a;font-family:monospace;font-size:10.5px;cursor:pointer">影片</button>
+          <button style="padding:5px 10px;border-radius:5px;border:1px solid #27272a;background:transparent;color:#71717a;font-family:monospace;font-size:10.5px;cursor:pointer">檔案</button>
+        </div>
+        <div style="display:flex;gap:4px">
+          <div style="width:26px;height:26px;border:1px solid #27272a;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="12" height="12" viewBox="0 0 20 20"><rect x="2" y="2" width="7" height="7" fill="#52525b"/><rect x="11" y="2" width="7" height="7" fill="#52525b"/><rect x="2" y="11" width="7" height="7" fill="#52525b"/><rect x="11" y="11" width="7" height="7" fill="#52525b"/></svg>
+          </div>
+          <div style="width:26px;height:26px;border:1px solid #5eead4;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#5eead4/10">
+            <svg width="12" height="12" viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="2" fill="#5eead4"/><rect x="2" y="9" width="16" height="2" fill="#5eead4"/><rect x="2" y="14" width="16" height="2" fill="#5eead4"/></svg>
+          </div>
+        </div>
+      </div>
+      <!-- file rows -->
+      <div style="padding:8px">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:6px;border-bottom:1px solid #18191d">
+          <div style="width:36px;height:36px;border-radius:6px;background:#3b82f6/20;border:1px solid #3b82f6/30;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🖼</div>
+          <div style="flex:1">
+            <div style="font-size:12.5px;color:#e4e4e7;font-weight:500">screenshot-20260420.png</div>
+            <div style="font-family:monospace;font-size:10px;color:#52525b;margin-top:2px">1.2 MB · Adam · 今天 14:30</div>
+          </div>
+          <button style="padding:4px 8px;border-radius:4px;border:1px solid #27272a;background:transparent;color:#71717a;font-family:monospace;font-size:10px;cursor:pointer">下載</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:6px">
+          <div style="width:36px;height:36px;border-radius:6px;background:#8b5cf6/20;border:1px solid #8b5cf6/30;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">📹</div>
+          <div style="flex:1">
+            <div style="font-size:12.5px;color:#e4e4e7;font-weight:500">meeting-recording.mp4</div>
+            <div style="font-family:monospace;font-size:10px;color:#52525b;margin-top:2px">48 MB · Brian · 昨天 10:15</div>
+          </div>
+          <button style="padding:4px 8px;border-radius:4px;border:1px solid #27272a;background:transparent;color:#71717a;font-family:monospace;font-size:10px;cursor:pointer">下載</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(idx) {
+  const panels = ['tab-overview','tab-components','tab-colors','tab-missing'];
+  panels.forEach((id,i) => {
+    document.getElementById(id).classList.toggle('active', i===idx);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+
+// 從 Tab1 點擊 → 跳 Tab2 並展開
+function goComp(id) {
+  switchTab(1);
+  const row = document.getElementById('comp-' + id);
+  if (!row) return;
+  if (!row.classList.contains('open')) toggleComp(id);
+  setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+}
+
+// Tab2 展開/收合
+function toggleComp(id) {
+  const row = document.getElementById('comp-' + id);
+  if (!row) return;
+  row.classList.toggle('open');
+}
+</script>
+</body>
+</html>

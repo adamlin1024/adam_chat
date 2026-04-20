@@ -1,0 +1,95 @@
+{
+  "chat": "聊天",
+  "members": "成員",
+  "favs": "收藏",
+  "files": "檔案",
+  "setting": "設定",
+  "more": "更多",
+  "action": {
+    "login": "登入",
+    "re_login": "重新登入",
+    "logout": "登出",
+    "change_avatar": "修改",
+    "cancel": "取消",
+    "dismiss": "關閉",
+    "new_channel": "新增頻道",
+    "new_private_channel": "新增私密頻道",
+    "new_msg": "傳訊息",
+    "invite_people": "邀請其他人",
+    "search_people": "搜尋用戶",
+    "search": "搜尋",
+    "create": "建立",
+    "open": "開啟",
+    "update": "更新",
+    "upload": "上傳",
+    "done": "完成",
+    "add": "新增",
+    "yes": "確定",
+    "remove": "刪除",
+    "remove_user": "移除用戶",
+    "delete_channel": "刪除頻道",
+    "edit": "編輯",
+    "edit_msg": "編輯訊息",
+    "add_reaction": "表情",
+    "add_to_fav": "收藏",
+    "select": "選擇",
+    "forward": "轉傳",
+    "reply": "回覆",
+    "pin": "置頂",
+    "unpin": "取消置頂",
+
+    "send": "傳送",
+    "send_msg": "傳訊息",
+    "copy": "複製",
+    "copy_email": "複製信箱",
+    "mute": "靜音通知",
+    "unmute": "取消靜音",
+    "mark_read": "標記已讀",
+    "hide_session": "隱藏對話",
+    "reload": "重新整理",
+    "install": "安裝",
+    "download_origin": "下載原圖",
+    "close": "關閉",
+    "upgrade": "升級",
+    "view_pwd": "查看密碼",
+    "change_pwd": "修改密碼"
+  },
+  "status": {
+    "uploading": "上傳中"
+  },
+  "tip": {
+    "email_msg_tip": "您的地區收不到訊息提醒，升級到 Pro 版本可以使用郵件提醒功能",
+    "update": "更新成功！",
+    "delete": "刪除成功！",
+    "reg": "註冊成功！",
+    "login": "登入成功！",
+    "logout": "登出成功！",
+    "pin": "訊息置頂成功！",
+    "pwa_install_title": "安裝到桌面？",
+    "pwa_install_desc": "使用桌面存取，更便利！"
+  },
+  "new_version": "有<0>新版本</0>",
+  "mobile_app": "歡迎下載使用<0>手機 APP</0>",
+  "price": {
+    "pro": {
+      "title": "VoceChat 專業版",
+      "desc": "",
+      "price": "$49"
+    },
+    "supreme": {
+      "title": "VoceSpace 私有部署音視訊[499$]",
+      "desc": "",
+      "price": ""
+    }
+  },
+  "server_update": {
+    "version_needed": "支援此功能的最低 Server 版本：<0>{{version}}</0>",
+    "current_version": "目前的 Server 版本：<0>{{version}}</0>",
+    "update_tip": "請升級後端服務！",
+    "howto": "如何升級後端服務"
+  },
+  "inactive": {
+    "title": "VoceChat 只允許一個分頁處於活動狀態",
+    "desc": "重新整理頁面繼續，或關閉此頁面"
+  }
+}

@@ -1,0 +1,20 @@
+# Frontend dependencies & build
+vocechat-web/node_modules/
+vocechat-web/build/
+
+# wwwroot is rebuilt by Docker, no need to track
+vocechat-data/wwwroot/
+
+# User data (sensitive, managed by Railway volume)
+vocechat-data/db/
+vocechat-data/msg/
+vocechat-data/upload/
+vocechat-data/avatar/
+vocechat-data/group_avatar/
+vocechat-data/favorite/
+vocechat-data/key.json
+vocechat-data/license
+
+# OS
+.DS_Store
+Thumbs.db
