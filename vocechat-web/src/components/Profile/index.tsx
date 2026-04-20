@@ -88,9 +88,9 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
                 isCard ? "mt-2.5 w-full grid grid-cols-2" : "flex flex-col md:flex-row mt-6"
               )}
             >
-              <NavLink to={`/chat/dm/${uid}`} className={isCard ? "block" : ""}>
-                <li className={clsx(iconClass, isCard && "w-full justify-center bg-accent text-accent-on border-accent hover:opacity-90")}>
-                  <IconMessage className={isCard ? "fill-accent-on" : "fill-fg-secondary"} />
+              <NavLink to={`/chat/dm/${uid}`} className={isCard ? "block" : "md:flex-1"}>
+                <li className={clsx(iconClass, "justify-center", isCard && "w-full bg-accent text-accent-on border-accent hover:opacity-90")}>
+                  <IconMessage className={isCard ? "fill-accent-on w-5 h-5" : "fill-accent w-5 h-5"} />
                   <span>{t("send_msg")}</span>
                 </li>
               </NavLink>
@@ -155,8 +155,8 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
                   />
                 }
               >
-                <li className={clsx(iconClass, isCard && "w-full justify-center", !hasMore && "opacity-40 cursor-not-allowed")}>
-                  <IconMore className="fill-fg-secondary" />
+                <li className={clsx(iconClass, "justify-center md:flex-1", isCard && "w-full", !hasMore && "opacity-40 cursor-not-allowed")}>
+                  <IconMore className="fill-fg-secondary w-5 h-5" />
                   <span>{ct("more")}</span>
                 </li>
               </Tippy>
