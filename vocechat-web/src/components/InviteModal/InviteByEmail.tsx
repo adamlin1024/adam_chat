@@ -45,8 +45,8 @@ const InviteByEmail: FC<Props> = ({ cid }) => {
         <label className="text-sm text-gray-400 dark:text-gray-100" htmlFor="">
           {t("invite_by_email")}
         </label>
-        <div className="relative flex items-center gap-2">
-          <form ref={formRef} action="/" className="w-full">
+        <div className="relative flex items-center">
+          <form ref={formRef} action="/" className="w-full relative">
             <Input
               className="!pr-20"
               required
@@ -57,14 +57,14 @@ const InviteByEmail: FC<Props> = ({ cid }) => {
               name="email"
               placeholder={enableSMTP ? "Enter Email" : t("enable_smtp")}
             />
+            <Button
+              disabled={!enableSMTP || !email || isLoading}
+              className="send absolute right-1.5 top-1/2 -translate-y-1/2 !h-7 !text-xs !px-2.5"
+              onClick={handleSendEmail}
+            >
+              {ct("action.send")}
+            </Button>
           </form>
-          <Button
-            disabled={!enableSMTP || !email || isLoading}
-            className="send"
-            onClick={handleSendEmail}
-          >
-            {ct("action.send")}
-          </Button>
         </div>
       </div>
       <div className="flex flex-col gap-2 mb-3">

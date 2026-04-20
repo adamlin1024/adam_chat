@@ -42,7 +42,7 @@ const NewMessageBottomTip = ({ context, id, scrollToBottom }: Props) => {
   return (
     <aside
       className={clsx(
-        "z-[999] absolute bottom-20 right-4 justify-center text-xs rounded-full text-white flex items-center cursor-pointer",
+        "z-[999] absolute bottom-5 right-4 justify-center text-xs rounded-full text-white flex items-center cursor-pointer",
         unreads > 0 ? "py-1 px-3" : "w-8 h-8"
       )}
       style={style}
