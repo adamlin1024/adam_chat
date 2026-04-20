@@ -6,7 +6,7 @@ import ChatLayout from "./ChatLayout";
 import ContactVerification from "./ContactVerification";
 import DarkMode from "./DarkMode";
 import FrontendURL from "./FrontendURL";
-import Language from "./Language";
+import Language from "./language";
 import OnlineStatus from "./OnlineStatus";
 import MessageSound from "./MessageSound";
 import Server from "./Server";
