@@ -13,7 +13,7 @@ cat > "$CONFIG_FILE" << EOF
 bind = "0.0.0.0:3000"
 
 [system]
-data_path = "$DATA_DIR"
+data_dir = "$DATA_DIR"
 EOF
 
 SERVER="/home/vocechat-server/vocechat-server"
