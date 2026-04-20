@@ -240,9 +240,14 @@
 
     // iOS PWA keyboard fix: track visualViewport height to prevent header scroll-off
     (function () {
+      var rafId = null;
       function updateAppHeight() {
-        var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-        document.documentElement.style.setProperty('--app-height', h + 'px');
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(function () {
+          rafId = null;
+          var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+          document.documentElement.style.setProperty('--app-height', h + 'px');
+        });
       }
       if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', updateAppHeight);
