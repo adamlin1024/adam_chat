@@ -187,7 +187,7 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
         }
         header={
           <>
-            <header className="h-14 flex-shrink-0 flex items-center gap-2.5 px-6 border-b border-border-subtle bg-bg-canvas">
+            <header className="h-14 flex-shrink-0 flex items-center gap-2.5 px-4 md:px-[0.8rem] border-b border-border-subtle bg-bg-canvas">
               <GoBackNav />
               <div className="flex items-center gap-2.5 flex-1 min-w-0">
                 <Link

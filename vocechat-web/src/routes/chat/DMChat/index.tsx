@@ -61,7 +61,7 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
         </ul>
       }
       header={
-        <header className="h-14 flex-shrink-0 box-border px-6 flex items-center justify-between border-b border-border-subtle bg-bg-canvas">
+        <header className="h-14 flex-shrink-0 box-border px-4 md:px-[0.8rem] flex items-center justify-between border-b border-border-subtle bg-bg-canvas">
           <GoBackNav />
           <User interactive={false} uid={currUser.uid} enableNavToSetting={true} />
           <MessageSearch context="dm" id={uid} onLocate={handleLocate} />
