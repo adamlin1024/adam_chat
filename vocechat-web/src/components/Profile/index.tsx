@@ -84,11 +84,11 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
           {canDM && (
             <ul
               className={clsx(
-                "flex items-center gap-2",
-                isCard ? "mt-2.5 w-full flex-row" : "mt-6 flex-col md:flex-row"
+                "items-center gap-2",
+                isCard ? "mt-2.5 w-full grid grid-cols-2" : "flex flex-col md:flex-row mt-6"
               )}
             >
-              <NavLink to={`/chat/dm/${uid}`} className={isCard ? "flex-1" : ""}>
+              <NavLink to={`/chat/dm/${uid}`} className={isCard ? "block" : ""}>
                 <li className={clsx(iconClass, isCard && "w-full justify-center bg-accent text-accent-on border-accent hover:opacity-90")}>
                   <IconMessage className={isCard ? "fill-accent-on" : "fill-fg-secondary"} />
                   <span>{t("send_msg")}</span>
@@ -155,7 +155,7 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
                   />
                 }
               >
-                <li className={clsx(iconClass, isCard && "flex-1 justify-center", !hasMore && "opacity-40 cursor-not-allowed")}>
+                <li className={clsx(iconClass, isCard && "w-full justify-center", !hasMore && "opacity-40 cursor-not-allowed")}>
                   <IconMore className="fill-fg-secondary" />
                   <span>{ct("more")}</span>
                 </li>
