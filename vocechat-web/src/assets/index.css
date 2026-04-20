@@ -1,6 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer base {
+  a, button, [role="button"], input[type="checkbox"], input[type="radio"], label {
+    transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+}
 @layer components {
   .flex-center {
     @apply flex items-center justify-center;

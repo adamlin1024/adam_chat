@@ -13,7 +13,7 @@ const StyledButton = ({ children, className = "", ...rest }: Props) => {
   return (
     <button
       className={clsx(
-        `text-sm text-white bg-primary-400 break-keep shadow-sm rounded-lg px-3.5 h-11 md:hover:bg-primary-500 active:bg-primary-500 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:hover:cursor-not-allowed`,
+        `text-sm text-accent-on bg-accent break-keep shadow-sm rounded-lg px-3.5 h-11 md:hover:bg-accent-hover active:bg-accent-pressed disabled:bg-fg-disabled disabled:hover:bg-fg-disabled disabled:hover:cursor-not-allowed transition-colors duration-200`,
         isFull && "w-full text-center justify-center",
         isGhost &&
           " !text-gray-700 dark:!text-gray-100  !border !border-solid !border-gray-300 dark:!border-gray-500 !bg-transparent",

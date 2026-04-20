@@ -36,13 +36,13 @@ const NewMessageBottomTip = ({ context, id, scrollToBottom }: Props) => {
 
   const style =
     unreads > 0
-      ? { background: "linear-gradient(135deg, #3C8CE7 0%, #00EAFF 100%)" }
-      : { background: "rgba(156, 163, 175, 0.5)" };
+      ? { background: "#5eead4", color: "#042f2e" }
+      : { background: "rgba(94, 234, 212, 0.15)", border: "1px solid rgba(94, 234, 212, 0.3)" };
 
   return (
     <aside
       className={clsx(
-        "z-[999] absolute bottom-24 right-4 justify-center text-xs rounded-full text-white flex items-center cursor-pointer",
+        "z-[999] absolute bottom-24 left-1/2 -translate-x-1/2 justify-center text-xs rounded-full flex items-center cursor-pointer",
         unreads > 0 ? "py-1 px-3" : "w-8 h-8"
       )}
       style={style}

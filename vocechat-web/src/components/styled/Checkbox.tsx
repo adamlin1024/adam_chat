@@ -7,7 +7,7 @@ export default function StyledCheckbox(props: InputHTMLAttributes<HTMLInputEleme
       readOnly
       {...props}
       type="checkbox"
-      className={`checkbox w-5 h-5 rounded-md border border-solid border-slate-300 checked:border-primary-400 disabled:opacity-40 ${cbClasses}`}
+      className={`checkbox w-5 h-5 rounded-md border border-solid border-border checked:border-accent disabled:opacity-40 ${cbClasses}`}
     />
   );
 }

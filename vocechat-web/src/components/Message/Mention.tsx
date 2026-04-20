@@ -17,7 +17,7 @@ const Mention = ({ uid, popover = true, cid, textOnly = false }: Props) => {
   const user = usersData[uid];
   if (!user) return null;
   if (textOnly) return <>{`@${user.name}`}</>;
-  if (!popover) return <span className="px-0.5 text-primary-400">{`@${user.name}`}</span>;
+  if (!popover) return <span className="px-0.5 text-accent">{`@${user.name}`}</span>;
   return (
     <Tippy
       interactive
@@ -25,7 +25,7 @@ const Mention = ({ uid, popover = true, cid, textOnly = false }: Props) => {
       trigger="click"
       content={<Profile uid={uid} type="card" cid={cid} />}
     >
-      <span className="px-0.5 text-primary-400 cursor-pointer">{`@${user.name}`}</span>
+      <span className="px-0.5 text-accent cursor-pointer">{`@${user.name}`}</span>
     </Tippy>
   );
 };
