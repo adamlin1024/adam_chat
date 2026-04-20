@@ -8,7 +8,6 @@ import "./assets/index.css";
 import "./libs/DayjsSetting";
 import "./libs/TippySetting";
 
-import MobileAppTip from "./components/MobileAppTip";
 import NewVersion from "./components/NewVersion";
 import ReduxRoutes from "./routes";
 import { register } from "./serviceWorkerRegistration";
@@ -37,7 +36,6 @@ root.render(
     <DndProvider backend={HTML5Backend}>
       <ReduxRoutes />
     </DndProvider>
-    <MobileAppTip />
   </Suspense>
 );
 
