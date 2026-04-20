@@ -7,15 +7,13 @@ CONFIG_FILE="/home/vocechat/config.toml"
 mkdir -p "$DATA_DIR/wwwroot"
 cp -rf /app/default-wwwroot/. "$DATA_DIR/wwwroot/"
 
-# Generate config file
-cat > "$CONFIG_FILE" << EOF
-[network]
-bind = "0.0.0.0:3000"
+# Find sample config in image
+echo "=== Searching for sample configs ==="
+find / -name "*.toml" -type f 2>/dev/null || true
+find /home/vocechat-server -type f 2>/dev/null || true
 
-[system]
-data_dir = "$DATA_DIR"
-EOF
+echo "=== Binary help ==="
+/home/vocechat-server/vocechat-server --help 2>&1 || true
 
-SERVER="/home/vocechat-server/vocechat-server"
-echo "Starting: $SERVER $CONFIG_FILE"
-exec "$SERVER" "$CONFIG_FILE"
+echo "=== Exiting for inspection ==="
+exit 1
