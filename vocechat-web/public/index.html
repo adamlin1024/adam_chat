@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
     />
     <meta name="theme-color" content="#08090b" />
     <meta name="description" content="Neko-talk — Your private chat space" />
@@ -176,10 +176,10 @@
     /* iOS safari */
     @supports (-webkit-touch-callout: none) {
       body {
-        height: -webkit-fill-available;
+        height: 100dvh;
       }
       .h-screen {
-        height: -webkit-fill-available !important ;
+        height: 100dvh !important;
         overflow: auto;
       }
     }
