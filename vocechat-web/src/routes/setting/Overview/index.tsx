@@ -9,7 +9,7 @@ import FrontendURL from "./FrontendURL";
 import Language from "./language";
 import OnlineStatus from "./OnlineStatus";
 import MessageSound from "./MessageSound";
-import Server from "./Server";
+import Server from "./server";
 import { shallowEqual } from "react-redux";
 import OnlyAdminCreateGroup from "./OnlyAdminCreateGroup";
 import OnlyAdminCanSeeChannelMembers from "./OnlyAdminSeeChannelMembers";
