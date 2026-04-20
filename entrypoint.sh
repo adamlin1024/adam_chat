@@ -1,13 +1,12 @@
 #!/bin/sh
 set -e
 
-DATA_DIR="/home/vocechat/data"
-
+# Use the default config's data dir (relative to binary location)
+DATA_DIR="/home/vocechat-server/data"
 mkdir -p "$DATA_DIR/wwwroot"
 cp -rf /app/default-wwwroot/. "$DATA_DIR/wwwroot/"
 
-echo "=== Default config contents ==="
-cat /home/vocechat-server/config/config.toml
-
-echo "=== Exiting for inspection ==="
-exit 1
+# Run from binary directory so it finds config/config.toml by default
+cd /home/vocechat-server
+echo "Starting vocechat-server with default config..."
+exec ./vocechat-server
