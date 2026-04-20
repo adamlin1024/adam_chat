@@ -325,7 +325,7 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     <>
       <div
         id={`VOCECHAT_FEED_${context}_${id}`}
-        className="px-1 md:px-4 py-4.5 overflow-x-hidden overflow-y-scroll flex-1"
+        className="px-3 md:px-4 py-4.5 overflow-x-hidden overflow-y-scroll flex-1"
       >
         <Virtualizer
           ref={vRef}
