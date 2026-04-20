@@ -154,7 +154,7 @@ export default function Register() {
       </div>
 
       <form
-        className="flex flex-col gap-5 md:min-w-[360px] w-full"
+        className="flex flex-col gap-5 w-full"
         onSubmit={handleReg}
         autoSave={"false"}
         autoComplete={"true"}
