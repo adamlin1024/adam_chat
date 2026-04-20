@@ -20,7 +20,11 @@ const userMsgSlice = createSlice({
     },
     fillUserMsg(state, action: PayloadAction<{ [id: number]: any }>) {
       state.ids = Object.keys(action.payload).map((k) => +k);
-      state.byId = action.payload;
+      const sorted: { [id: number]: number[] } = {};
+      for (const [id, mids] of Object.entries(action.payload)) {
+        sorted[+id] = Array.isArray(mids) ? [...mids].sort((a: number, b: number) => a - b) : mids;
+      }
+      state.byId = sorted;
     },
     addUserMsg(state, action: PayloadAction<{ id: number; mid: number; local_id?: number }>) {
       const { id, mid, local_id } = action.payload;

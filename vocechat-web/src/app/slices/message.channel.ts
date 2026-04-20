@@ -18,7 +18,11 @@ const channelMsgSlice = createSlice({
       state[id] = [];
     },
     fillChannelMsg(state, action: PayloadAction<State>) {
-      return action.payload;
+      const sorted: State = {};
+      for (const [id, mids] of Object.entries(action.payload)) {
+        sorted[+id] = Array.isArray(mids) ? [...mids].sort((a: number, b: number) => a - b) : mids;
+      }
+      return sorted;
     },
     addChannelMsg(state, action: PayloadAction<{ id: number; mid: number; local_id?: any }>) {
       const { id, mid, local_id = null } = action.payload;
