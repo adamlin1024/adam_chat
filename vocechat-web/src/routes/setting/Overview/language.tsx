@@ -5,10 +5,11 @@ import SettingBlock from "@/components/SettingBlock";
 import StyledRadio from "@/components/styled/Radio";
 
 // type Props = {}
-export type LanguageType = "en" | "zh" | "jp" | "tr" | "pt" | "es" | "fr" | "ru" | "de";
+export type LanguageType = "en" | "zh-TW" | "zh" | "jp" | "tr" | "pt" | "es" | "fr" | "ru" | "de";
 export const LangMap: Record<LanguageType, string> = {
   en: "English",
-  zh: "中文",
+  "zh-TW": "中文（繁體）",
+  zh: "中文（簡體）",
   tr: "Türkçe",
   jp: "日本語",
   pt: "Portuguese",
@@ -36,7 +37,7 @@ const LanguageList = ({
       <StyledRadio
         options={Object.values(LangMap)}
         values={Object.keys(LangMap)}
-        value={i18n.language.split("-")[0]}
+        value={i18n.language}
         onChange={(v) => {
           const _v = v as LanguageType;
           handleGuestToggle(_v);

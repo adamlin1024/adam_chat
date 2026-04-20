@@ -35,7 +35,7 @@ export const resources = {
 } as const;
 i18n.on("languageChanged", (lng) => {
   // 匹配dayjs的多语言关键字
-  dayjs.locale(lng === "zh" ? "zh-cn" : lng === "jp" ? "ja" : lng);
+  dayjs.locale(lng === "zh" ? "zh-cn" : lng === "zh-TW" ? "zh-tw" : lng === "jp" ? "ja" : lng);
 });
 i18n
   // load translation using http -> see /public/locales (i.e. https://github.com/i18next/react-i18next/tree/master/example/react/public/locales)
