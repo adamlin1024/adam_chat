@@ -11,12 +11,14 @@ ENV REACT_APP_RELEASE=true
 ENV GENERATE_SOURCEMAP=false
 RUN node scripts/build.js
 
-# Stage 2: VoceChat server + nginx reverse proxy
+# Stage 2: Get Caddy static binary (fully static Go binary, no deps needed)
+FROM caddy:2 AS caddy-source
+
+# Stage 3: VoceChat server + Caddy reverse proxy
 FROM privoce/vocechat-server:latest
-USER root
-RUN apt-get update && apt-get install -y --no-install-recommends nginx && rm -rf /var/lib/apt/lists/*
+COPY --from=caddy-source /usr/bin/caddy /usr/bin/caddy
 COPY --from=frontend-builder /build/build /app/wwwroot
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY Caddyfile /etc/caddy/Caddyfile
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

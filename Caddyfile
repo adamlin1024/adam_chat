@@ -1,0 +1,15 @@
+:3000 {
+    root * /app/wwwroot
+    encode gzip
+
+    handle /api/* {
+        reverse_proxy localhost:3001 {
+            flush_interval -1
+        }
+    }
+
+    handle {
+        try_files {path} {path}/ /index.html
+        file_server
+    }
+}
