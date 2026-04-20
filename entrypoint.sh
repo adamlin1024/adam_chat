@@ -1,9 +1,19 @@
 #!/bin/sh
 set -e
 
-# Copy custom frontend to data volume on every deploy
-mkdir -p /data/wwwroot
-cp -rf /app/default-wwwroot/. /data/wwwroot/
+DATA_DIR="/home/vocechat/data"
+mkdir -p "$DATA_DIR/wwwroot"
+cp -rf /app/default-wwwroot/. "$DATA_DIR/wwwroot/"
 
-# Start VoceChat server
-exec /app/vocechat-server -d /data
+# Find vocechat-server binary
+SERVER=$(which vocechat-server 2>/dev/null \
+  || find / -maxdepth 4 -name "vocechat-server" -type f 2>/dev/null | head -1)
+
+if [ -z "$SERVER" ]; then
+  echo "ERROR: vocechat-server binary not found. Contents of /:"
+  ls /
+  exit 1
+fi
+
+echo "Starting: $SERVER -d $DATA_DIR"
+exec "$SERVER" -d "$DATA_DIR"
