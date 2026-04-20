@@ -173,13 +173,15 @@
       width: 100%;
       height: 100%;
     }
-    /* iOS safari */
+    /* iOS safari — use --app-height set by visualViewport JS below */
     @supports (-webkit-touch-callout: none) {
       body {
-        height: 100dvh;
+        position: fixed;
+        width: 100%;
+        height: var(--app-height, 100svh);
       }
       .h-screen {
-        height: 100dvh !important;
+        height: var(--app-height, 100svh) !important;
         overflow: auto;
       }
     }
@@ -235,5 +237,21 @@
         navigator.serviceWorker.register('/sw.js').catch(function () {});
       });
     }
+
+    // iOS PWA keyboard fix: track visualViewport height to prevent header scroll-off
+    (function () {
+      function updateAppHeight() {
+        var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        document.documentElement.style.setProperty('--app-height', h + 'px');
+      }
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', updateAppHeight);
+        window.visualViewport.addEventListener('scroll', function () {
+          window.scrollTo(0, 0);
+        });
+      }
+      window.addEventListener('resize', updateAppHeight);
+      updateAppHeight();
+    })();
   </script>
 </html>
