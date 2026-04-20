@@ -5,15 +5,7 @@ DATA_DIR="/home/vocechat/data"
 mkdir -p "$DATA_DIR/wwwroot"
 cp -rf /app/default-wwwroot/. "$DATA_DIR/wwwroot/"
 
-# Find vocechat-server binary
-SERVER=$(which vocechat-server 2>/dev/null \
-  || find / -maxdepth 4 -name "vocechat-server" -type f 2>/dev/null | head -1)
+SERVER="/home/vocechat-server/vocechat-server"
 
-if [ -z "$SERVER" ]; then
-  echo "ERROR: vocechat-server binary not found. Contents of /:"
-  ls /
-  exit 1
-fi
-
-echo "Starting: $SERVER -d $DATA_DIR"
-exec "$SERVER" -d "$DATA_DIR"
+echo "Starting: $SERVER $DATA_DIR"
+exec "$SERVER" "$DATA_DIR"
