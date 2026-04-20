@@ -10,14 +10,13 @@ ENV REACT_APP_BUILD_TIME=0
 ENV REACT_APP_RELEASE=true
 ENV GENERATE_SOURCEMAP=false
 RUN node scripts/build.js
-# Download official md5 so VoceChat thinks webclient is already up-to-date
-RUN apk add --no-cache curl && \
-    curl -fsSL "https://github.com/Privoce/vocechat-web/releases/latest/download/web.vocechat.md5" \
-    -o /build/build/web.vocechat.md5 || true
 
-# Stage 2: VoceChat server with custom frontend bundled
+# Stage 2: VoceChat server + nginx reverse proxy
 FROM privoce/vocechat-server:latest
-COPY --from=frontend-builder /build/build /app/default-wwwroot
+USER root
+RUN apk add --no-cache nginx
+COPY --from=frontend-builder /build/build /app/wwwroot
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
