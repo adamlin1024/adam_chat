@@ -78,7 +78,7 @@ function HomePage() {
                   `flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-[120ms] ${
                     isActive || isChattingPage
                       ? "bg-bg-surface shadow-inset-hairline text-accent"
-                      : "text-fg-subtle hover:text-fg-secondary"
+                      : "text-white hover:text-white"
                   }`
                 }
                 to={chatNav}
@@ -94,7 +94,7 @@ function HomePage() {
               <NavLink
                 className={({ isActive }) =>
                   `flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-[120ms] ${
-                    isActive ? "bg-bg-surface shadow-inset-hairline text-accent" : "text-fg-subtle hover:text-fg-secondary"
+                    isActive ? "bg-bg-surface shadow-inset-hairline text-accent" : "text-white hover:text-white"
                   }`
                 }
                 to={userNav}
@@ -110,7 +110,7 @@ function HomePage() {
               <NavLink
                 className={({ isActive }) =>
                   `flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-[120ms] ${
-                    isActive ? "bg-bg-surface shadow-inset-hairline text-accent" : "text-fg-subtle hover:text-fg-secondary"
+                    isActive ? "bg-bg-surface shadow-inset-hairline text-accent" : "text-white hover:text-white"
                   }`
                 }
                 to={"/favs"}
@@ -127,7 +127,7 @@ function HomePage() {
                 <NavLink
                   className={({ isActive }) =>
                     `flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-[120ms] ${
-                      isActive ? "bg-bg-surface shadow-inset-hairline text-accent" : "text-fg-subtle hover:text-fg-secondary"
+                      isActive ? "bg-bg-surface shadow-inset-hairline text-accent" : "text-white hover:text-white"
                     }`
                   }
                   to={"/files"}

@@ -4,7 +4,6 @@ import { Outlet, useOutletContext, useSearchParams } from "react-router-dom";
 import { useCheckMagicTokenValidMutation } from "@/app/services/auth";
 import ExpiredTip from "./ExpiredTip";
 import SelectLanguage from "../../components/Language";
-import Downloads from "../../components/Downloads";
 
 type ContextType = { token: string };
 export default function RegContainer() {
@@ -31,7 +30,7 @@ export default function RegContainer() {
   return (
     <>
       <div className="flex min-h-screen items-center justify-center bg-bg-app overflow-x-hidden overflow-y-auto">
-        <div className="w-[360px] rounded-xl border border-border bg-bg-elevated px-[26px] py-7 shadow-overlay max-h-[95vh] overflow-y-auto overflow-x-hidden">
+        <div className="w-full max-w-[360px] mx-4 rounded-xl border border-border bg-bg-elevated px-[26px] py-7 shadow-overlay max-h-[95vh] overflow-y-auto overflow-x-hidden">
           {magic_token ? (
             tokenIsValid ? (
               <Outlet context={{ token }} />
@@ -41,7 +40,6 @@ export default function RegContainer() {
           ) : (
             <Outlet context={{ token }} />
           )}
-          <Downloads />
         </div>
       </div>
       <SelectLanguage />
