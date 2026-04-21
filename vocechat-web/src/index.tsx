@@ -8,14 +8,12 @@ import "./assets/index.css";
 import "./libs/DayjsSetting";
 import "./libs/TippySetting";
 
-import NewVersion from "./components/NewVersion";
 import ReduxRoutes from "./routes";
 import { register } from "./serviceWorkerRegistration";
 // import i18n (needs to be bundled ;))
 import "./i18n";
 import "./libs/polyfills";
 
-import { isDarkMode, reloadCurrentPage } from "./utils";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 // dark-only design — always apply dark class
@@ -39,19 +37,4 @@ root.render(
   </Suspense>
 );
 
-register({
-  // onSuccess: () => {
-  //   toast.success("Service Worker Installed");
-  // },
-  onUpdate: (reg) => {
-    const handleUpdate = () => {
-      reg.unregister().then(() => {
-        reloadCurrentPage();
-      });
-    };
-    toast((t) => <NewVersion id={t.id} handleUpdate={handleUpdate} />, {
-      duration: Infinity,
-      position: "top-right"
-    });
-  }
-});
+register({});
