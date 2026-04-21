@@ -12,8 +12,6 @@ import useDraft from "@/hooks/useDraft";
 import useSendMessage from "@/hooks/useSendMessage";
 import useUploadFile from "@/hooks/useUploadFile";
 import useUserOperation from "@/hooks/useUserOperation";
-import StyledButton from "../styled/Button";
-// import TextInput from "../TextInput";
 import Replying from "./Replying";
 import Toolbar from "./Toolbar";
 import UploadFileList from "./UploadFileList";
@@ -74,8 +72,6 @@ const Send: FC<IProps> = ({
   const { sendMessage } = useSendMessage({ context, from: from_uid, to: id });
 
   const insertEmoji = (emoji: Emoji) => {
-    console.log({ emoji });
-
     if (mode == Modes.markdown && markdownEditor) {
       // markdown insert emoji
       const { native } = emoji.skins[0];
@@ -233,7 +229,3 @@ const Send: FC<IProps> = ({
 };
 
 export default Send;
-// export default memo(Send, (prev, next) => {
-//   console.log("send name", prev.name, next.name);
-//   return prev.name == next.name;
-// });

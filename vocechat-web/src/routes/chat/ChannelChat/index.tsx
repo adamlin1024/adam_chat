@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState, useMemo } from "react";
+import { memo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { shallowEqual, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,7 +8,6 @@ import { updateChannelVisibleAside } from "@/app/slices/footprint";
 import { updateRememberedNavs } from "@/app/slices/ui";
 import { useAppSelector } from "@/app/store";
 import { useGetGroupAnnouncementQuery } from "@/app/services/server";
-import ChannelIcon from "@/components/ChannelIcon";
 import GoBackNav from "@/components/GoBackNav";
 import Tooltip from "@/components/Tooltip";
 import MessageSearch from "@/components/MessageSearch";
@@ -26,7 +25,8 @@ import Members from "./Members";
 import PinList from "./PinList";
 import { KEY_ADMIN_SEE_CHANNEL_MEMBERS } from "@/app/config";
 import useServerExtSetting from "@/hooks/useServerExtSetting";
-import { compareVersion } from "@/utils";
+import useIsAnnouncementSupported from "@/hooks/useIsAnnouncementSupported";
+import useAnnouncementDisplay from "@/hooks/useAnnouncementDisplay";
 
 type Props = {
   cid?: number;
@@ -43,21 +43,20 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
   const visibleAside = useAppSelector((store) => store.footprint.channelAsides[cid], shallowEqual);
   const userIds = useAppSelector((store) => store.users.ids, shallowEqual);
   const data = useAppSelector((store) => store.channels.byId[cid], shallowEqual);
-  const currentVersion = useAppSelector((store) => store.server.version, shallowEqual);
+  const isAnnouncementSupported = useIsAnnouncementSupported();
 
-  // Check if server version supports announcements
-  const isAnnouncementSupported = useMemo(() => {
-    return currentVersion && compareVersion(currentVersion, "0.5.13") >= 0;
-  }, [currentVersion]);
-
-  // Announcement state - only fetch if version is supported
   const { data: announcementResponse } = useGetGroupAnnouncementQuery(cid, {
-    skip: !cid || !isAnnouncementSupported
+    skip: !cid || !isAnnouncementSupported,
   });
   const announcement = announcementResponse?.announcement;
-  const [showModal, setShowModal] = useState(false);
-  const [showBanner, setShowBanner] = useState(false);
-  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const {
+    showModal,
+    showBanner,
+    bannerDismissed,
+    handleModalClose,
+    handleBannerExpand,
+    handleBannerDismiss,
+  } = useAnnouncementDisplay(cid, announcement);
 
   useEffect(() => {
     if (!data) {
@@ -72,29 +71,6 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
     };
   }, [pathname]);
 
-  // Handle announcement read status
-  useEffect(() => {
-    if (!announcement || !cid) {
-      setShowModal(false);
-      setShowBanner(false);
-      return;
-    }
-
-    const storageKey = `announcement_read_${cid}`;
-    const storedTimestamp = localStorage.getItem(storageKey);
-
-    if (!storedTimestamp || new Date(storedTimestamp) < new Date(announcement.updated_at)) {
-      // Unread announcement - show modal
-      setShowModal(true);
-      setShowBanner(false);
-      setBannerDismissed(false);
-    } else {
-      // Read announcement - show banner only
-      setShowModal(false);
-      setShowBanner(true);
-    }
-  }, [announcement, cid]);
-
   const toggleMembersVisible = () => {
     dispatch(
       updateChannelVisibleAside({
@@ -106,23 +82,6 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
 
   const handleLocate = (mid: number) => {
     feedRef.current?.scrollToMessage(mid);
-  };
-
-  const handleModalClose = () => {
-    if (announcement) {
-      const storageKey = `announcement_read_${cid}`;
-      localStorage.setItem(storageKey, new Date(announcement.updated_at).toISOString());
-    }
-    setShowModal(false);
-    setShowBanner(true);
-  };
-
-  const handleBannerExpand = () => {
-    setShowModal(true);
-  };
-
-  const handleBannerDismiss = () => {
-    setBannerDismissed(true);
   };
 
   if (!data) return null;

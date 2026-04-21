@@ -1,7 +1,6 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "@/app/store";
 import {
   useGetGroupAnnouncementQuery,
   useCreateOrUpdateGroupAnnouncementMutation,
@@ -13,22 +12,18 @@ import Button from "@/components/styled/Button";
 import Textarea from "@/components/styled/Textarea";
 import MarkdownRender from "@/components/MarkdownRender";
 import { shallowEqual } from "react-redux";
-import { compareVersion } from "@/utils";
+import { useAppSelector } from "@/app/store";
+import useIsAnnouncementSupported from "@/hooks/useIsAnnouncementSupported";
 
 export default function Announcement({ id = 0 }) {
   const { t } = useTranslation("setting", { keyPrefix: "channel" });
   const { t: ct } = useTranslation();
   const loginUser = useAppSelector((store) => store.authData.user, shallowEqual);
   const channel = useAppSelector((store) => store.channels.byId[id], shallowEqual);
-  const currentVersion = useAppSelector((store) => store.server.version, shallowEqual);
-
-  // Check if server version supports announcements
-  const isVersionSupported = useMemo(() => {
-    return currentVersion && compareVersion(currentVersion, "0.5.13") >= 0;
-  }, [currentVersion]);
+  const isAnnouncementSupported = useIsAnnouncementSupported();
 
   const { data: announcementResponse, refetch } = useGetGroupAnnouncementQuery(id, {
-    skip: !id || !isVersionSupported
+    skip: !id || !isAnnouncementSupported,
   });
   const [createOrUpdate, { isSuccess: saveSuccess, isLoading: saving }] =
     useCreateOrUpdateGroupAnnouncementMutation();

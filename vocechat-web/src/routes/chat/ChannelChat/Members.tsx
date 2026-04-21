@@ -27,7 +27,6 @@ const Members = ({ uids, addVisible, ownerId, cid, membersVisible }: Props) => {
   const toggleAddVisible = () => {
     setAddMemberModalVisible((prev) => !prev);
   };
-  console.log({ sortedUsers });
   useEffect(() => {
     setSortedUsers(sortUsersByRole(users.filter((u) => uids.includes(u.uid))));
   }, [uids, users]);

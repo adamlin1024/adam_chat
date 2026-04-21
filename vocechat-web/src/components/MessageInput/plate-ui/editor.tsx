@@ -16,8 +16,6 @@ const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
     useKey(
       "Enter",
       (evt) => {
-        console.log("enter", editorRef, evt);
-
         if (!editorRef) return;
         if (evt.shiftKey || evt.ctrlKey || evt.altKey || evt.isComposing) {
           return true;
