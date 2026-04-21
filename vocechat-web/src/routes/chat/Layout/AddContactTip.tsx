@@ -47,28 +47,28 @@ const AddContactTip = (props: Props) => {
   if (targetUser.status == "added") return null;
   const blocked = targetUser.status == "blocked";
   return (
-    <div className="px-6 py-2.5 flex items-center justify-between border-b border-border-subtle bg-bg-canvas">
-      <span className="text-[11px] text-fg-muted tracking-[-0.005em]">
+    <div className="px-4 pt-2.5 pb-3 flex flex-col gap-2 border-b border-border-subtle bg-bg-canvas">
+      <span className="text-[12px] text-fg-muted text-center">
         {blocked ? t("contact_block_tip") : t("contact_tip")}
       </span>
-      <ul className="flex gap-2">
+      <div className="flex gap-2">
         {!blocked && (isAdmin || addFriendEnable) && (
-          <li
-            className="cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-medium text-accent border border-border bg-bg-surface hover:border-border-strong transition-colors duration-[120ms]"
+          <button
+            className="flex-1 py-2 rounded-lg text-[13px] font-medium text-accent border border-accent hover:bg-accent/10 transition-colors duration-[120ms] flex items-center justify-center gap-1.5"
             onClick={handleContactStatus.bind(null, "add")}
           >
-            <IconAdd className="w-3.5 h-3.5 stroke-accent fill-none" />
-            <span>{t("add_contact")}</span>
-          </li>
+            <IconAdd className="w-4 h-4 stroke-accent fill-none" />
+            {t("add_contact")}
+          </button>
         )}
-        <li
-          className="cursor-pointer flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-medium text-fg-secondary border border-border bg-bg-surface hover:border-border-strong transition-colors duration-[120ms]"
+        <button
+          className="flex-1 py-2 rounded-lg text-[13px] font-medium text-fg-secondary border border-border hover:bg-bg-surface transition-colors duration-[120ms] flex items-center justify-center gap-1.5"
           onClick={blocked ? handleContactStatus.bind(null, "unblock") : handleContactStatus.bind(null, "block")}
         >
-          <IconBlock className="w-3.5 h-3.5 stroke-current fill-none" />
-          <span>{blocked ? t("unblock") : t("block")}</span>
-        </li>
-      </ul>
+          <IconBlock className="w-4 h-4 stroke-current fill-none" />
+          {blocked ? t("unblock") : t("block")}
+        </button>
+      </div>
     </div>
   );
 };

@@ -164,8 +164,8 @@ const VoiceChat = ({ id, context = "channel" }: Props) => {
 
   return (
     <Tooltip disabled={visible} tip={t("voice")} placement="left">
-      <li className={`relative group`}>
-        <IconHeadphone className={"fill-gray-500"} role="button" onClick={handleOnClick} />
+      <li className={`relative group h-9 w-9 flex-center cursor-pointer`}>
+        <IconHeadphone className={"fill-gray-500 w-5 h-5"} role="button" onClick={handleOnClick} />
         {/* {visible ? null : (
           <>
             {memberCount > 0 && (

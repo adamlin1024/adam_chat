@@ -14,6 +14,7 @@ import MessageSearch from "@/components/MessageSearch";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import AnnouncementModal from "@/components/AnnouncementModal";
 import IconFav from "@/assets/icons/bookmark.svg";
+import IconSearch from "@/assets/icons/search.svg";
 import IconPeople from "@/assets/icons/people.svg";
 import IconPin from "@/assets/icons/pin.svg";
 import FavListModal from "../FavListModal";
@@ -34,6 +35,7 @@ type Props = {
 };
 function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
   const [favModalVisible, setFavModalVisible] = useState(false);
+  const [searchVisible, setSearchVisible] = useState(false);
   const { getExtSetting } = useServerExtSetting();
   const { t } = useTranslation("chat");
   const { pathname } = useLocation();
@@ -61,7 +63,6 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
 
   useEffect(() => {
     if (!data) {
-      // channel 不存在了 回首页
       navigate("/chat");
     }
   }, [data]);
@@ -95,6 +96,7 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
   const canViewMembers = loginUser?.is_admin ? true : !onlyAdminCanSeeMembers;
   return (
     <>
+      <FavListModal visible={favModalVisible} onClose={() => setFavModalVisible(false)} cid={cid} />
       <Layout
         to={cid}
         context="channel"
@@ -127,7 +129,6 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
                 <IconFav className="fill-fg-subtle hover:fill-fg-secondary transition-colors" />
               </li>
             </Tooltip>
-            <FavListModal visible={favModalVisible} onClose={() => setFavModalVisible(false)} cid={cid} />
             {canViewMembers && (
               <li className={`${toolClass}`} onClick={toggleMembersVisible}>
                 <Tooltip tip={t("channel_members")} placement="left">
@@ -139,14 +140,45 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
         }
         header={
           <>
-            <header className="h-14 flex-shrink-0 flex items-center px-4 md:px-3 border-b border-border-subtle bg-bg-canvas relative">
-              <GoBackNav />
-              <span className="absolute left-1/2 -translate-x-1/2 font-semibold text-sm text-fg-primary truncate max-w-[60%]">
-                {name}
-              </span>
-              <div className="ml-auto">
-                <MessageSearch context="channel" id={cid} onLocate={handleLocate} />
-              </div>
+            <header className="h-14 flex-shrink-0 flex items-center px-4 md:px-3 gap-2 border-b border-border-subtle bg-bg-canvas relative">
+              {searchVisible ? (
+                <MessageSearch
+                  context="channel"
+                  id={cid}
+                  onLocate={handleLocate}
+                  headerInputMode
+                  onHide={() => setSearchVisible(false)}
+                />
+              ) : (
+                <>
+                  <GoBackNav />
+                  <span className="flex-1 ml-7 md:ml-0 font-semibold text-sm text-fg-primary truncate">
+                    {name}
+                  </span>
+                  <ul className="flex items-center gap-2 shrink-0">
+                    <li>
+                      <button
+                        onClick={() => setSearchVisible(true)}
+                        className="h-9 w-9 flex-center rounded-md text-fg-subtle hover:text-fg-secondary transition-colors"
+                      >
+                        <IconSearch className="fill-current w-5 h-5" />
+                      </button>
+                    </li>
+                    {/* Mobile only — desktop uses aside */}
+                    <div className="md:hidden flex items-center gap-2">
+                      <VoiceChat context="channel" id={cid} />
+                      <Tooltip tip={t("fav")} placement="left">
+                        <li
+                          className="h-9 w-9 flex-center cursor-pointer fav text-fg-subtle hover:text-fg-secondary transition-colors"
+                          onClick={() => setFavModalVisible(true)}
+                        >
+                          <IconFav className="fill-current w-5 h-5" />
+                        </li>
+                      </Tooltip>
+                    </div>
+                  </ul>
+                </>
+              )}
             </header>
             {announcement && showBanner && !bannerDismissed && (
               <AnnouncementBanner
