@@ -24,6 +24,7 @@ import FavoritesPage from "./favs";
 import FilesPage from "./files";
 import HomePage from "./home";
 import ResourceManagement from "./resources";
+import SettingPage from "./setting";
 
 // 少用頁面：保留 lazy，減少首次載入體積
 const RegBasePage = lazy(() => import("./reg"));
@@ -36,7 +37,6 @@ const CallbackPage = lazy(() => import("./callback"));
 const OnboardingPage = lazy(() => import("./onboarding"));
 const SettingChannelPage = lazy(() => import("./settingChannel"));
 const SettingDMPage = lazy(() => import("./settingDM"));
-const SettingPage = lazy(() => import("./setting"));
 const GuestLogin = lazy(() => import("./guest"));
 
 let toastId: string;
@@ -184,11 +184,7 @@ const PageRoutes = () => {
           <Route path="setting">
             <Route
               path=":nav?"
-              element={
-                <LazyIt key="setting">
-                  <SettingPage />
-                </LazyIt>
-              }
+              element={<SettingPage />}
             />
             <Route
               path="channel/:cid/:nav?"

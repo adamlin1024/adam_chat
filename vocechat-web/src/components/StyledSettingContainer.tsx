@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode, useEffect, useState } from "react";
+import { FC, PropsWithChildren, ReactNode, useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 
@@ -7,7 +7,6 @@ import MobileNavs from "../routes/home/MobileNavs";
 import { Nav } from "../routes/settingChannel/navs";
 import GoBackNav from "./GoBackNav";
 
-// import ErrorCatcher from "./ErrorCatcher";
 export interface Danger {
   title: string;
   handler: () => void;
@@ -32,12 +31,43 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
   children
 }) => {
   const [animated, setAnimated] = useState(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const dragStartY = useRef(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
   useEffect(() => {
     requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
     return () => setAnimated(false);
   }, []);
 
   const isMobile = window.innerWidth < 768;
+
+  const handleDragStart = (e: React.TouchEvent) => {
+    dragStartY.current = e.touches[0].clientY;
+    setIsDragging(true);
+  };
+
+  const handleDragMove = (e: React.TouchEvent) => {
+    const delta = e.touches[0].clientY - dragStartY.current;
+    if (delta > 0) setDragOffset(delta);
+  };
+
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    const threshold = 80;
+    if (dragOffset > threshold) {
+      const sheetH = sheetRef.current?.offsetHeight ?? window.innerHeight;
+      setDragOffset(sheetH);
+      setAnimated(false);
+      setTimeout(() => {
+        setDragOffset(0);
+        closeModal();
+      }, 280);
+    } else {
+      setDragOffset(0);
+    }
+  };
 
   if (isMobile) {
     return (
@@ -50,22 +80,30 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
         />
         {/* Sheet */}
         <div
+          ref={sheetRef}
           className="absolute bottom-0 left-0 right-0 bg-bg-sidebar flex flex-col overflow-hidden"
           style={{
             height: "92vh",
             borderRadius: "10px 10px 0 0",
-            transform: animated ? "translateY(0)" : "translateY(100%)",
-            transition: "transform 320ms cubic-bezier(0.32,0.72,0,1)",
+            transform: dragOffset > 0
+              ? `translateY(${dragOffset}px)`
+              : (animated ? "translateY(0)" : "translateY(100%)"),
+            transition: isDragging ? "none" : "transform 320ms cubic-bezier(0.32,0.72,0,1)",
           }}
         >
-          {/* Sheet header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle shrink-0">
+          {/* Sheet header — drag area */}
+          <div
+            className="flex items-center justify-between px-4 py-3 border-b border-border-subtle shrink-0 touch-none select-none"
+            onTouchStart={handleDragStart}
+            onTouchMove={handleDragMove}
+            onTouchEnd={handleDragEnd}
+          >
             {nav ? (
               <NavLink to={pathPrefix} className="p-1 -ml-1">
-                <IconBack className="w-6 h-6 fill-fg-secondary" />
+                <IconBack className="w-5 h-5 fill-fg-secondary" />
               </NavLink>
             ) : (
-              <div className="w-8" />
+              <div className="w-7" />
             )}
             <span className="font-semibold text-sm text-fg-primary">
               {nav ? nav.title : title}
@@ -76,7 +114,6 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
           {/* 選單列表 或 子頁內容 */}
           <div className="flex-1 overflow-y-auto">
             {!nav ? (
-              // 一級選單
               <div className="px-4 py-4">
                 {navs.map(({ title: groupTitle, items }) => (
                   <div key={groupTitle} className="mb-6">
@@ -116,7 +153,6 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                 })}
               </div>
             ) : (
-              // 子頁內容
               <div className="px-4 py-4">{children}</div>
             )}
           </div>
@@ -139,7 +175,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
             onClick={closeModal}
             className="hidden md:flex gap-2 items-center text-sm md:text-base cursor-pointer mb-8 font-bold text-fg-primary"
           >
-            <IconBack className="dark:fill-gray-400" /> {title}
+            <IconBack className="w-5 h-5 dark:fill-gray-400" /> {title}
           </h2>
           {navs.map(({ title, items }) => {
             return (
@@ -215,9 +251,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
               {nav.title}
             </h4>
           )}
-          {/* <ErrorCatcher> */}
           {children}
-          {/* </ErrorCatcher> */}
         </div>
       </div>
       {!nav && <MobileNavs />}
