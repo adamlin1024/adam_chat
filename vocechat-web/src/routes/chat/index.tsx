@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useMatch, useParams } from "react-router-dom";
 import clsx from "clsx";
 
@@ -18,10 +18,56 @@ import SessionList from "./SessionList";
 import VoiceFullscreen from "./VoiceFullscreen";
 import { shallowEqual } from "react-redux";
 
+const SESSION_WIDTH_KEY = "session_list_width";
+const DEFAULT_WIDTH = 270;
+const MIN_WIDTH = 200;
+const MAX_WIDTH = 480;
+
 function ChatPage() {
   const isHomePath = useMatch(`/`);
   const isChatHomePath = useMatch(`/chat`);
   const [sessionListVisible, setSessionListVisible] = useState(false);
+  const [sideWidth, setSideWidth] = useState(() => {
+    const stored = localStorage.getItem(SESSION_WIDTH_KEY);
+    return stored ? Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, parseInt(stored))) : DEFAULT_WIDTH;
+  });
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const startWidth = useRef(0);
+  const currentWidth = useRef(sideWidth);
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      const newWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startWidth.current + e.clientX - startX.current));
+      currentWidth.current = newWidth;
+      setSideWidth(newWidth);
+    };
+    const onMouseUp = () => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "none" === document.body.style.userSelect ? "" : document.body.style.userSelect;
+      document.body.style.userSelect = "";
+      localStorage.setItem(SESSION_WIDTH_KEY, String(currentWidth.current));
+    };
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, []);
+
+  const handleDragStart = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    startX.current = e.clientX;
+    startWidth.current = sideWidth;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+    e.preventDefault();
+  };
+
   const [channelModalVisible, setChannelModalVisible] = useState(false);
   const [usersModalVisible, setUsersModalVisible] = useState(false);
   const { channel_id = 0, user_id = 0 } = useParams();
@@ -62,6 +108,8 @@ function ChatPage() {
   const dmChatVisible = user_id != 0 && aside !== "voice_fullscreen";
   const isMainPath = isHomePath || isChatHomePath;
   const context = channel_id !== 0 ? "channel" : "dm";
+  const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+  const leftStyle = isDesktop ? { width: sideWidth, minWidth: sideWidth, maxWidth: sideWidth } : undefined;
   const contextId = (+channel_id || callingTo) ?? 0;
   console.log("fffff", channel_id, user_id, aside, channelChatVisible);
 
@@ -85,17 +133,25 @@ function ChatPage() {
         )}
         <div
           className={clsx(
-            "left-container flex-col md:rounded-l-lg w-full h-screen md:h-full md:max-w-[270px] md:min-w-[260px] border-r border-border-subtle bg-bg-sidebar",
+            "left-container flex-col md:rounded-l-lg w-full h-screen md:h-full bg-bg-sidebar",
             isMainPath ? "flex" : "hidden md:flex"
           )}
+          style={leftStyle}
         >
           <Server readonly={isGuest} />
           {isGuest ? <GuestSessionList /> : <SessionList tempSession={tmpSession} />}
           <RTCWidget id={+contextId} context={context} />
         </div>
+        {/* Resizable divider — desktop only */}
+        <div
+          className="hidden md:flex items-center justify-center w-2 flex-shrink-0 cursor-col-resize group"
+          onMouseDown={handleDragStart}
+        >
+          <div className="w-px h-full bg-border-subtle group-hover:bg-accent/50 transition-colors duration-150" />
+        </div>
         <div
           className={clsx(
-            `right-container md:rounded-r-lg w-full bg-bg-canvas`,
+            `right-container md:rounded-r-lg flex-1 min-w-0 bg-bg-canvas`,
             placeholderVisible && "h-full flex-center",
             isMainPath && "hidden md:flex"
           )}
