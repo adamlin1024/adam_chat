@@ -5,7 +5,6 @@ import Tippy from "@tippyjs/react";
 import { useAppSelector } from "@/app/store";
 import GoBackNav from "@/components/GoBackNav";
 import Tooltip from "@/components/Tooltip";
-import User from "@/components/User";
 import MessageSearch from "@/components/MessageSearch";
 import FavIcon from "@/assets/icons/bookmark.svg";
 import FavList from "../FavList";
@@ -61,9 +60,11 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
         </ul>
       }
       header={
-        <header className="h-14 flex-shrink-0 box-border px-4 md:px-3 flex items-center justify-between border-b border-border-subtle bg-bg-canvas">
+        <header className="h-14 flex-shrink-0 box-border px-4 md:px-3 flex items-center justify-between border-b border-border-subtle bg-bg-canvas relative">
           <GoBackNav />
-          <User interactive={false} uid={currUser.uid} enableNavToSetting={true} />
+          <span className="absolute left-1/2 -translate-x-1/2 font-semibold text-sm text-fg-primary truncate max-w-[60%]">
+            {currUser.name}
+          </span>
           <MessageSearch context="dm" id={uid} onLocate={handleLocate} />
         </header>
       }
