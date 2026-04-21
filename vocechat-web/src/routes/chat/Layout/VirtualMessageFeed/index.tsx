@@ -156,13 +156,17 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
+    let timer: ReturnType<typeof setTimeout>;
     const handleResize = () => {
-      if (stickToBottomRef.current) {
-        requestAnimationFrame(() => scrollToBottom());
-      }
+      if (!stickToBottomRef.current) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => scrollToBottom(), 50);
     };
     vv.addEventListener("resize", handleResize);
-    return () => vv.removeEventListener("resize", handleResize);
+    return () => {
+      vv.removeEventListener("resize", handleResize);
+      clearTimeout(timer);
+    };
   }, [scrollToBottom]);
 
   // Reset isPrepend after layout
