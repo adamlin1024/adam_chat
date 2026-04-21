@@ -53,17 +53,20 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
     if (delta > 0) setDragOffset(delta);
   };
 
+  const animateClose = () => {
+    const sheetH = sheetRef.current?.offsetHeight ?? window.innerHeight;
+    setDragOffset(sheetH);
+    setAnimated(false);
+    setTimeout(() => {
+      setDragOffset(0);
+      closeModal();
+    }, 280);
+  };
+
   const handleDragEnd = () => {
     setIsDragging(false);
-    const threshold = 80;
-    if (dragOffset > threshold) {
-      const sheetH = sheetRef.current?.offsetHeight ?? window.innerHeight;
-      setDragOffset(sheetH);
-      setAnimated(false);
-      setTimeout(() => {
-        setDragOffset(0);
-        closeModal();
-      }, 280);
+    if (dragOffset > 80) {
+      animateClose();
     } else {
       setDragOffset(0);
     }
@@ -76,7 +79,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
         <div
           className="absolute inset-0 bg-black/50 transition-opacity duration-300"
           style={{ opacity: animated ? 1 : 0 }}
-          onClick={closeModal}
+          onClick={animateClose}
         />
         {/* Sheet */}
         <div
@@ -112,7 +115,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
               <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">
                 {nav ? nav.title : title}
               </span>
-              <button onClick={closeModal} className="ml-auto text-fg-subtle p-1 text-lg leading-none">✕</button>
+              <button onClick={animateClose} className="ml-auto text-fg-subtle p-1 text-lg leading-none">✕</button>
             </div>
           </div>
 

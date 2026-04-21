@@ -6,18 +6,20 @@ import useFavMessage from "@/hooks/useFavMessage";
 import IconRemove from "@/assets/icons/close.svg";
 import IconSurprise from "@/assets/icons/emoji.surprise.svg";
 
-type Props = { cid?: number; uid?: number };
-const FavList: FC<Props> = ({ cid = null, uid = null }) => {
+type Props = { cid?: number; uid?: number; bare?: boolean };
+const FavList: FC<Props> = ({ cid = null, uid = null, bare = false }) => {
   const { t } = useTranslation("chat");
   const { favorites, removeFavorite } = useFavMessage({ cid, uid });
   const handleRemove = (evt: MouseEvent<HTMLButtonElement>) => {
     const { id = "" } = evt.currentTarget.dataset;
-    // console.log("remove fav", id);
     removeFavorite(id);
   };
   const noFavs = favorites.length == 0;
   return (
-    <div className="p-3 bg-bg-elevated border border-border rounded-xl w-full md:min-w-[460px] max-h-[70vh] md:max-h-[480px] overflow-auto shadow-overlay">
+    <div className={bare
+      ? "w-full"
+      : "p-3 bg-bg-elevated border border-border rounded-xl w-full md:min-w-[460px] max-h-[70vh] md:max-h-[480px] overflow-auto shadow-overlay"
+    }>
       <h4 className="font-mono text-[11px] font-semibold text-fg-subtle uppercase tracking-widest mb-3 px-1">
         {t("fav_msg")} · {favorites.length}
       </h4>

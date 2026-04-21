@@ -114,6 +114,7 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
                   <ActionSheet
                     visible={sheetVisible}
                     onClose={() => setSheetVisible(false)}
+                    title={ct("more")}
                     items={([
                       { title: chatTrans("remark"), handler: () => setRemarkVisible(true) },
                       agoraEnabled && type == "card" && { title: t("call"), handler: startCall },

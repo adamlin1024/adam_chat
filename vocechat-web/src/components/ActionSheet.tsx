@@ -68,29 +68,33 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
     setIsDragging(false);
     const threshold = 80;
     if (dragOffset > threshold) {
-      const sheetH = sheetRef.current?.offsetHeight ?? window.innerHeight;
-      setDragOffset(sheetH);
-      setAnimated(false);
-      setTimeout(() => {
-        setDragOffset(0);
-        onClose();
-      }, 280);
+      animateClose();
     } else {
       setDragOffset(0);
     }
+  };
+
+  const animateClose = () => {
+    const sheetH = sheetRef.current?.offsetHeight ?? window.innerHeight;
+    setDragOffset(sheetH);
+    setAnimated(false);
+    setTimeout(() => {
+      setDragOffset(0);
+      onClose();
+    }, 280);
   };
 
   return (
     <div
       ref={overlayRef}
       className="fixed inset-0 z-[200] flex items-end justify-center"
-      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+      onClick={(e) => { if (e.target === overlayRef.current) animateClose(); }}
     >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 transition-opacity duration-300"
         style={{ opacity: animated ? 1 : 0 }}
-        onClick={onClose}
+        onClick={animateClose}
       />
 
       {/* Sheet */}
@@ -107,31 +111,34 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
       >
         {/* Header — drag area */}
         <div
-          className="flex items-center px-4 py-3 border-b border-border-subtle touch-none select-none"
+          className="flex flex-col touch-none select-none"
           onTouchStart={handleDragStart}
           onTouchMove={handleDragMove}
           onTouchEnd={handleDragEnd}
         >
-          {stack.length > 0 ? (
-            <button className="mr-2 p-1 -ml-1 rounded" onClick={handleBack}>
-              <IconBack className="w-5 h-5 fill-fg-secondary" />
-            </button>
-          ) : null}
-          {current.title ? (
-            <span className="font-mono text-[11px] text-fg-subtle uppercase tracking-widest">
-              {current.title}
-            </span>
-          ) : (
-            <div className="mx-auto w-10 h-1 rounded-full bg-zinc-600" />
-          )}
-          {current.title && (
+          <div className="flex justify-center pt-2.5 pb-1">
+            <div className="w-9 h-1 rounded-full bg-fg-disabled" />
+          </div>
+          <div className="relative flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
+            {stack.length > 0 ? (
+              <button className="p-1 -ml-1 rounded" onClick={handleBack}>
+                <IconBack className="w-5 h-5 fill-fg-secondary" />
+              </button>
+            ) : (
+              <div className="w-7" />
+            )}
+            {current.title && (
+              <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">
+                {current.title}
+              </span>
+            )}
             <button
-              className="ml-auto p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors"
-              onClick={onClose}
+              className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors"
+              onClick={animateClose}
             >
               ✕
             </button>
-          )}
+          </div>
         </div>
 
         {/* Items */}

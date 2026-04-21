@@ -47,23 +47,40 @@ const Session: FC<IProps> = ({
   const dispatch = useDispatch();
   const { addStageFile } = useUploadFile({ context: type, id });
 
-  // 左滑手勢
+  // 左滑手勢 + 長按呼出選單
   const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [swipeLocked, setSwipeLocked] = useState(false);
   const ACTION_W = 160;
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     startXRef.current = e.touches[0].clientX;
+    startYRef.current = e.touches[0].clientY;
+    longPressTimer.current = setTimeout(() => {
+      showContextMenu();
+    }, 500);
   }, []);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    const delta = e.touches[0].clientX - startXRef.current;
-    if (delta < 0) setSwipeOffset(Math.max(delta, -ACTION_W));
-    else if (swipeLocked) setSwipeOffset(Math.min(0, -ACTION_W + delta));
+    const deltaX = e.touches[0].clientX - startXRef.current;
+    const deltaY = e.touches[0].clientY - startYRef.current;
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+      }
+    }
+    if (deltaX < 0) setSwipeOffset(Math.max(deltaX, -ACTION_W));
+    else if (swipeLocked) setSwipeOffset(Math.min(0, -ACTION_W + deltaX));
   }, [swipeLocked, ACTION_W]);
 
   const handleTouchEnd = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
     if (swipeOffset < -ACTION_W * 0.5) {
       setSwipeOffset(-ACTION_W);
       setSwipeLocked(true);
@@ -114,7 +131,7 @@ const Session: FC<IProps> = ({
     }),
     [type, id]
   );
-  const { visible: contextMenuVisible, handleContextMenuEvent, hideContextMenu } = useContextMenu();
+  const { visible: contextMenuVisible, handleContextMenuEvent, hideContextMenu, showContextMenu } = useContextMenu();
   const [data, setData] = useState<{
     name: string;
     icon: string;

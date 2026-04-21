@@ -14,9 +14,12 @@ import { removeUserSession } from "@/app/slices/message.user";
 import { useAppSelector } from "@/app/store";
 import { ChatContext } from "@/types/common";
 import ContextMenu, { Item } from "@/components/ContextMenu";
+import ActionSheet, { ActionSheetItem } from "@/components/ActionSheet";
 import useUserOperation from "@/hooks/useUserOperation";
 import Modal from "../../../components/Modal";
 import NicknameModal from "../../../components/NicknameModal";
+
+const isMobileViewport = () => window.innerWidth < 768;
 
 type Props = {
   context: ChatContext;
@@ -59,6 +62,10 @@ const SessionContextMenu: FC<Props> = ({
     (store) => (context == "channel" ? store.footprint.muteChannels[id] : false),
     shallowEqual
   );
+  const sessionName = useAppSelector((store) => {
+    if (context == "dm") return store.users.byId[id]?.name;
+    return store.channels.byId[id]?.name;
+  }, shallowEqual);
 
   const handleChannelSetting = () => {
     navigateTo(`/setting/channel/${id}/overview?f=${pathname}`);
@@ -157,17 +164,29 @@ const SessionContextMenu: FC<Props> = ({
   return (
     <>
       <NicknameModal uid={id} visible={remarkVisible} updateVisible={setRemarkVisible} />
-      <Tippy
-        interactive
-        placement="right-start"
-        popperOptions={{ strategy: "fixed" }}
-        followCursor={"initial"}
-        visible={visible}
-        onClickOutside={hide}
-        content={<ContextMenu hideMenu={hide} items={items.filter(Boolean) as Item[]} />}
-      >
-        {children}
-      </Tippy>
+      {isMobileViewport() ? (
+        <>
+          {children}
+          <ActionSheet
+            visible={visible}
+            onClose={hide}
+            title={sessionName}
+            items={items.filter(Boolean) as ActionSheetItem[]}
+          />
+        </>
+      ) : (
+        <Tippy
+          interactive
+          placement="right-start"
+          popperOptions={{ strategy: "fixed" }}
+          followCursor={"initial"}
+          visible={visible}
+          onClickOutside={hide}
+          content={<ContextMenu hideMenu={hide} items={items.filter(Boolean) as Item[]} />}
+        >
+          {children}
+        </Tippy>
+      )}
     </>
   );
 };

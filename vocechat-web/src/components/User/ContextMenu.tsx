@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import Tippy from "@tippyjs/react";
 
 import useUserOperation from "@/hooks/useUserOperation";
+import { useAppSelector } from "@/app/store";
+import { shallowEqual } from "react-redux";
 const isMobileViewport = () => window.innerWidth < 768;
 import ActionSheet, { ActionSheetItem } from "../ActionSheet";
 import DesktopContextMenu, { Item } from "../ContextMenu";
@@ -20,6 +22,7 @@ interface Props {
 const UserContextMenu: FC<Props> = ({ enable = false, uid, cid, visible, hide, children }) => {
   const [remarkVisible, setRemarkVisible] = useState(false);
   const { t } = useTranslation("member");
+  const userName = useAppSelector((store) => store.users.byId[uid]?.name, shallowEqual);
   const { t: chatTran } = useTranslation("chat");
   const {
     blockThisContact,
@@ -99,7 +102,7 @@ const UserContextMenu: FC<Props> = ({ enable = false, uid, cid, visible, hide, c
 
       {/* 手機專屬 ActionSheet */}
       {isMobileViewport() && (
-        <ActionSheet visible={visible && enable} onClose={hide} items={sheetItems} />
+        <ActionSheet visible={visible && enable} onClose={hide} title={userName} items={sheetItems} />
       )}
     </>
   );
