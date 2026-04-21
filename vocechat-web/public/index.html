@@ -253,12 +253,6 @@
       // The page is in an iframe
       document.body.classList.add("iframe");
     }
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('/sw.js').catch(function () {});
-      });
-    }
-
     // iOS PWA keyboard fix: track visualViewport height to prevent header scroll-off
     (function () {
       var rafId = null;
