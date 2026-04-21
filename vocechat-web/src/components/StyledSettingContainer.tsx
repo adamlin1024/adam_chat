@@ -101,18 +101,18 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
             <div className="flex justify-center pt-2.5 pb-1">
               <div className="w-9 h-1 rounded-full bg-fg-disabled" />
             </div>
-            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
+            <div className="relative flex items-center px-4 py-2.5 border-b border-border-subtle">
               {nav ? (
                 <NavLink to={pathPrefix} className="p-1 -ml-1">
-                  <IconBack className="w-4 h-4 fill-fg-secondary" />
+                  <IconBack className="w-6 h-6 dark:stroke-white" />
                 </NavLink>
               ) : (
                 <div className="w-7" />
               )}
-              <span className="font-semibold text-sm text-fg-primary">
+              <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">
                 {nav ? nav.title : title}
               </span>
-              <button onClick={closeModal} className="text-fg-subtle p-1 text-lg leading-none">✕</button>
+              <button onClick={closeModal} className="ml-auto text-fg-subtle p-1 text-lg leading-none">✕</button>
             </div>
           </div>
 
@@ -139,7 +139,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                             <NavLink to={`${pathPrefix}/${name}`}
                               className="flex items-center justify-between px-1 py-3.5 text-[14px] text-fg-body">
                               {itemTitle}
-                              <IconBack className="w-4 h-4 fill-fg-subtle rotate-180" />
+                              <IconBack className="w-5 h-5 dark:stroke-white rotate-180" />
                             </NavLink>
                           )}
                         </li>
