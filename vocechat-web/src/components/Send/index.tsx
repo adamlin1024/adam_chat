@@ -22,7 +22,7 @@ import MessageInput from "../MessageInput";
 import { Emoji } from "@udecode/plate-emoji";
 import { EmojiInputPicker } from "../MessageInput/plate-ui/emoji-input-picker";
 import { MessageWithMentions } from "@/types/message";
-import { PlateEditor } from "@udecode/plate-common";
+import { PlateEditor, focusEditor } from "@udecode/plate-common";
 import { VirtualMessageFeedHandle } from "@/routes/chat/Layout/VirtualMessageFeed";
 
 const Modes = {
@@ -86,6 +86,9 @@ const Send: FC<IProps> = ({
     if (!id) return;
     if (editorRef.current) {
       editorRef.current.reset();
+      // Re-focus to keep iOS keyboard up after send
+      const editor = editorRef.current;
+      setTimeout(() => focusEditor(editor), 0);
     }
     if (msg.text.trim()) {
       // send text msg

@@ -90,11 +90,13 @@ const Toolbar: FC<Props> = ({
                   type="file"
                   name="file"
                   id="file"
+                  tabIndex={-1}
                 />
               </label>
             </div>
           </Tooltip>
           <button
+            tabIndex={-1}
             onClick={sendMessages}
             className={`rounded-sm px-3 py-[5px] font-mono text-[12px] font-bold whitespace-nowrap transition-colors ${
               sendVisible
