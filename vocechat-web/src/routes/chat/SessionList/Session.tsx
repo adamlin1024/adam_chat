@@ -1,9 +1,11 @@
 // @ts-nocheck
-import { FC, useEffect, useState, memo } from "react";
+import { FC, useEffect, useState, memo, useRef, useCallback } from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import { NavLink, useMatch, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import clsx from "clsx";
+import { removeUserSession } from "@/app/slices/message.user";
 
 import { useAppSelector } from "@/app/store";
 import { ChatContext } from "@/types/common";
@@ -40,7 +42,51 @@ const Session: FC<IProps> = ({
   // const { pathname } = useLocation();
   const isCurrentPath = useMatch(navPath);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { addStageFile } = useUploadFile({ context: type, id });
+
+  // 左滑手勢
+  const startXRef = useRef(0);
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [swipeLocked, setSwipeLocked] = useState(false);
+  const ACTION_W = type === "dm" ? 80 : 160;
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    startXRef.current = e.touches[0].clientX;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const delta = e.touches[0].clientX - startXRef.current;
+    if (delta < 0) setSwipeOffset(Math.max(delta, -ACTION_W));
+    else if (swipeLocked) setSwipeOffset(Math.min(0, -ACTION_W + delta));
+  }, [swipeLocked, ACTION_W]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (swipeOffset < -ACTION_W * 0.5) {
+      setSwipeOffset(-ACTION_W);
+      setSwipeLocked(true);
+    } else {
+      setSwipeOffset(0);
+      setSwipeLocked(false);
+    }
+  }, [swipeOffset, ACTION_W]);
+
+  const closeSwipe = useCallback(() => {
+    setSwipeOffset(0);
+    setSwipeLocked(false);
+  }, []);
+
+  const handleHide = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    dispatch(removeUserSession(id));
+    navigate("/chat");
+  }, [dispatch, id, navigate]);
+
+  const handleDelete = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setDeleteChannelId(id);
+    closeSwipe();
+  }, [id, setDeleteChannelId, closeSwipe]);
 
   const [{ isActive }, drop] = useDrop(
     () => ({
@@ -121,7 +167,43 @@ const Session: FC<IProps> = ({
   console.log("unreads", unreads, isCurrentPath);
 
   return (
-    <li className={clsx("session")}>
+    <li className={clsx("session relative overflow-hidden")}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* 左滑動作按鈕（手機專用） */}
+      <div
+        className="absolute right-0 top-0 h-full flex"
+        style={{ width: `${ACTION_W}px` }}
+      >
+        <button
+          onClick={handleHide}
+          className="flex-1 flex flex-col items-center justify-center bg-zinc-600 text-white text-[11px] font-medium gap-0.5"
+        >
+          <span>隱藏</span>
+        </button>
+        {type === "channel" && (
+          <button
+            onClick={handleDelete}
+            className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white text-[11px] font-medium gap-0.5"
+          >
+            <span>刪除</span>
+          </button>
+        )}
+      </div>
+
+      {/* Session 內容，左滑時向左移 */}
+      <div
+        style={{
+          transform: `translateX(${swipeOffset}px)`,
+          transition: swipeOffset === 0 || swipeOffset === -ACTION_W
+            ? "transform 240ms cubic-bezier(0.32,0.72,0,1)"
+            : "none",
+        }}
+        className="relative bg-bg-sidebar"
+        onClick={swipeLocked ? closeSwipe : undefined}
+      >
       <ContextMenu
         visible={contextMenuVisible}
         hide={hideContextMenu}
@@ -203,6 +285,7 @@ const Session: FC<IProps> = ({
           </div>
         </NavLink>
       </ContextMenu>
+      </div>
     </li>
   );
 };

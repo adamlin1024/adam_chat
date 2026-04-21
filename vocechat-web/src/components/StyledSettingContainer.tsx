@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
+import { FC, PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 
@@ -31,6 +31,101 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
   nav,
   children
 }) => {
+  const [animated, setAnimated] = useState(false);
+  useEffect(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
+    return () => setAnimated(false);
+  }, []);
+
+  const isMobile = window.innerWidth < 768;
+
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 z-[150]">
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/50 transition-opacity duration-300"
+          style={{ opacity: animated ? 1 : 0 }}
+          onClick={closeModal}
+        />
+        {/* Sheet */}
+        <div
+          className="absolute bottom-0 left-0 right-0 bg-bg-sidebar flex flex-col overflow-hidden"
+          style={{
+            height: "92vh",
+            borderRadius: "10px 10px 0 0",
+            transform: animated ? "translateY(0)" : "translateY(100%)",
+            transition: "transform 320ms cubic-bezier(0.32,0.72,0,1)",
+          }}
+        >
+          {/* Sheet header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle shrink-0">
+            {nav ? (
+              <NavLink to={pathPrefix} className="p-1 -ml-1">
+                <IconBack className="w-4 h-4 fill-fg-secondary" />
+              </NavLink>
+            ) : (
+              <div className="w-6" />
+            )}
+            <span className="font-semibold text-sm text-fg-primary">
+              {nav ? nav.title : title}
+            </span>
+            <button onClick={closeModal} className="text-fg-subtle p-1 text-lg leading-none">✕</button>
+          </div>
+
+          {/* 選單列表 或 子頁內容 */}
+          <div className="flex-1 overflow-y-auto">
+            {!nav ? (
+              // 一級選單
+              <div className="px-4 py-4">
+                {navs.map(({ title: groupTitle, items }) => (
+                  <div key={groupTitle} className="mb-6">
+                    {groupTitle && (
+                      <div className="font-mono text-[10px] text-fg-subtle uppercase tracking-widest mb-2 px-1">
+                        {groupTitle}
+                      </div>
+                    )}
+                    <ul className="flex flex-col">
+                      {items.map(({ name, link, title: itemTitle }) => (
+                        <li key={name} className="border-b border-border-subtle last:border-0">
+                          {link ? (
+                            <a href={link} target="_blank" rel="noreferrer"
+                              className="flex items-center justify-between px-1 py-3.5 text-[14px] text-fg-body">
+                              {itemTitle} <span className="text-xs text-fg-subtle">↗</span>
+                            </a>
+                          ) : (
+                            <NavLink to={`${pathPrefix}/${name}`}
+                              className="flex items-center justify-between px-1 py-3.5 text-[14px] text-fg-body">
+                              {itemTitle}
+                              <IconBack className="w-3.5 h-3.5 fill-fg-subtle rotate-180" />
+                            </NavLink>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+                {dangers.map((d) => {
+                  if (typeof d === "boolean" || !d) return null;
+                  return (
+                    <button key={d.title} onClick={d.handler}
+                      className="w-full text-left px-1 py-3.5 text-[14px] text-red-400 border-t border-border-subtle">
+                      {d.title}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              // 子頁內容
+              <div className="px-4 py-4">{children}</div>
+            )}
+          </div>
+          <div style={{ paddingBottom: "env(safe-area-inset-bottom)" }} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="w-screen h-screen flex">
