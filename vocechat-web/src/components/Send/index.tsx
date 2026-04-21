@@ -20,7 +20,8 @@ import MessageInput from "../MessageInput";
 import { Emoji } from "@udecode/plate-emoji";
 import { EmojiInputPicker } from "../MessageInput/plate-ui/emoji-input-picker";
 import { MessageWithMentions } from "@/types/message";
-import { PlateEditor, focusEditor } from "@udecode/plate-common";
+import { PlateEditor } from "@udecode/plate-common";
+import { Transforms, Editor as SlateEditor } from "slate";
 import { VirtualMessageFeedHandle } from "@/routes/chat/Layout/VirtualMessageFeed";
 
 const Modes = {
@@ -81,10 +82,10 @@ const Send: FC<IProps> = ({
   const handleSendMessage = async () => {
     if (!id) return;
     if (editorRef.current) {
-      editorRef.current.reset();
-      // Re-focus to keep iOS keyboard up after send
-      const editor = editorRef.current;
-      setTimeout(() => focusEditor(editor), 0);
+      // Clear content via Transforms (no blur → iOS keyboard stays up)
+      const e = editorRef.current as any;
+      Transforms.select(e, SlateEditor.range(e, []));
+      Transforms.delete(e);
     }
     if (msg.text.trim()) {
       // send text msg

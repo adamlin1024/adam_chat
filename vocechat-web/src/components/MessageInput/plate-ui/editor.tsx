@@ -1,6 +1,7 @@
 import React from "react";
 import { PlateContent, useEditorRef } from "@udecode/plate-common";
 import { useKey } from "rooks";
+import { Transforms, Editor as SlateEditor } from "slate";
 
 import { cn, isMobile } from "@/utils";
 
@@ -22,7 +23,9 @@ const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
         }
         evt.preventDefault();
         sendMessage();
-        editorRef.reset();
+        const e = editorRef as any;
+        Transforms.select(e, SlateEditor.range(e, []));
+        Transforms.delete(e);
       },
       {
         when: !isMobile(),
