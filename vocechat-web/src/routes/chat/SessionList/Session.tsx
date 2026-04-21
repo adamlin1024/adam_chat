@@ -174,7 +174,7 @@ const Session: FC<IProps> = ({
     >
       {/* 左滑動作按鈕（手機專用） */}
       <div
-        className="absolute right-0 top-0 h-full flex z-0"
+        className="absolute right-0 top-0 h-full flex"
         style={{ width: `${ACTION_W}px` }}
       >
         <button
@@ -201,7 +201,7 @@ const Session: FC<IProps> = ({
             ? "transform 240ms cubic-bezier(0.32,0.72,0,1)"
             : "none",
         }}
-        className="relative z-10 w-full bg-bg-sidebar"
+        className="relative w-full bg-bg-sidebar"
         onClick={swipeLocked ? closeSwipe : undefined}
       >
       <ContextMenu
