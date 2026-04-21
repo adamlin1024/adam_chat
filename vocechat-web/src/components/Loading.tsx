@@ -25,26 +25,6 @@ const Loading: FC<Props> = ({
     clearLocalData();
     reloadCurrentPage();
   };
-  useEffect(() => {
-    let inter = 0;
-    if (window.AUTO_RELOAD) {
-      const key = "auto_reload_count";
-      const count = parseInt(sessionStorage.getItem(key) || "0", 10);
-      if (count < 3) {
-        sessionStorage.setItem(key, String(count + 1));
-        inter = window.setTimeout(() => {
-          location.reload();
-        }, 5000);
-      } else {
-        sessionStorage.removeItem(key);
-        window.AUTO_RELOAD = false;
-      }
-    }
-    return () => {
-      window.AUTO_RELOAD = false;
-      clearTimeout(inter);
-    };
-  }, []);
 
   useEffect(() => {
     let inter = 0;

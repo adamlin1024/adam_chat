@@ -24,8 +24,6 @@ const RequireAuth: FC<Props> = ({ children, redirectTo = "/login", guestMode }) 
   console.info("check basic info", guestMode);
   // 初始化login配置检查
   if (typeof guestMode == "undefined") {
-    // tricky mark
-    window.AUTO_RELOAD = true;
     return <Loading fullscreen={true} reload context="auth-route" />;
   }
   //  未初始化 则先走setup 流程
