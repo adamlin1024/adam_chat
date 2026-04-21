@@ -1,13 +1,12 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Tippy from "@tippyjs/react";
 
 import { useAppSelector } from "@/app/store";
 import GoBackNav from "@/components/GoBackNav";
 import Tooltip from "@/components/Tooltip";
 import MessageSearch from "@/components/MessageSearch";
 import FavIcon from "@/assets/icons/bookmark.svg";
-import FavList from "../FavList";
+import FavListModal from "../FavListModal";
 import Layout from "../Layout";
 import { VirtualMessageFeedHandle } from "../Layout/VirtualMessageFeed";
 import VoiceChat from "../VoiceChat";
@@ -18,6 +17,7 @@ type Props = {
   dropFiles?: File[];
 };
 const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
+  const [favModalVisible, setFavModalVisible] = useState(false);
   const navigate = useNavigate();
   const feedRef = useRef<VirtualMessageFeedHandle>(null);
   const currUser = useAppSelector((store) => store.users.byId[uid], shallowEqual);
@@ -44,19 +44,11 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
         <ul className="flex flex-col gap-6">
           <VoiceChat context={`dm`} id={uid} />
           <Tooltip tip="Saved Items" placement="left">
-            <Tippy
-              placement="left-start"
-              popperOptions={{ strategy: "fixed" }}
-              offset={[0, 180]}
-              interactive
-              trigger="click"
-              content={<FavList uid={uid} />}
-            >
-              <li className={`relative cursor-pointer fav`}>
-                <FavIcon className="fill-fg-subtle hover:fill-fg-secondary transition-colors" />
-              </li>
-            </Tippy>
+            <li className="relative cursor-pointer fav" onClick={() => setFavModalVisible(true)}>
+              <FavIcon className="fill-fg-subtle hover:fill-fg-secondary transition-colors" />
+            </li>
           </Tooltip>
+          <FavListModal visible={favModalVisible} onClose={() => setFavModalVisible(false)} uid={uid} />
         </ul>
       }
       header={

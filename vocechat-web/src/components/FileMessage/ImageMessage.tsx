@@ -54,7 +54,7 @@ const ImageMessage: FC<Props> = ({
         </div>
       )}
       {status == "loading" ? (
-        <div className="w-full h-full flex-center bg-primary-50/80 dark:bg-primary-900/70">
+        <div className="w-full h-full flex-center bg-zinc-800/60 animate-pulse">
           <LineWobble />
         </div>
       ) : (

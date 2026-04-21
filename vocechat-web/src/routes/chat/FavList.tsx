@@ -17,7 +17,7 @@ const FavList: FC<Props> = ({ cid = null, uid = null }) => {
   };
   const noFavs = favorites.length == 0;
   return (
-    <div className="p-3 bg-bg-elevated border border-border rounded-xl min-w-[460px] max-h-[480px] overflow-auto shadow-overlay">
+    <div className="p-3 bg-bg-elevated border border-border rounded-xl w-full md:min-w-[460px] max-h-[70vh] md:max-h-[480px] overflow-auto shadow-overlay">
       <h4 className="font-mono text-[11px] font-semibold text-fg-subtle uppercase tracking-widest mb-3 px-1">
         {t("fav_msg")} · {favorites.length}
       </h4>

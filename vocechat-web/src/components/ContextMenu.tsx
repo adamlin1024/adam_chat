@@ -32,6 +32,7 @@ const WrapWithSubmenu = ({
       interactive
       placement="auto-start"
       trigger="mouseenter focus"
+      popperOptions={{ strategy: "fixed" }}
       content={
         <ul className="context-menu">
           {items.map((sub) => {

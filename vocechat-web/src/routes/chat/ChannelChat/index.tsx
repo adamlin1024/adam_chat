@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shallowEqual, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ import AnnouncementModal from "@/components/AnnouncementModal";
 import IconFav from "@/assets/icons/bookmark.svg";
 import IconPeople from "@/assets/icons/people.svg";
 import IconPin from "@/assets/icons/pin.svg";
-import FavList from "../FavList";
+import FavListModal from "../FavListModal";
 import Layout from "../Layout";
 import { VirtualMessageFeedHandle } from "../Layout/VirtualMessageFeed";
 import VoiceChat from "../VoiceChat";
@@ -33,6 +33,7 @@ type Props = {
   dropFiles?: File[];
 };
 function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
+  const [favModalVisible, setFavModalVisible] = useState(false);
   const { getExtSetting } = useServerExtSetting();
   const { t } = useTranslation("chat");
   const { pathname } = useLocation();
@@ -122,19 +123,11 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
             </Tooltip>
             <VoiceChat context={`channel`} id={cid} />
             <Tooltip tip={t("fav")} placement="left">
-              <Tippy
-                placement="left-start"
-                popperOptions={{ strategy: "fixed" }}
-                offset={[0, 164]}
-                interactive
-                trigger="click"
-                content={<FavList cid={cid} />}
-              >
-                <li className={`${toolClass}`}>
-                  <IconFav className="fill-fg-subtle hover:fill-fg-secondary transition-colors" />
-                </li>
-              </Tippy>
+              <li className={`${toolClass}`} onClick={() => setFavModalVisible(true)}>
+                <IconFav className="fill-fg-subtle hover:fill-fg-secondary transition-colors" />
+              </li>
             </Tooltip>
+            <FavListModal visible={favModalVisible} onClose={() => setFavModalVisible(false)} cid={cid} />
             {canViewMembers && (
               <li className={`${toolClass}`} onClick={toggleMembersVisible}>
                 <Tooltip tip={t("channel_members")} placement="left">

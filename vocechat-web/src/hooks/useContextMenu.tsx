@@ -31,9 +31,8 @@ export default function useContextMenu(placement = "right-start") {
     setVisible(true);
   };
 
-  const hideContextMenu = () => {
-    setVisible(false);
-  };
+  const hideContextMenu = () => setVisible(false);
+  const showContextMenu = () => setVisible(true);
 
   const ContextMenu = ({ key, items, children }: ContextMenuProps) => {
     return (
@@ -57,6 +56,7 @@ export default function useContextMenu(placement = "right-start") {
     offset,
     visible,
     hideContextMenu,
+    showContextMenu,
     handleContextMenuEvent
   };
 }
