@@ -54,7 +54,7 @@ export default function MessageSearch({ context, id, onLocate }: Props) {
         onClick={() => setVisible(!visible)}
         className={`h-7 w-7 flex-center rounded-md border transition-colors ${visible ? "border-border-strong bg-bg-surface text-fg-primary" : "border-transparent text-fg-subtle hover:border-border hover:text-fg-secondary"}`}
       >
-        <IconSearch className="w-3.5 h-3.5 fill-current" />
+        <IconSearch className="fill-current" style={{ width: "1.2rem", height: "1.2rem" }} />
       </button>
 
       {visible && (

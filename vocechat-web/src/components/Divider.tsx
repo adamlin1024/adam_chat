@@ -10,11 +10,13 @@ const Divider: FC<Props> = ({ content, className = "" }) => {
   return (
     <div
       className={clsx(
-        "or relative border-none h-[1px] bg-slate-200 dark:bg-gray-500 my-6 overflow-visible",
+        "or relative border-none h-px bg-zinc-700/60 my-4 overflow-visible",
         className
       )}
     >
-      <span className="p-1 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-xs text-gray-500 dark:text-gray-300 font-semibold bg-white dark:bg-gray-700">
+      <span className="px-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-zinc-500 font-mono bg-bg-canvas"
+        style={{ fontSize: "0.7rem", letterSpacing: "0.04em" }}
+      >
         {content}
       </span>
     </div>

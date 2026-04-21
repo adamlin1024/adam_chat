@@ -29,7 +29,7 @@ const ChannelHeader = ({ cid }: ChannelHeaderProps) => {
       {isAdmin && (
         <NavLink
           to={`/setting/channel/${cid}/overview?f=${pathname}`}
-          className="flex items-center gap-1 bg-clip-text text-fill-transparent bg-gradient-to-r from-blue-500 to-primary-400 "
+          className="flex items-center gap-1 bg-clip-text text-fill-transparent bg-gradient-to-r from-blue-500 to-primary-400 text-[0.9rem]"
         >
           <EditIcon className="w-4 h-4 fill-blue-500" />
           {t("edit_channel")}
