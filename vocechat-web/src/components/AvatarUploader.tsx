@@ -2,7 +2,6 @@ import { ChangeEvent, FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 
-import uploadIcon from "@/assets/icons/upload.image.svg?url";
 import Avatar from "./Avatar";
 
 type UID = number;
@@ -45,9 +44,9 @@ const AvatarUploader: FC<Props> = ({
   return (
     <div
       style={{ width: `${size}px`, height: `${size}px` }}
-      className={clsx(className, "relative group")}
+      className={clsx(className, "relative group cursor-pointer")}
     >
-      <div className="group overflow-hidden relative w-full h-full rounded-full bg-gray-50">
+      <div className="overflow-hidden relative w-full h-full rounded-full bg-gray-50 ring-2 ring-transparent group-hover:ring-accent transition-all duration-200">
         <Avatar
           width={size}
           height={size}
@@ -58,7 +57,7 @@ const AvatarUploader: FC<Props> = ({
         />
         {!disabled && (
           <>
-            <div className="flex-center flex-col whitespace-nowrap hidden group-hover:flex p-1 absolute inset-0 bg-black/50 text-white font-bold text-xs">
+            <div className="flex-center flex-col whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 absolute inset-0 bg-black/50 text-white font-bold text-xs">
               {uploading ? t("status.uploading") : t("action.change_avatar")}
             </div>
             <input
@@ -73,13 +72,6 @@ const AvatarUploader: FC<Props> = ({
           </>
         )}
       </div>
-      {!disabled && (
-        <img
-          src={uploadIcon}
-          alt="icon"
-          className="hidden w-7 h-7 absolute top-0 right-0 group-hover:block"
-        />
-      )}
     </div>
   );
 };

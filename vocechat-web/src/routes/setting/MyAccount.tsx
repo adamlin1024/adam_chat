@@ -47,7 +47,7 @@ export default function MyAccount() {
     }
   }, [uploadSuccess]);
 
-  const handleBasicEdit = (evt: MouseEvent<HTMLButtonElement>) => {
+  const handleBasicEdit = (evt: MouseEvent<HTMLElement>) => {
     const { edit } = evt.currentTarget.dataset as { edit: EditField };
     setEditModal(edit);
   };
@@ -86,9 +86,13 @@ export default function MyAccount() {
                 {name} <span className="text-gray-600 dark:text-gray-400"> #{uid}</span>
               </span>
             </div>
-            <Button data-edit="name" onClick={handleBasicEdit} className="">
+            <span
+              data-edit="name"
+              onClick={handleBasicEdit}
+              className="cursor-pointer text-sm font-medium text-accent hover:text-accent/70 transition-colors duration-200"
+            >
               {ct("action.edit")}
-            </Button>
+            </span>
           </div>
 
           <div className="w-full flex items-start justify-between mb-6">
@@ -96,7 +100,12 @@ export default function MyAccount() {
               <span className="text-xs uppercase  font-semibold">{t("password")}</span>
               <span className="text-sm">*********</span>
             </div>
-            <Button onClick={togglePasswordModal}>{ct("action.edit")}</Button>
+            <span
+              onClick={togglePasswordModal}
+              className="cursor-pointer text-sm font-medium text-accent hover:text-accent/70 transition-colors duration-200"
+            >
+              {ct("action.edit")}
+            </span>
           </div>
         </div>
         
