@@ -12,12 +12,12 @@ import useFavMessage from "@/hooks/useFavMessage";
 import useSendMessage from "@/hooks/useSendMessage";
 import IconBookmark from "@/assets/icons/bookmark.add.svg";
 import IconDelete from "@/assets/icons/delete.svg";
-import editIcon from "@/assets/icons/edit.svg?url";
+import IconEdit from "@/assets/icons/edit.svg";
 import IconForward from "@/assets/icons/forward.svg";
-import moreIcon from "@/assets/icons/more.svg?url";
+import IconMore from "@/assets/icons/more.svg";
 import IconPin from "@/assets/icons/pin.svg";
-import reactIcon from "@/assets/icons/reaction.svg?url";
-import replyIcon from "@/assets/icons/reply.svg?url";
+import IconReact from "@/assets/icons/reaction.svg";
+import IconReply from "@/assets/icons/reply.svg";
 import IconSelect from "@/assets/icons/select.svg";
 import ContextMenu, { Item } from "../ContextMenu";
 import Tooltip from "../Tooltip";
@@ -113,21 +113,21 @@ const Commands: FC<Props> = ({
         >
           <li className={cmdClass}>
             <Tooltip placement="top" tip={t("action.add_reaction")}>
-              <img src={reactIcon} className="w-4 h-4 opacity-60" alt="icon emoji" />
+              <IconReact className="w-4 h-4 fill-fg-subtle" />
             </Tooltip>
           </li>
         </Tippy>
         {canEdit && (
           <li className={cmdClass} onClick={toggleEditMessage}>
             <Tooltip placement="top" tip={t("action.edit")}>
-              <img src={editIcon} className="w-4 h-4 opacity-60" alt="icon edit" />
+              <IconEdit className="w-4 h-4 fill-fg-subtle" />
             </Tooltip>
           </li>
         )}
         {canReply && (
           <li className={cmdClass} onClick={handleReply}>
             <Tooltip placement="top" tip={t("action.reply")}>
-              <img src={replyIcon} className="w-4 h-4 opacity-60" alt="icon reply" />
+              <IconReply className="w-4 h-4 fill-fg-subtle" />
             </Tooltip>
           </li>
         )}
@@ -174,7 +174,7 @@ const Commands: FC<Props> = ({
         >
           <li className={cmdClass}>
             <Tooltip placement="top" tip={t("more")}>
-              <img src={moreIcon} className="w-4 h-4 opacity-60" alt="icon more" />
+              <IconMore className="w-4 h-4 fill-fg-subtle" />
             </Tooltip>
           </li>
         </Tippy>
