@@ -106,7 +106,8 @@
       "title": "Chat Layout",
       "desc": "Which side to show messages sent by yourself",
       "left": "Left",
-      "self_right": "Right"
+      "self_right": "Right",
+      "alternating": "Alternating"
     },
     "contact_verify": {
       "title": "Contact Verification",

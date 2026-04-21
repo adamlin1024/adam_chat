@@ -158,7 +158,8 @@
       "title": "Chat-Layout",
       "desc": "Anzeigeseite für deine eigenen Nachrichten",
       "left": "Links",
-      "self_right": "Rechts"
+      "self_right": "Rechts",
+      "alternating": "Alternating"
     },
     "contact_verify": {
       "title": "Kontaktüberprüfung",

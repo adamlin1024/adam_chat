@@ -113,7 +113,8 @@
       "title": "Mise en Page du Chat",
       "desc": "Quel côté pour afficher les messages envoyés par vous-même",
       "left": "Gauche",
-      "self_right": "Droite"
+      "self_right": "Droite",
+      "alternating": "Alternating"
     },
     "contact_verify": {
       "title": "Vérification des Contacts",

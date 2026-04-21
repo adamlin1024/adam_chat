@@ -22,6 +22,7 @@ import useInView from "./useInView";
 import { shallowEqual } from "react-redux";
 import NameWithRemark from "../NameWithRemark";
 import { isMobile } from "@/utils";
+import { useChatLayout } from "@/hooks/useChatLayout";
 
 interface IProps {
   readOnly?: boolean;
@@ -46,10 +47,7 @@ const Message: FC<IProps> = ({
   const selectedTextRef = useRef<string>("");
   const { getPinInfo } = usePinMessage(context == "channel" ? contextId : 0);
   const message = useAppSelector((store) => store.message[mid], shallowEqual);
-  const enableRightLayout = useAppSelector(
-    (store) => store.server.chat_layout_mode == "SelfRight",
-    shallowEqual
-  );
+  const { mode: chatLayout } = useChatLayout();
   const loginUid = useAppSelector((store) => store.authData.user?.uid, shallowEqual);
   // 只订阅当前消息发送者的用户信息，而不是整个usersData
   const currUser = useAppSelector((store) => store.users.byId[message?.from_uid || 0], shallowEqual);
@@ -102,7 +100,8 @@ const Message: FC<IProps> = ({
   // return null;
   const _key = properties?.local_id || mid;
   const showExpire = (expires_in ?? 0) > 0;
-  const isSelf = fromUid == loginUid && enableRightLayout;
+  const isSelf = fromUid == loginUid;
+  const alignRight = chatLayout === "Right" || (chatLayout === "Alternating" && isSelf);
   return (
     <div
       key={_key}
@@ -121,7 +120,7 @@ const Message: FC<IProps> = ({
         !readOnly && "hover:bg-[#0d0e11]",
         showExpire && "bg-danger/10",
         pinInfo && "bg-accent-bg !pt-7 border-l-2 border-accent",
-        isSelf && "flex-row-reverse"
+        alignRight && "flex-row-reverse"
       )}
     >
       <Tippy
@@ -157,7 +156,7 @@ const Message: FC<IProps> = ({
           className={clsx(
             "w-full flex flex-col gap-2",
             pinInfo && "relative",
-            isSelf && "items-end"
+            alignRight && "items-end"
           )}
           data-pin-tip={`pinned by ${pinCreatorName || ""}`}
         >
@@ -165,14 +164,14 @@ const Message: FC<IProps> = ({
             <span
               className={clsx(
                 "absolute -top-1 -translate-y-full text-xs text-gray-400",
-                isSelf ? "right-0" : "left-0"
+                alignRight ? "right-0" : "left-0"
               )}
             >
               {`pinned by ${pinCreatorName || ""}`}
             </span>
           )}
           <div
-            className={clsx(`mb-0.5 flex items-baseline gap-2`, isSelf && "flex-row-reverse")}
+            className={clsx(`mb-0.5 flex items-baseline gap-2`, alignRight && "flex-row-reverse")}
           >
             <span className="text-[15px] font-semibold tracking-tight text-fg-primary">
               {currUser?.name ? (
@@ -232,7 +231,7 @@ const Message: FC<IProps> = ({
 
       {showExpire && (
         <ExpireTimer
-          enableRightLayout={isSelf}
+          enableRightLayout={alignRight}
           mid={message.mid}
           context={context}
           contextId={contextId}
@@ -242,7 +241,7 @@ const Message: FC<IProps> = ({
       )}
       {!edit && !failed && !readOnly && (
         <Commands
-          isSelf={isSelf}
+          isSelf={alignRight}
           context={context}
           contextId={contextId}
           mid={mid}

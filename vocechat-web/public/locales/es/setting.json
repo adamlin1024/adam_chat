@@ -107,7 +107,8 @@
       "title": "Diseño del Chat",
       "desc": "Dónde mostrar los mensajes enviados por ti mismo",
       "left": "Izquierda",
-      "self_right": "Derecha"
+      "self_right": "Derecha",
+      "alternating": "Alternating"
     },
     "contact_verify": {
       "title": "Verificación de Contactos",

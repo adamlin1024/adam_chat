@@ -153,9 +153,10 @@
     },
     "chat_layout": {
       "title": "Chat Layout",
-      "desc": "Which side to show messages sent by yourself",
+      "desc": "Set message alignment (mobile defaults to Alternating)",
       "left": "Left",
-      "self_right": "Right"
+      "self_right": "Right",
+      "alternating": "Alternating (self right, others left)"
     },
     "contact_verify": {
       "title": "Contact Verification",

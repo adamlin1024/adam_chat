@@ -152,7 +152,8 @@
       "title": "Макет чата",
       "desc": "С какой стороны показывать сообщения, отправленные вами?",
       "left": "Левый",
-      "self_right": "Правый"
+      "self_right": "Правый",
+      "alternating": "Alternating"
     },
     "contact_verify": {
       "title": "Проверка контакта",

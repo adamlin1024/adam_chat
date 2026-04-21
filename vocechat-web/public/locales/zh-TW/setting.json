@@ -151,9 +151,10 @@
     },
     "chat_layout": {
       "title": "聊天版面",
-      "desc": "您可以決定自己傳送的訊息靠左或靠右顯示",
+      "desc": "設定訊息的顯示位置（手機預設為「交互」）",
       "left": "靠左",
-      "self_right": "靠右"
+      "self_right": "靠右",
+      "alternating": "交互（自己靠右，對方靠左）"
     },
     "contact_verify": {
       "title": "聯絡人驗證",
