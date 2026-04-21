@@ -96,7 +96,7 @@ const RegWithUsername: FC = () => {
           {t("reg.input_name_tip")}
         </span>
       </div>
-      <form className="flex flex-col m-auto gap-5 w-80 md:min-w-[360px]" onSubmit={handleAuth}>
+      <form className="flex flex-col gap-5 w-full" onSubmit={handleAuth}>
         <Input
           className="large"
           name="username"

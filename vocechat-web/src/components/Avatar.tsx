@@ -1,15 +1,14 @@
-import { FC, ImgHTMLAttributes, useState } from "react";
+import { FC, HTMLAttributes, useEffect, useState } from "react";
 
 import { getInitials } from "../utils";
 
-interface Props extends ImgHTMLAttributes<HTMLImageElement> {
-  // className?: string;
-  // alt?: string;
-  // src?: string;
+interface Props extends HTMLAttributes<HTMLDivElement> {
   width: number;
   height: number;
+  src?: string;
   name?: string;
   type?: "user" | "channel";
+  alt?: string;
 }
 
 function getFontSize(width: number): number {
@@ -28,29 +27,56 @@ const Avatar: FC<Props> = ({
   type = "user",
   width,
   height,
+  alt,
   ...rest
 }) => {
   const [error, setError] = useState(false);
-  const handleError = () => {
-    setError(true);
-  };
+
+  useEffect(() => {
+    if (!src) {
+      setError(false);
+      return;
+    }
+    setError(false);
+    const img = new Image();
+    img.onload = () => setError(false);
+    img.onerror = () => setError(true);
+    img.src = src;
+  }, [src]);
+
+  const shapeClass = type === "channel" ? "rounded-md" : "rounded-full";
+
   if (!error && src) {
-    return <img width={width} height={height} src={src} onError={handleError} {...rest} />;
+    return (
+      <div
+        {...rest}
+        className={`${shapeClass} ${rest.className || ""}`}
+        style={{
+          width,
+          height,
+          backgroundImage: `url(${src})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          flexShrink: 0,
+          ...(rest.style || {}),
+        }}
+      />
+    );
   }
-  // 长度限制在六个字符
-  let initials = getInitials(name).substring(0, 6);
+
+  const initials = getInitials(name).substring(0, 6);
   const len = initials.length;
   const scaleVal = len > 2 ? (11 - len) / 10 : 1;
 
-  // avatar fallback 色盤（依 name hashCode 選色）
   const userColors = ["#5eead4", "#10b981", "#8b5cf6", "#ec4899", "#f97316", "#3b82f6"];
   const hashCode = name.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
   const fallbackBg = type === "channel" ? "#3b82f6" : userColors[hashCode % userColors.length];
   const fallbackColor = type === "channel" ? "#ffffff" : "#042f2e";
-  const shapeClass = type === "channel" ? "rounded-md" : "rounded-full";
 
   return (
     <div
+      {...rest}
       className={`flex-center ${shapeClass} ${rest.className || ""}`}
       style={{
         width,
@@ -60,6 +86,7 @@ const Avatar: FC<Props> = ({
         fontFamily: "Inter, -apple-system, sans-serif",
         background: fallbackBg,
         color: fallbackColor,
+        ...(rest.style || {}),
       }}
     >
       <span className="whitespace-nowrap" style={{ transform: `scale(${scaleVal})` }}>
