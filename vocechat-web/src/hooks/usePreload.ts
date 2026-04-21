@@ -99,11 +99,13 @@ export default function usePreload() {
     (favoritesSuccess || favoritesError) &&
     (serverVersionSuccess || serverVersionError || timedOut);
 
+  const hasCache = rehydrated && !!loginUid;
+
   return {
     loading:
       usersLoading || favoritesLoading || !rehydrated || loadingLicense || loadingServerVersion,
     error: usersError && favoritesError,
-    success: apisDone || timedOut,
+    success: hasCache || apisDone || timedOut,
     data: {
       users: enableContacts ? contacts : users,
       favorites
