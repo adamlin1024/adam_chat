@@ -152,6 +152,19 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     return () => clearTimeout(timer);
   }, [id, scrollToBottom]);
 
+  // Keep last message visible when keyboard appears/disappears (mobile)
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handleResize = () => {
+      if (stickToBottomRef.current) {
+        requestAnimationFrame(() => scrollToBottom());
+      }
+    };
+    vv.addEventListener("resize", handleResize);
+    return () => vv.removeEventListener("resize", handleResize);
+  }, [scrollToBottom]);
+
   // Reset isPrepend after layout
   useLayoutEffect(() => {
     isPrependRef.current = false;
