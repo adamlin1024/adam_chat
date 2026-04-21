@@ -6,7 +6,6 @@ import { useSendLoginMagicLinkMutation } from "@/app/services/auth";
 import useInviteLink from "@/hooks/useInviteLink";
 import InviteLink from "../InviteLink";
 import Button from "../styled/Button";
-import Input from "../styled/Input";
 
 interface Props {
   cid?: number;
@@ -47,8 +46,7 @@ const InviteByEmail: FC<Props> = ({ cid }) => {
         </label>
         <div className="relative flex items-center">
           <form ref={formRef} action="/" className="w-full relative">
-            <Input
-              className="!pr-20"
+            <input
               required
               value={email}
               onChange={handleEmail}
@@ -56,6 +54,7 @@ const InviteByEmail: FC<Props> = ({ cid }) => {
               type="email"
               name="email"
               placeholder={enableSMTP ? "Enter Email" : t("enable_smtp")}
+              className="w-full bg-bg-surface rounded-md px-3 py-2 pr-20 text-sm border border-border focus:border-border-strong outline-none text-fg-body placeholder:text-fg-disabled transition-colors disabled:opacity-50"
             />
             <Button
               disabled={!enableSMTP || !email || isLoading}

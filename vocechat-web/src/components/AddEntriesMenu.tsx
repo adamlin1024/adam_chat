@@ -29,43 +29,18 @@ export default function AddEntriesMenu() {
     (store) => store.server.search_user_enable ?? true,
     shallowEqual
   );
+  type ActiveModal = "invite" | "search" | "channel" | "users" | null;
   const [isPrivate, setIsPrivate] = useState(false);
-  const [inviteModalVisible, setInviteModalVisible] = useState(false);
-  const [searchModalVisible, setSearchModalVisible] = useState(false);
-  const [channelModalVisible, setChannelModalVisible] = useState(false);
-  const [usersModalVisible, setUsersModalVisible] = useState(false);
-  const toggleInviteModalVisible = () => {
-    setInviteModalVisible((prev) => {
-      if (!prev) {
-        hideAll();
-      }
-      return !prev;
-    });
-  };
-  const toggleSearchModalVisible = () => {
-    setSearchModalVisible((prevVisible) => {
-      if (!prevVisible) {
-        hideAll();
-      }
-      return !prevVisible;
-    });
-  };
-  const toggleUsersModalVisible = () => {
-    setUsersModalVisible((prevVisible) => {
-      if (!prevVisible) {
-        hideAll();
-      }
-      return !prevVisible;
-    });
-  };
-  const handleOpenChannelModal = (isPrivate: boolean) => {
-    setIsPrivate(isPrivate);
-    setChannelModalVisible(true);
-    hideAll();
-  };
-  const handleCloseModal = () => {
-    setChannelModalVisible(false);
-  };
+  const [activeModal, setActiveModal] = useState<ActiveModal>(null);
+
+  const openModal = (modal: ActiveModal) => { hideAll(); setActiveModal(modal); };
+  const closeModal = () => setActiveModal(null);
+
+  const toggleInviteModalVisible = () => openModal(activeModal === "invite" ? null : "invite");
+  const toggleSearchModalVisible = () => openModal(activeModal === "search" ? null : "search");
+  const toggleUsersModalVisible = () => openModal(activeModal === "users" ? null : "users");
+  const handleOpenChannelModal = (isPrivate: boolean) => { setIsPrivate(isPrivate); openModal("channel"); };
+  const handleCloseModal = closeModal;
 
   const itemClass =
     "rounded flex items-center gap-2 text-sm font-semibold cursor-pointer px-2 py-2.5 md:hover:bg-gray-800/20 md:dark:hover:bg-gray-200/20 transition-colors duration-200";
@@ -109,10 +84,10 @@ export default function AddEntriesMenu() {
           </li>
         )}
       </ul>
-      {channelModalVisible && <ChannelModal personal={isPrivate} closeModal={handleCloseModal} />}
-      {usersModalVisible && <UsersModal closeModal={toggleUsersModalVisible} />}
-      {inviteModalVisible && <InviteModal closeModal={toggleInviteModalVisible} />}
-      {searchModalVisible && <SearchUser closeModal={toggleSearchModalVisible} />}
+      {activeModal === "channel" && <ChannelModal personal={isPrivate} closeModal={handleCloseModal} />}
+      {activeModal === "users" && <UsersModal closeModal={closeModal} />}
+      {activeModal === "invite" && <InviteModal closeModal={closeModal} />}
+      {activeModal === "search" && <SearchUser closeModal={closeModal} />}
     </>
   );
 }

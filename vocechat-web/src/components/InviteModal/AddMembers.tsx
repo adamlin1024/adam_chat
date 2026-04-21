@@ -7,7 +7,6 @@ import useFilteredUsers from "@/hooks/useFilteredUsers";
 import CloseIcon from "@/assets/icons/close.svg";
 import Button from "../styled/Button";
 import StyledCheckbox from "../styled/Checkbox";
-import Input from "../styled/Input";
 import User from "../User";
 import { shallowEqual } from "react-redux";
 
@@ -54,27 +53,27 @@ const AddMembers: FC<Props> = ({ cid = 0, closeModal }) => {
 
   return (
     <div className="pt-4">
-      <div className="flex items-center max-w-[520px] min-h-[40px] px-2 py-1.5 mb-3 border border-solid border-slate-100 shadow rounded">
-        <ul className="flex items-center flex-wrap gap-1 w-full overflow-scroll">
+      <div className="flex items-center min-h-[40px] px-2 py-1.5 mb-3 bg-bg-surface border border-border rounded-md focus-within:border-border-strong transition-colors">
+        <ul className="flex items-center flex-wrap gap-1 w-full overflow-hidden">
           {selects.map((uid) => {
             return (
               <li
-                className="px-1.5 py-1 rounded text-sm bg-primary-300 text-white flex items-center justify-between gap-1"
+                className="px-1.5 py-0.5 rounded text-sm bg-accent text-accent-on flex items-center gap-1"
                 key={uid}
               >
                 {userData[uid]?.name}
                 <CloseIcon
                   data-uid={uid}
                   onClick={toggleCheckMember}
-                  className="cursor-pointer w-3 h-3 fill-white"
+                  className="cursor-pointer w-3 h-3 fill-accent-on"
                 />
               </li>
             );
           })}
-          <Input
+          <input
             autoFocus
             type="text"
-            className="!w-fit none"
+            className="bg-transparent outline-none text-sm text-fg-body placeholder:text-fg-disabled min-w-[60px] flex-1"
             value={input}
             onChange={handleFilterInput}
           />
