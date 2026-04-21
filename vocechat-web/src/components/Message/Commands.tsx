@@ -92,7 +92,7 @@ const Commands: FC<Props> = ({
       toast.error("Added Favorites Failed!");
     }
   };
-  const cmdClass = `flex h-7 w-7 cursor-pointer items-center justify-center rounded-sm border border-border bg-bg-app hover:border-border-strong hover:text-fg-primary text-fg-subtle transition-colors`;
+  const cmdClass = `flex h-9 w-9 cursor-pointer items-center justify-center rounded-sm border border-border bg-bg-app hover:border-border-strong hover:text-fg-primary text-fg-subtle transition-colors`;
   return (
     <>
       <ul
@@ -113,27 +113,27 @@ const Commands: FC<Props> = ({
         >
           <li className={cmdClass}>
             <Tooltip placement="top" tip={t("action.add_reaction")}>
-              <IconReact className="w-4 h-4 fill-fg-subtle" />
+              <IconReact className="w-5 h-5 fill-fg-subtle" />
             </Tooltip>
           </li>
         </Tippy>
         {canEdit && (
           <li className={cmdClass} onClick={toggleEditMessage}>
             <Tooltip placement="top" tip={t("action.edit")}>
-              <IconEdit className="w-4 h-4 fill-fg-subtle" />
+              <IconEdit className="w-5 h-5 fill-fg-subtle" />
             </Tooltip>
           </li>
         )}
         {canReply && (
           <li className={cmdClass} onClick={handleReply}>
             <Tooltip placement="top" tip={t("action.reply")}>
-              <IconReply className="w-4 h-4 fill-fg-subtle" />
+              <IconReply className="w-5 h-5 fill-fg-subtle" />
             </Tooltip>
           </li>
         )}
         <li className={cmdClass} onClick={handleAddFav}>
           <Tooltip placement="top" tip={t("action.add_to_fav")}>
-            <IconBookmark className="w-3.5 h-3.5 fill-fg-subtle" />
+            <IconBookmark className="w-4.5 h-4.5 fill-fg-subtle" />
           </Tooltip>
         </li>
         <Tippy
@@ -174,7 +174,7 @@ const Commands: FC<Props> = ({
         >
           <li className={cmdClass}>
             <Tooltip placement="top" tip={t("more")}>
-              <IconMore className="w-4 h-4 fill-fg-subtle" />
+              <IconMore className="w-5 h-5 fill-fg-subtle" />
             </Tooltip>
           </li>
         </Tippy>
