@@ -98,6 +98,7 @@ const Toolbar: FC<Props> = ({
           <button
             tabIndex={-1}
             onClick={sendMessages}
+            onMouseDown={(e) => e.preventDefault()}
             className={`rounded-sm px-3 py-[5px] font-mono text-[12px] font-bold whitespace-nowrap transition-colors ${
               sendVisible
                 ? "bg-accent text-accent-on cursor-pointer"
