@@ -93,22 +93,27 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
         >
           {/* Sheet header — drag area */}
           <div
-            className="flex items-center justify-between px-4 py-3 border-b border-border-subtle shrink-0 touch-none select-none"
+            className="flex flex-col shrink-0 touch-none select-none"
             onTouchStart={handleDragStart}
             onTouchMove={handleDragMove}
             onTouchEnd={handleDragEnd}
           >
-            {nav ? (
-              <NavLink to={pathPrefix} className="p-1 -ml-1">
-                <IconBack className="w-4 h-4 fill-fg-secondary" />
-              </NavLink>
-            ) : (
-              <div className="w-7" />
-            )}
-            <span className="font-semibold text-sm text-fg-primary">
-              {nav ? nav.title : title}
-            </span>
-            <button onClick={closeModal} className="text-fg-subtle p-1 text-lg leading-none">✕</button>
+            <div className="flex justify-center pt-2.5 pb-1">
+              <div className="w-9 h-1 rounded-full bg-fg-disabled" />
+            </div>
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
+              {nav ? (
+                <NavLink to={pathPrefix} className="p-1 -ml-1">
+                  <IconBack className="w-4 h-4 fill-fg-secondary" />
+                </NavLink>
+              ) : (
+                <div className="w-7" />
+              )}
+              <span className="font-semibold text-sm text-fg-primary">
+                {nav ? nav.title : title}
+              </span>
+              <button onClick={closeModal} className="text-fg-subtle p-1 text-lg leading-none">✕</button>
+            </div>
           </div>
 
           {/* 選單列表 或 子頁內容 */}
