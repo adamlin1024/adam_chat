@@ -47,7 +47,7 @@ const Loading: FC<Props> = ({
         fullscreen ? "w-screen h-screen" : ""
       )}
     >
-      <Ring size={40} lineWeight={5} speed={2} color="black" />
+      <Ring size={40} lineWeight={5} speed={2} color="#71717a" />
       <Button
         className={clsx(`danger`, reloadVisible ? "visible" : "invisible")}
         onClick={handleReload}

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import initCache, { useRehydrate } from "@/app/cache";
 import { useLazyGetFavoritesQuery, useLazyLoadMoreMessagesQuery } from "@/app/services/message";
@@ -10,7 +10,9 @@ import useStreaming from "./useStreaming";
 import { shallowEqual } from "react-redux";
 
 let preloadChannelMsgs = false;
+const PRELOAD_TIMEOUT_MS = 15000;
 export default function usePreload() {
+  const [timedOut, setTimedOut] = useState(false);
   const { isLoading: loadingLicense } = useLicense(false);
   const [preloadChannelMessages] = useLazyLoadMoreMessagesQuery();
   const { rehydrate, rehydrated } = useRehydrate();
@@ -46,16 +48,15 @@ export default function usePreload() {
 
   const [
     getServerVersion,
-    { data: serverVersion, isSuccess: serverVersionSuccess, isLoading: loadingServerVersion }
+    { data: serverVersion, isSuccess: serverVersionSuccess, isError: serverVersionError, isLoading: loadingServerVersion }
   ] = useLazyGetServerVersionQuery();
   const [getSystemCommon] = useLazyGetSystemCommonQuery();
   useEffect(() => {
     initCache();
     rehydrate();
     getServerVersion();
-    // return ()=>{
-    //   stopStreaming()
-    // }
+    const timer = setTimeout(() => setTimedOut(true), PRELOAD_TIMEOUT_MS);
+    return () => clearTimeout(timer);
   }, []);
   // 在 guest 的时候 预取 channel 数据
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function usePreload() {
     }
   }, [channelIds, channelMessageData, isGuest]);
   useEffect(() => {
-    if (rehydrated && serverVersion) {
+    if (rehydrated) {
       getUsers().then(() => {
         if (!isGuest) {
           getContacts();
@@ -79,7 +80,7 @@ export default function usePreload() {
       getFavorites();
       getSystemCommon();
     }
-  }, [rehydrated, serverVersion, isGuest]);
+  }, [rehydrated, isGuest]);
   const tokenAlmostExpire = dayjs().isAfter(new Date(expireTime - 20 * 1000));
   const canStreaming = !!loginUid && rehydrated && !!token && !tokenAlmostExpire && !ready;
 
@@ -93,11 +94,16 @@ export default function usePreload() {
       }, 100);
     }
   }, [canStreaming]);
+  const apisDone =
+    (usersSuccess || usersError) &&
+    (favoritesSuccess || favoritesError) &&
+    (serverVersionSuccess || serverVersionError || timedOut);
+
   return {
     loading:
       usersLoading || favoritesLoading || !rehydrated || loadingLicense || loadingServerVersion,
     error: usersError && favoritesError,
-    success: usersSuccess && favoritesSuccess && serverVersionSuccess,
+    success: apisDone || timedOut,
     data: {
       users: enableContacts ? contacts : users,
       favorites
