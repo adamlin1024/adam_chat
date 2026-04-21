@@ -100,7 +100,7 @@ const Toolbar: FC<Props> = ({
             onClick={sendMessages}
             className={`rounded-sm px-3 py-[5px] font-mono text-[12px] font-bold whitespace-nowrap transition-colors ${
               sendVisible
-                ? "bg-accent text-accent-on cursor-pointer animate-zoomIn"
+                ? "bg-accent text-accent-on cursor-pointer"
                 : "bg-bg-surface text-fg-disabled cursor-default"
             }`}
           >
