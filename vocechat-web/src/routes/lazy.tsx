@@ -1,6 +1,6 @@
 import { FC, ReactNode, Suspense } from "react";
 
-import Loading from "@/components/Loading";
+import SkeletonScreen from "@/components/SkeletonScreen";
 
 type Props = {
   key?: string;
@@ -11,7 +11,7 @@ const Lazy: FC<Props> = ({ key, children }) => {
   return (
     <Suspense
       key={key ?? new Date().getTime()}
-      fallback={<Loading fullscreen={true} context="lazy" />}
+      fallback={<SkeletonScreen />}
     >
       {children}
     </Suspense>

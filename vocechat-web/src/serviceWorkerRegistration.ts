@@ -42,10 +42,19 @@ export function register(config: Config) {
 
 function registerValidSW(swUrl: string, config: Config) {
   if (!navigator.serviceWorker) return;
+
+  // Reload once when a new SW takes over, so old JS chunks don't mix with new ones.
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      // If a new SW is already waiting, activate it immediately (no reload needed).
+      // If a new SW is already waiting, activate it immediately.
       if (registration.waiting) {
         registration.waiting.postMessage({ type: "SKIP_WAITING" });
         return;
@@ -57,7 +66,7 @@ function registerValidSW(swUrl: string, config: Config) {
         installingWorker.onstatechange = () => {
           if (installingWorker.state === "installed") {
             if (navigator.serviceWorker.controller) {
-              // New SW ready — activate silently without reloading.
+              // New SW ready — activate it, controllerchange will handle the reload.
               installingWorker.postMessage({ type: "SKIP_WAITING" });
             } else if (config && config.onSuccess) {
               config.onSuccess(registration);

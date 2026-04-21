@@ -5,7 +5,7 @@ import { NavLink, Outlet, useLocation, useMatch } from "react-router-dom";
 
 import { updateRememberedNavs } from "@/app/slices/ui";
 import { useAppSelector } from "@/app/store";
-import Loading from "@/components/Loading";
+import SkeletonScreen from "@/components/SkeletonScreen";
 import Manifest from "@/components/Manifest";
 import Notification from "@/components/Notification";
 import ReLoginModal from "@/components/ReLoginModal";
@@ -46,7 +46,7 @@ function HomePage() {
 
   console.info("preload success", success);
   if (!success) {
-    return <Loading reload={true} fullscreen={true} context="home-route" />;
+    return <SkeletonScreen />;
   }
   const isSettingPage = pathname.startsWith("/setting");
   const isChattingPage = isHomePath || pathname.startsWith("/chat");

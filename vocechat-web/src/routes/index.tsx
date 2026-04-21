@@ -17,24 +17,27 @@ import LazyIt from "./lazy";
 import InviteInMobile from "./reg/InviteInMobile";
 import usePrefetchData from "@/hooks/usePrefetchData";
 
+// 主要分頁：直接 import，不做 lazy，切換時不觸發 Suspense
+import ChatPage from "./chat";
+import UsersPage from "./users";
+import FavoritesPage from "./favs";
+import FilesPage from "./files";
+import HomePage from "./home";
+import ResourceManagement from "./resources";
+
+// 少用頁面：保留 lazy，減少首次載入體積
 const RegBasePage = lazy(() => import("./reg"));
 const RegWithUsernamePage = lazy(() => import("./reg/RegWithUsername"));
 const SendMagicLinkPage = lazy(() => import("./sendMagicLink"));
 const RegPage = lazy(() => import("./reg/Register"));
 const LoginPage = lazy(() => import("./login"));
 const OAuthPage = lazy(() => import("./oauth"));
-const UsersPage = lazy(() => import("./users"));
 const CallbackPage = lazy(() => import("./callback"));
-const FavoritesPage = lazy(() => import("./favs"));
 const OnboardingPage = lazy(() => import("./onboarding"));
 const SettingChannelPage = lazy(() => import("./settingChannel"));
 const SettingDMPage = lazy(() => import("./settingDM"));
 const SettingPage = lazy(() => import("./setting"));
-const ResourceManagement = lazy(() => import("./resources"));
-const FilesPage = lazy(() => import("./files"));
 const GuestLogin = lazy(() => import("./guest"));
-const ChatPage = lazy(() => import("./chat"));
-const HomePage = lazy(() => import("./home"));
 
 let toastId: string;
 const PageRoutes = () => {
@@ -171,14 +174,11 @@ const PageRoutes = () => {
           key={"main"}
           path="/"
           element={
-            <LazyIt>
-              <RequireAuth guestMode={guestMode}>
-                {/* 只允许活跃一个 tab 标签 */}
-                <RequireSingleTab>
-                  <HomePage />
-                </RequireSingleTab>
-              </RequireAuth>
-            </LazyIt>
+            <RequireAuth guestMode={guestMode}>
+              <RequireSingleTab>
+                <HomePage />
+              </RequireSingleTab>
+            </RequireAuth>
           }
         >
           <Route path="setting">
@@ -215,74 +215,21 @@ const PageRoutes = () => {
               }
             />
           </Route>
-          <Route
-            index
-            element={
-              <LazyIt>
-                <ChatPage />
-              </LazyIt>
-            }
-          />
+          <Route index element={<ChatPage />} />
           <Route path="chat">
-            <Route
-              index
-              element={
-                <LazyIt>
-                  <ChatPage />
-                </LazyIt>
-              }
-            />
-            <Route
-              path="channel/:channel_id"
-              element={
-                <LazyIt>
-                  <ChatPage />
-                </LazyIt>
-              }
-            />
-            <Route
-              path="dm/:user_id"
-              element={
-                <LazyIt>
-                  <ChatPage />
-                </LazyIt>
-              }
-            />
+            <Route index element={<ChatPage />} />
+            <Route path="channel/:channel_id" element={<ChatPage />} />
+            <Route path="dm/:user_id" element={<ChatPage />} />
           </Route>
           <Route path="users">
-            <Route
-              index
-              element={
-                <LazyIt key="users">
-                  <UsersPage />
-                </LazyIt>
-              }
-            />
-            <Route
-              path=":user_id"
-              element={
-                <LazyIt key=":user_id">
-                  <UsersPage />
-                </LazyIt>
-              }
-            />
+            <Route index element={<UsersPage />} />
+            <Route path=":user_id" element={<UsersPage />} />
           </Route>
-          <Route
-            path="favs"
-            element={
-              <LazyIt key="favs">
-                <FavoritesPage />
-              </LazyIt>
-            }
-          ></Route>
+          <Route path="favs" element={<FavoritesPage />} />
           <Route
             path="files"
-            element={
-              <LazyIt key="files">
-                {compareVersion(version, "0.3.11") > -1 ? <FilesPage /> : <ResourceManagement />}
-              </LazyIt>
-            }
-          ></Route>
+            element={compareVersion(version, "0.3.11") > -1 ? <FilesPage /> : <ResourceManagement />}
+          />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
