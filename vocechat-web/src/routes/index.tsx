@@ -183,17 +183,9 @@ const PageRoutes = () => {
         >
           <Route path="setting">
             <Route
-              index
-              element={
-                <LazyIt key="setting">
-                  <SettingPage />
-                </LazyIt>
-              }
-            />
-            <Route
               path=":nav?"
               element={
-                <LazyIt>
+                <LazyIt key="setting">
                   <SettingPage />
                 </LazyIt>
               }

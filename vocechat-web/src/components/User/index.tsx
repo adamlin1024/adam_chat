@@ -5,7 +5,6 @@ import clsx from "clsx";
 
 import { useAppSelector } from "@/app/store";
 import useContextMenu from "@/hooks/useContextMenu";
-import useLongPress from "@/hooks/useLongPress";
 import IconBot from "@/assets/icons/bot.svg";
 import IconAdmin from "@/assets/icons/owner.svg";
 import Avatar from "../Avatar";
@@ -43,10 +42,7 @@ const User: FC<Props> = ({
   ...rest
 }) => {
   const navigate = useNavigate();
-  const { visible: contextMenuVisible, handleContextMenuEvent, hideContextMenu, showContextMenu } = useContextMenu();
-  const longPressHandlers = useLongPress(() => {
-    if (enableContextMenu) showContextMenu();
-  });
+  const { visible: contextMenuVisible, handleContextMenuEvent, hideContextMenu } = useContextMenu();
   const curr = useAppSelector((store) => store.users.byId[uid], shallowEqual);
   const loginUid = useAppSelector((store) => store.authData.user?.uid, shallowEqual);
   const showStatus = useAppSelector((store) => store.server.show_user_online_status, shallowEqual);
@@ -95,7 +91,6 @@ const User: FC<Props> = ({
           onClick={enableNavToSetting ? handleNavToSetting : undefined}
           onDoubleClick={dm ? handleDoubleClick : undefined}
           onContextMenu={enableContextMenu && !isMobileViewport() ? handleContextMenuEvent : undefined}
-          {...(enableContextMenu && isMobileViewport() ? longPressHandlers : {})}
           {...rest}
         >
           <div
@@ -144,7 +139,6 @@ const User: FC<Props> = ({
           className={containerClass}
           onDoubleClick={dm ? handleDoubleClick : undefined}
           onContextMenu={enableContextMenu && !isMobileViewport() ? handleContextMenuEvent : undefined}
-          {...(enableContextMenu && isMobileViewport() ? longPressHandlers : {})}
           {...rest}
         >
           <div

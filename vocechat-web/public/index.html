@@ -165,6 +165,27 @@
       width: 100vw;
       height: 100dvh;
     }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to   { transform: translateY(0);   opacity: 1; }
+    }
+
+    @media (max-width: 767px) {
+      #root-modal > .wrapper,
+      #modal-modal > .wrapper {
+        align-items: flex-end;
+      }
+
+      #root-modal.mask > .wrapper > *,
+      #modal-modal.mask > .wrapper > * {
+        animation: modalSlideUp 320ms cubic-bezier(0.32, 0.72, 0, 1) both;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        width: 100%;
+        max-width: 100%;
+      }
+    }
   </style>
   <style>
     /* reset */

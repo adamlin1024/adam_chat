@@ -62,10 +62,10 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
           <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle shrink-0">
             {nav ? (
               <NavLink to={pathPrefix} className="p-1 -ml-1">
-                <IconBack className="w-4 h-4 fill-fg-secondary" />
+                <IconBack className="w-6 h-6 fill-fg-secondary" />
               </NavLink>
             ) : (
-              <div className="w-6" />
+              <div className="w-8" />
             )}
             <span className="font-semibold text-sm text-fg-primary">
               {nav ? nav.title : title}

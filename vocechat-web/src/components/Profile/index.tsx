@@ -43,6 +43,10 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
     isAdmin,
     canUpdateRole,
     updateRole,
+    canBlock,
+    blockThisContact,
+    canRemoveFromContact,
+    removeFromContact,
   } = useUserOperation({ uid, cid });
   const data = useAppSelector((store) => store.users.byId[uid], shallowEqual);
   if (!data) return null;
@@ -122,6 +126,8 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
                         ],
                       },
                       canRemoveFromChannel && { title: t("remove_from_channel"), danger: true, handler: removeFromChannel },
+                      canRemoveFromContact && { title: t("remove_from_contact"), danger: true, handler: removeFromContact },
+                      canBlock && { title: chatTrans("block"), danger: true, handler: blockThisContact },
                       canRemoveFromServer && { title: t("remove"), danger: true, handler: removeUser },
                     ].filter(Boolean)) as ActionSheetItem[]}
                   />
@@ -149,6 +155,8 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
                           ],
                         },
                         canRemoveFromChannel && { title: t("remove_from_channel"), danger: true, handler: removeFromChannel },
+                        canRemoveFromContact && { title: t("remove_from_contact"), danger: true, handler: removeFromContact },
+                        canBlock && { title: chatTrans("block"), danger: true, handler: blockThisContact },
                         canRemoveFromServer && { title: t("remove"), danger: true, handler: removeUser },
                       ].filter(Boolean)) as Item[]}
                     />

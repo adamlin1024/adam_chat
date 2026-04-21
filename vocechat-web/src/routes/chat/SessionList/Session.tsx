@@ -174,19 +174,19 @@ const Session: FC<IProps> = ({
     >
       {/* 左滑動作按鈕（手機專用） */}
       <div
-        className="absolute right-0 top-0 h-full flex"
+        className="absolute right-0 top-0 h-full flex z-0"
         style={{ width: `${ACTION_W}px` }}
       >
         <button
           onClick={handleHide}
-          className="flex-1 flex flex-col items-center justify-center bg-zinc-600 text-white text-[11px] font-medium gap-0.5"
+          className="flex-1 flex flex-col items-center justify-center bg-zinc-600 text-white text-[13px] font-medium gap-0.5"
         >
           <span>隱藏</span>
         </button>
         {type === "channel" && (
           <button
             onClick={handleDelete}
-            className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white text-[11px] font-medium gap-0.5"
+            className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white text-[13px] font-medium gap-0.5"
           >
             <span>刪除</span>
           </button>
@@ -196,12 +196,12 @@ const Session: FC<IProps> = ({
       {/* Session 內容，左滑時向左移 */}
       <div
         style={{
-          transform: `translateX(${swipeOffset}px)`,
+          transform: swipeOffset !== 0 ? `translateX(${swipeOffset}px)` : undefined,
           transition: swipeOffset === 0 || swipeOffset === -ACTION_W
             ? "transform 240ms cubic-bezier(0.32,0.72,0,1)"
             : "none",
         }}
-        className="relative bg-bg-sidebar"
+        className="relative z-10 w-full bg-bg-sidebar"
         onClick={swipeLocked ? closeSwipe : undefined}
       >
       <ContextMenu
