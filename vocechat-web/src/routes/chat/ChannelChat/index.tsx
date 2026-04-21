@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { shallowEqual, useDispatch } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 
 import { updateChannelVisibleAside } from "@/app/slices/footprint";
@@ -187,23 +187,14 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
         }
         header={
           <>
-            <header className="h-14 flex-shrink-0 flex items-center gap-2.5 px-4 md:px-3 border-b border-border-subtle bg-bg-canvas">
+            <header className="h-14 flex-shrink-0 flex items-center px-4 md:px-3 border-b border-border-subtle bg-bg-canvas relative">
               <GoBackNav />
-              <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                <Link
-                  to={`/setting/channel/${cid}/overview?f=/chat/channel/${cid}`}
-                  className="flex items-center gap-2 min-w-0"
-                >
-                  <span className="font-mono text-fg-subtle shrink-0">#</span>
-                  <span className="text-[16px] font-semibold tracking-tight text-fg-primary whitespace-nowrap truncate">{name}</span>
-                </Link>
-                {description && (
-                  <span className="hidden md:block border-l border-border pl-2.5 font-mono text-[11px] tracking-[0.14em] uppercase text-fg-disabled truncate">
-                    {description}
-                  </span>
-                )}
+              <span className="absolute left-1/2 -translate-x-1/2 font-semibold text-sm text-fg-primary truncate max-w-[60%]">
+                {name}
+              </span>
+              <div className="ml-auto">
+                <MessageSearch context="channel" id={cid} onLocate={handleLocate} />
               </div>
-              <MessageSearch context="channel" id={cid} onLocate={handleLocate} />
             </header>
             {announcement && showBanner && !bannerDismissed && (
               <AnnouncementBanner

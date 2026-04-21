@@ -60,12 +60,14 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
         </ul>
       }
       header={
-        <header className="h-14 flex-shrink-0 box-border px-4 md:px-3 flex items-center justify-between border-b border-border-subtle bg-bg-canvas relative">
+        <header className="h-14 flex-shrink-0 box-border px-4 md:px-3 flex items-center border-b border-border-subtle bg-bg-canvas relative">
           <GoBackNav />
           <span className="absolute left-1/2 -translate-x-1/2 font-semibold text-sm text-fg-primary truncate max-w-[60%]">
             {currUser.name}
           </span>
-          <MessageSearch context="dm" id={uid} onLocate={handleLocate} />
+          <div className="ml-auto">
+            <MessageSearch context="dm" id={uid} onLocate={handleLocate} />
+          </div>
         </header>
       }
     />
