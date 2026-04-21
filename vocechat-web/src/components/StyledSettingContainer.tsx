@@ -100,7 +100,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
           >
             {nav ? (
               <NavLink to={pathPrefix} className="p-1 -ml-1">
-                <IconBack className="w-5 h-5 fill-fg-secondary" />
+                <IconBack className="w-4 h-4 fill-fg-secondary" />
               </NavLink>
             ) : (
               <div className="w-7" />
@@ -134,7 +134,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                             <NavLink to={`${pathPrefix}/${name}`}
                               className="flex items-center justify-between px-1 py-3.5 text-[14px] text-fg-body">
                               {itemTitle}
-                              <IconBack className="w-3.5 h-3.5 fill-fg-subtle rotate-180" />
+                              <IconBack className="w-4 h-4 fill-fg-subtle rotate-180" />
                             </NavLink>
                           )}
                         </li>

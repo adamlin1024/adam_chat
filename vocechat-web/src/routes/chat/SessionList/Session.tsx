@@ -28,6 +28,7 @@ interface IProps {
   mid: number;
   pinned?: boolean;
   setDeleteChannelId: (param: number) => void;
+  setDeleteDMId: (param: number) => void;
   setInviteChannelId: (param: number) => void;
 }
 const Session: FC<IProps> = ({
@@ -36,6 +37,7 @@ const Session: FC<IProps> = ({
   id,
   mid,
   setDeleteChannelId,
+  setDeleteDMId,
   setInviteChannelId,
 }) => {
   const navPath = type == "dm" ? `/chat/dm/${id}` : `/chat/channel/${id}`;
@@ -49,7 +51,7 @@ const Session: FC<IProps> = ({
   const startXRef = useRef(0);
   const [swipeOffset, setSwipeOffset] = useState(0);
   const [swipeLocked, setSwipeLocked] = useState(false);
-  const ACTION_W = type === "dm" ? 80 : 160;
+  const ACTION_W = 160;
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     startXRef.current = e.touches[0].clientX;
@@ -84,9 +86,13 @@ const Session: FC<IProps> = ({
 
   const handleDelete = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    setDeleteChannelId(id);
+    if (type === "channel") {
+      setDeleteChannelId(id);
+    } else {
+      setDeleteDMId(id);
+    }
     closeSwipe();
-  }, [id, setDeleteChannelId, closeSwipe]);
+  }, [id, type, setDeleteChannelId, setDeleteDMId, closeSwipe]);
 
   const [{ isActive }, drop] = useDrop(
     () => ({
@@ -183,14 +189,12 @@ const Session: FC<IProps> = ({
         >
           <span>隱藏</span>
         </button>
-        {type === "channel" && (
-          <button
-            onClick={handleDelete}
-            className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white text-[13px] font-medium gap-0.5"
-          >
-            <span>刪除</span>
-          </button>
-        )}
+        <button
+          onClick={handleDelete}
+          className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white text-[13px] font-medium gap-0.5"
+        >
+          <span>刪除</span>
+        </button>
       </div>
 
       {/* Session 內容，左滑時向左移 */}

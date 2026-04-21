@@ -6,6 +6,7 @@ import { ChatContext } from "@/types/common";
 import { PinChatTargetChannel, PinChatTargetUser } from "@/types/sse";
 import InviteModal from "@/components/InviteModal";
 import DeleteChannelConfirmModal from "../../settingChannel/DeleteConfirmModal";
+import DeleteDMConfirmModal from "./DeleteDMConfirmModal";
 import Session from "./Session";
 import { shallowEqual } from "react-redux";
 
@@ -21,6 +22,7 @@ type Props = {
 const SessionList: FC<Props> = ({ tempSession }) => {
   const ref = useRef<HTMLUListElement | null>(null);
   const [deleteId, setDeleteId] = useState<number>();
+  const [deleteDMId, setDeleteDMId] = useState<number>();
   const [inviteChannelId, setInviteChannelId] = useState<number>();
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [pinSessions, setPinSessions] = useState<ChatSession[]>([]);
@@ -132,6 +134,7 @@ const SessionList: FC<Props> = ({ tempSession }) => {
                 mid={mid}
                 setInviteChannelId={setInviteChannelId}
                 setDeleteChannelId={setDeleteId}
+                setDeleteDMId={setDeleteDMId}
               />
             );
           })}
@@ -154,6 +157,7 @@ const SessionList: FC<Props> = ({ tempSession }) => {
                 mid={mid}
                 setInviteChannelId={setInviteChannelId}
                 setDeleteChannelId={setDeleteId}
+                setDeleteDMId={setDeleteDMId}
               />
             );
           }}
@@ -162,9 +166,13 @@ const SessionList: FC<Props> = ({ tempSession }) => {
       {!!deleteId && (
         <DeleteChannelConfirmModal
           id={deleteId}
-          closeModal={() => {
-            setDeleteId(0);
-          }}
+          closeModal={() => setDeleteId(0)}
+        />
+      )}
+      {!!deleteDMId && (
+        <DeleteDMConfirmModal
+          id={deleteDMId}
+          closeModal={() => setDeleteDMId(0)}
         />
       )}
       {!!inviteChannelId && (
