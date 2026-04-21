@@ -13,15 +13,20 @@ export default function useAnnouncementDisplay(cid: number, announcement?: Group
       return;
     }
 
-    const storageKey = `announcement_read_${cid}`;
-    const storedTimestamp = localStorage.getItem(storageKey);
+    const readKey = `announcement_read_${cid}`;
+    const dismissKey = `announcement_banner_dismissed_${cid}`;
+    const storedTimestamp = localStorage.getItem(readKey);
+    const isNewOrUpdated = !storedTimestamp || new Date(storedTimestamp) < new Date(announcement.updated_at);
 
-    if (!storedTimestamp || new Date(storedTimestamp) < new Date(announcement.updated_at)) {
+    if (isNewOrUpdated) {
       setShowModal(true);
       setShowBanner(false);
       setBannerDismissed(false);
+      localStorage.removeItem(dismissKey);
     } else {
       setShowModal(false);
+      const dismissed = localStorage.getItem(dismissKey) === "1";
+      setBannerDismissed(dismissed);
       setShowBanner(true);
     }
   }, [announcement, cid]);
@@ -38,7 +43,11 @@ export default function useAnnouncementDisplay(cid: number, announcement?: Group
   };
 
   const handleBannerExpand = () => setShowModal(true);
-  const handleBannerDismiss = () => setBannerDismissed(true);
+
+  const handleBannerDismiss = () => {
+    localStorage.setItem(`announcement_banner_dismissed_${cid}`, "1");
+    setBannerDismissed(true);
+  };
 
   return {
     showModal,
