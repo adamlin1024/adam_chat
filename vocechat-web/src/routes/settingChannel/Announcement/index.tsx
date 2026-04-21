@@ -83,11 +83,11 @@ export default function Announcement({ id = 0 }) {
   return (
     <ServerVersionChecker version="0.5.13">
       {!canManage ? (
-        <div className="w-[512px] p-4 text-gray-500 dark:text-gray-400">
+        <div className="w-full md:w-[512px] p-4 text-gray-500 dark:text-gray-400">
           {t("no_permission") || "You don't have permission to manage announcements"}
         </div>
       ) : (
-        <div className="w-[512px] flex flex-col gap-6 h-full mb-10">
+        <div className="w-full md:w-[512px] flex flex-col gap-6 h-full mb-10">
           <div className="flex flex-col gap-2">
             <Label>Channel Announcement</Label>
             <p className="text-sm text-gray-500 dark:text-gray-400">

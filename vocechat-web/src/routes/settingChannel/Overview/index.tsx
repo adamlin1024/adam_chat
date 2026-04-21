@@ -94,7 +94,7 @@ export default function Overview({ id = 0 }) {
   const readOnly = !loginUser?.is_admin && channel?.owner != loginUser?.uid;
   const inputClass = `w-full flex flex-col items-start gap-2 relative`;
   return (
-    <div className="relative w-[512px] flex flex-col gap-6 h-full mb-10">
+    <div className="relative w-full md:w-[512px] flex flex-col gap-6 h-full mb-10">
       <AvatarUploader type="channel" url={channel?.icon} name={name} uploadImage={updateIcon} />
       <div className="flex flex-col gap-6 items-start">
         <div className={"flex items-center gap-1"}>
