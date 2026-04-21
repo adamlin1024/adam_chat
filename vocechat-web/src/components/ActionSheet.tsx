@@ -1,5 +1,4 @@
 import { FC, useEffect, useRef, useState } from "react";
-import IconArrow from "@/assets/icons/arrow.right.svg";
 import IconChecked from "@/assets/icons/check.sign.svg";
 import IconBack from "@/assets/icons/arrow.left.svg";
 
@@ -122,7 +121,7 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
           <div className="relative flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
             {stack.length > 0 ? (
               <button className="p-1 -ml-1 rounded" onClick={handleBack}>
-                <IconBack className="w-5 h-5 fill-fg-secondary" />
+                <IconBack className="w-5 h-5 dark:stroke-white" />
               </button>
             ) : (
               <div className="w-7" />
@@ -154,7 +153,7 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
               <span>{item.title}</span>
               {item.checked && <IconChecked className="w-4 h-4 fill-accent" />}
               {item.subs && item.subs.length > 0 && (
-                <IconArrow className="w-3.5 h-3.5 fill-fg-subtle" />
+                <IconBack className="w-5 h-5 dark:stroke-white rotate-180" />
               )}
             </li>
           ))}
