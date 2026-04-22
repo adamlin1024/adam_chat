@@ -64,3 +64,4 @@ export declare global {
   }
 }
 export type ShareScreenTrack = ILocalVideoTrack | [ILocalVideoTrack, ILocalAudioTrack];
+

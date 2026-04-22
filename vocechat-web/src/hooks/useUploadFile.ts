@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import heic2any from "heic2any";
 
 import BASE_URL, { FILE_SLICE_SIZE } from "@/app/config";
 import { usePrepareUploadFileMutation, useUploadFileMutation } from "@/app/services/message";
@@ -24,13 +23,39 @@ interface IProps {
 }
 const convertHeic2Jpg = async (file: { name: string; type: string; size: number; url: string }) => {
   const res = await fetch(file.url);
-  const blob = await res.blob();
-  const jpgBlob = (await heic2any({
-    blob,
-    toType: "image/jpeg",
-    quality: 0.8
-  })) as Blob;
-  const newName = file.name.replace(/\.hei\w$/i, ".jpg");
+  const arrayBuffer = await res.arrayBuffer();
+  const { default: libheif } = await import("libheif-js/wasm-bundle");
+
+  const decoder = new libheif.HeifDecoder();
+  const images = decoder.decode(new Uint8Array(arrayBuffer));
+  if (!images || images.length === 0) throw new Error("No images found in HEIC file");
+
+  const image = images[0];
+  const width = image.get_width();
+  const height = image.get_height();
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d")!;
+  const imageData = ctx.createImageData(width, height);
+
+  await new Promise<void>((resolve, reject) => {
+    image.display(imageData, (displayData: ImageData | null) => {
+      if (!displayData) return reject(new Error("HEIC display error"));
+      ctx.putImageData(displayData, 0, 0);
+      resolve();
+    });
+  });
+
+  const jpgBlob = await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) return reject(new Error("Canvas toBlob failed"));
+      resolve(blob);
+    }, "image/jpeg", 0.8);
+  });
+
+  const newName = file.name.replace(/\.hei\w+$/i, ".jpg");
   return { ...file, name: newName, converting: false, url: URL.createObjectURL(jpgBlob) };
 };
 const useUploadFile = (props?: IProps) => {
@@ -169,10 +194,14 @@ const useUploadFile = (props?: IProps) => {
     dispatch(updateUploadFiles({ context, id, data: filesData }));
     if (heifs.length) {
       heifs.forEach((idx) => {
-        convertHeic2Jpg(filesData[idx]).then((res) => {
-          console.log("heif2jpg", res);
-          dispatch(updateUploadFiles({ context, id, data: res, operation: "replace", idx }));
-        });
+        convertHeic2Jpg(filesData[idx])
+          .then((res) => {
+            dispatch(updateUploadFiles({ context, id, data: res, operation: "replace", idx }));
+          })
+          .catch(() => {
+            toast.error("圖片格式無法處理，請轉換後再上傳");
+            dispatch(updateUploadFiles({ context, id, operation: "remove", index: idx }));
+          });
       });
     }
   };
