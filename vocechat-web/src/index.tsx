@@ -41,12 +41,14 @@ document.addEventListener("focusin", (e) => {
     setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 400);
   }
 });
-// Fade out the HTML splash once React is ready
+// Keep splash visible for at least 1s so the animation is perceptible, then fade out
 const splash = document.getElementById("splash");
 if (splash) {
-  splash.style.transition = "opacity 350ms ease";
-  splash.style.opacity = "0";
-  setTimeout(() => splash.remove(), 350);
+  setTimeout(() => {
+    splash.style.transition = "opacity 350ms ease";
+    splash.style.opacity = "0";
+    setTimeout(() => splash.remove(), 350);
+  }, 1000);
 }
 
 root.render(
