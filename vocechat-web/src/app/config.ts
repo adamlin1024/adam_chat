@@ -110,19 +110,18 @@ export const MessageTypes = {
   archive: "vocechat/archive",
 };
 export const firebaseConfig = {
-  apiKey: "AIzaSyCc3VuCJZgzQLIH2wrYdQzsUOc1DuZiIOA",
-  authDomain: "vocechatdev.firebaseapp.com",
-  projectId: "vocechatdev",
-  storageBucket: "vocechatdev.appspot.com",
-  messagingSenderId: "526613312184",
-  appId: "1:526613312184:web:d13c92582baf470d487a4d",
-  measurementId: "G-82RQ3YSCP7",
+  apiKey: "AIzaSyAa2478MzY69Kx7prkAkmLGi8vUUx7IKZ0",
+  authDomain: "adam-chat-7dc02.firebaseapp.com",
+  projectId: "adam-chat-7dc02",
+  storageBucket: "adam-chat-7dc02.firebasestorage.app",
+  messagingSenderId: "538560352843",
+  appId: "1:538560352843:web:03fd2c1b5a55d8a92273ce",
 };
 export const ChatPrefixes = {
   channel: "#",
   dm: "@",
 };
-export const vapidKey = `BOmzyZhw-DcIGYQ77mzQUVqLlcvn0bm_76P_kc7rpwRxzXNbui-JP8iPyEQYfyoxyJeq43Ud4IiIsJSMNHNujn0`;
+export const vapidKey = `BEgz2D7pZyMqoV4pzNM_--1QZ5tT9QKmdlsT85k7YGIM-b2jXgghAcwFZhJ2DNAbKvfkvNrNJrNXc0o0GCxbJcc`;
 export const tokenHeader = "X-API-Key";
 export const KEY_SERVER_VERSION = "VC_SERVER_VERSION"; //
 export const FILE_SLICE_SIZE = 1000 * 1000; //
