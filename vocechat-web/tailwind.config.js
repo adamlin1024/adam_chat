@@ -4,6 +4,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/*.html"],
   theme: {
     extend: {
+      height: { screen: "100dvh" },
+      minHeight: { screen: "100dvh" },
+      maxHeight: { screen: "100dvh" },
       fontSize: {
         xs: ["0.75rem", "1.125rem"],
         "xs-ds":   ["10.5px", { lineHeight: "1.4" }],
