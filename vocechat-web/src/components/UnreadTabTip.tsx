@@ -17,24 +17,29 @@ function getFaviconLink(): HTMLLinkElement {
   return link;
 }
 
-function drawFaviconBadge(img: HTMLImageElement | null, count: number): string {
+function drawFaviconBadge(count: number): string {
   const canvas = document.createElement("canvas");
   canvas.width = 32;
   canvas.height = 32;
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
-  if (img) ctx.drawImage(img, 0, 0, 32, 32);
-  if (count > 0) {
-    ctx.fillStyle = "#ef4444";
-    ctx.beginPath();
-    ctx.arc(26, 6, 7, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.fillStyle = "#fff";
-    ctx.font = `bold ${count > 9 ? "7" : "9"}px Arial`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(count > 99 ? "99" : String(count), 26, 6);
-  }
+  // dark circle background
+  ctx.fillStyle = "#0c0d10";
+  ctx.beginPath();
+  ctx.arc(16, 16, 16, 0, 2 * Math.PI);
+  ctx.fill();
+  // red badge
+  ctx.fillStyle = "#ef4444";
+  ctx.beginPath();
+  ctx.arc(16, 16, 12, 0, 2 * Math.PI);
+  ctx.fill();
+  // count text
+  const label = count > 99 ? "99" : String(count);
+  ctx.fillStyle = "#fff";
+  ctx.font = `bold ${label.length > 1 ? "11" : "14"}px Arial`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(label, 16, 17);
   return canvas.toDataURL("image/png");
 }
 
@@ -49,24 +54,10 @@ const UnreadTabTip = () => {
   const channelMids = useAppSelector((store) => store.channelMessage, shallowEqual);
   const messageData = useAppSelector((store) => store.message, shallowEqual);
 
-  const faviconImgRef = useRef<HTMLImageElement | null>(null);
-  const faviconReadyRef = useRef(false);
   const originalHrefRef = useRef("");
 
   useEffect(() => {
-    const link = getFaviconLink();
-    originalHrefRef.current = link.href;
-    const img = new Image();
-    img.onload = () => {
-      faviconImgRef.current = img;
-      faviconReadyRef.current = true;
-      const url = drawFaviconBadge(img, totalUnreads);
-      if (url) getFaviconLink().href = url;
-    };
-    img.onerror = () => {
-      faviconReadyRef.current = true;
-    };
-    img.src = link.href;
+    originalHrefRef.current = getFaviconLink().href;
     return () => {
       if (originalHrefRef.current) getFaviconLink().href = originalHrefRef.current;
     };
@@ -93,9 +84,11 @@ const UnreadTabTip = () => {
     });
 
     // favicon badge — always visible
-    if (faviconReadyRef.current) {
-      const url = drawFaviconBadge(faviconImgRef.current, totalUnreads);
+    if (totalUnreads > 0) {
+      const url = drawFaviconBadge(totalUnreads);
       if (url) getFaviconLink().href = url;
+    } else if (originalHrefRef.current) {
+      getFaviconLink().href = originalHrefRef.current;
     }
 
     // title — only when tab is hidden
