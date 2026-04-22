@@ -61,7 +61,7 @@ const UnreadTabTip = () => {
     originalTitleRef.current = document.title;
 
     // fetch as blob (same-origin) to avoid canvas CORS taint
-    fetch("/android-chrome-192x192.png")
+    fetch("/neko-icon.png")
       .then((r) => r.blob())
       .then((blob) => {
         const blobUrl = URL.createObjectURL(blob);
