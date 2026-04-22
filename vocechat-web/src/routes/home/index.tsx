@@ -5,7 +5,6 @@ import { NavLink, Outlet, useLocation, useMatch } from "react-router-dom";
 
 import { updateRememberedNavs } from "@/app/slices/ui";
 import { useAppSelector } from "@/app/store";
-import SkeletonScreen from "@/components/SkeletonScreen";
 import Manifest from "@/components/Manifest";
 import Notification from "@/components/Notification";
 import ReLoginModal from "@/components/ReLoginModal";
@@ -44,9 +43,8 @@ function HomePage() {
     }
   }, [isChatHomePath]);
 
-  console.info("preload success", success);
   if (!success) {
-    return <SkeletonScreen />;
+    return <div className="w-screen h-screen bg-bg-app" />;
   }
   const isSettingPage = pathname.startsWith("/setting");
   const isChattingPage = isHomePath || pathname.startsWith("/chat");

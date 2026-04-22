@@ -17,16 +17,14 @@ import LazyIt from "./lazy";
 import InviteInMobile from "./reg/InviteInMobile";
 import usePrefetchData from "@/hooks/usePrefetchData";
 
-// 主要分頁：直接 import，不做 lazy，切換時不觸發 Suspense
-import ChatPage from "./chat";
-import UsersPage from "./users";
-import FavoritesPage from "./favs";
-import FilesPage from "./files";
 import HomePage from "./home";
-import ResourceManagement from "./resources";
-import SettingPage from "./setting";
 
-// 少用頁面：保留 lazy，減少首次載入體積
+const ChatPage = lazy(() => import("./chat"));
+const UsersPage = lazy(() => import("./users"));
+const FavoritesPage = lazy(() => import("./favs"));
+const FilesPage = lazy(() => import("./files"));
+const ResourceManagement = lazy(() => import("./resources"));
+const SettingPage = lazy(() => import("./setting"));
 const RegBasePage = lazy(() => import("./reg"));
 const RegWithUsernamePage = lazy(() => import("./reg/RegWithUsername"));
 const SendMagicLinkPage = lazy(() => import("./sendMagicLink"));
@@ -184,7 +182,11 @@ const PageRoutes = () => {
           <Route path="setting">
             <Route
               path=":nav?"
-              element={<SettingPage />}
+              element={
+                <LazyIt key="setting">
+                  <SettingPage />
+                </LazyIt>
+              }
             />
             <Route
               path="channel/:cid/:nav?"
@@ -203,20 +205,24 @@ const PageRoutes = () => {
               }
             />
           </Route>
-          <Route index element={<ChatPage />} />
+          <Route index element={<LazyIt key="chat-index"><ChatPage /></LazyIt>} />
           <Route path="chat">
-            <Route index element={<ChatPage />} />
-            <Route path="channel/:channel_id" element={<ChatPage />} />
-            <Route path="dm/:user_id" element={<ChatPage />} />
+            <Route index element={<LazyIt key="chat"><ChatPage /></LazyIt>} />
+            <Route path="channel/:channel_id" element={<LazyIt key="chat-channel"><ChatPage /></LazyIt>} />
+            <Route path="dm/:user_id" element={<LazyIt key="chat-dm"><ChatPage /></LazyIt>} />
           </Route>
           <Route path="users">
-            <Route index element={<UsersPage />} />
-            <Route path=":user_id" element={<UsersPage />} />
+            <Route index element={<LazyIt key="users"><UsersPage /></LazyIt>} />
+            <Route path=":user_id" element={<LazyIt key="users-id"><UsersPage /></LazyIt>} />
           </Route>
-          <Route path="favs" element={<FavoritesPage />} />
+          <Route path="favs" element={<LazyIt key="favs"><FavoritesPage /></LazyIt>} />
           <Route
             path="files"
-            element={compareVersion(version, "0.3.11") > -1 ? <FilesPage /> : <ResourceManagement />}
+            element={
+              <LazyIt key="files">
+                {compareVersion(version, "0.3.11") > -1 ? <FilesPage /> : <ResourceManagement />}
+              </LazyIt>
+            }
           />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
