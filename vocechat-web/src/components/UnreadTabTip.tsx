@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { useAppSelector } from "../app/store";
+import BASE_URL from "../app/config";
 import getUnreadCount from "../routes/chat/utils";
 import { shallowEqual } from "react-redux";
 
@@ -61,7 +62,7 @@ const UnreadTabTip = () => {
     originalTitleRef.current = document.title;
 
     // fetch as blob (same-origin) to avoid canvas CORS taint
-    fetch("/neko-icon.png")
+    fetch(`${BASE_URL}/resource/organization/logo`)
       .then((r) => r.blob())
       .then((blob) => {
         const blobUrl = URL.createObjectURL(blob);

@@ -4,7 +4,7 @@
   "description": "Your private chat space",
   "icons": [
     {
-      "src": "/neko-icon.png",
+      "src": "/api/resource/organization/logo",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
