@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getMessaging, getToken } from "firebase/messaging";
 
 import { firebaseConfig, KEY_DEVICE_TOKEN } from "@/app/config";
@@ -19,7 +19,8 @@ const useDeviceToken = (vapidKey: string) => {
         await navigator.serviceWorker.ready;
         if (cancelled) return;
 
-        const messaging = getMessaging(initializeApp(firebaseConfig));
+        const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+        const messaging = getMessaging(app);
         const currentToken = await getToken(messaging, { vapidKey });
         if (cancelled) return;
 
