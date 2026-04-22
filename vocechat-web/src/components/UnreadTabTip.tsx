@@ -92,9 +92,10 @@ const UnreadTabTip = () => {
     }
 
     // title — only when tab is hidden
+    const cleanTitle = () => document.title.replace(/^\[\d+\]\s*/, "");
     const handler = () => {
       if (document.hidden) {
-        savedTitle = document.title;
+        savedTitle = cleanTitle();
         if (totalUnreads > 0) document.title = `[${totalUnreads}] ${savedTitle}`;
       } else {
         if (savedTitle) document.title = savedTitle;
@@ -102,7 +103,7 @@ const UnreadTabTip = () => {
     };
     document.addEventListener("visibilitychange", handler);
     if (document.hidden && totalUnreads > 0) {
-      savedTitle = document.title;
+      savedTitle = cleanTitle();
       document.title = `[${totalUnreads}] ${savedTitle}`;
     }
     return () => {
