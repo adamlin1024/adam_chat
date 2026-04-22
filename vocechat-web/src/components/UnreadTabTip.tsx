@@ -29,10 +29,10 @@ function drawBadge(baseImg: HTMLImageElement | null): string {
       // tainted — skip background
     }
   }
-  // small red dot, no number, top-right corner
-  ctx.fillStyle = "#ef4444";
+  // small red dot, top-right corner, minimal overlap with main image
+  ctx.fillStyle = "#ff2222";
   ctx.beginPath();
-  ctx.arc(26, 6, 6, 0, 2 * Math.PI);
+  ctx.arc(27, 5, 5, 0, 2 * Math.PI);
   ctx.fill();
   try {
     return canvas.toDataURL("image/png");
@@ -61,7 +61,7 @@ const UnreadTabTip = () => {
     originalTitleRef.current = document.title;
 
     // fetch as blob (same-origin) to avoid canvas CORS taint
-    fetch("/favicon-32x32.png")
+    fetch("/favicon.ico")
       .then((r) => r.blob())
       .then((blob) => {
         const blobUrl = URL.createObjectURL(blob);
