@@ -67,7 +67,7 @@ if (splash) {
 }
 
 root.render(
-  <Suspense fallback="loading">
+  <Suspense fallback={null}>
     <Toaster
       toastOptions={{
         style: {
