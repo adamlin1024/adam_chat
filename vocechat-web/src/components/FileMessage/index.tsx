@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 import { useAppSelector } from "@/app/store";
 import { ChatContext } from "@/types/common";
@@ -87,21 +88,33 @@ const FileMessage: FC<Props> = ({
           .then((r) => r.blob())
           .then((blobFile) => new File([blobFile], name, { type }));
 
-        if (type === "image/jpeg" || type === "image/jpg") {
-          file = await new Promise<File>((resolve) => {
+        if (type === "image/jpeg" || type === "image/jpg" || type.startsWith("image/hei")) {
+          const objUrl = URL.createObjectURL(file);
+          const normalized = await new Promise<File | null>((resolve) => {
             const img = new Image();
             img.onload = () => {
+              URL.revokeObjectURL(objUrl);
               const canvas = document.createElement("canvas");
               canvas.width = img.naturalWidth;
               canvas.height = img.naturalHeight;
-              canvas.getContext("2d")!.drawImage(img, 0, 0);
-              canvas.toBlob((blob) => {
-                resolve(blob ? new File([blob], name, { type: "image/jpeg" }) : file);
-              }, "image/jpeg", 0.92);
+              const ctx = canvas.getContext("2d");
+              if (!ctx) { resolve(null); return; }
+              ctx.drawImage(img, 0, 0);
+              const outName = name.replace(/\.[^.]+$/, ".jpg");
+              canvas.toBlob(
+                (blob) => resolve(blob ? new File([blob], outName, { type: "image/jpeg" }) : null),
+                "image/jpeg", 0.92
+              );
             };
-            img.onerror = () => resolve(file);
-            img.src = URL.createObjectURL(file);
+            img.onerror = () => { URL.revokeObjectURL(objUrl); resolve(null); };
+            img.src = objUrl;
           });
+          if (!normalized) {
+            toast.error("此圖片格式不支援，請截圖後再上傳");
+            setUploadingFile(false);
+            return;
+          }
+          file = normalized;
         }
 
         await uploadFile(file);

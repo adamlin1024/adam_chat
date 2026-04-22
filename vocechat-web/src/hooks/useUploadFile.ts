@@ -57,7 +57,7 @@ const convertHeic2Jpg = async (file: { name: string; type: string; size: number;
   });
 
   const newName = file.name.replace(/\.hei\w+$/i, ".jpg");
-  return { ...file, name: newName, converting: false, url: URL.createObjectURL(jpgBlob) };
+  return { ...file, name: newName, type: "image/jpeg", converting: false, url: URL.createObjectURL(jpgBlob) };
 };
 const useUploadFile = (props?: IProps) => {
   const { context, id } = props ? props : { context: "channel", id: 0 };
