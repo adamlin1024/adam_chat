@@ -39,11 +39,20 @@ registerRoute(
     try {
       const resp = await fetch(`${origin}/api/server`);
       const server = await resp.json();
+      const logoUrl = `${origin}/api/resource/organization/logo`;
+      const logoResp = await fetch(logoUrl, { method: "HEAD" });
+      const hasLogo = logoResp.ok && (logoResp.headers.get("content-type") || "").startsWith("image/");
       const manifest = {
         ...fallbackManifest,
         name: server.name || fallbackManifest.name,
         short_name: server.name || fallbackManifest.short_name,
-        description: server.description || fallbackManifest.description
+        description: server.description || fallbackManifest.description,
+        ...(hasLogo && {
+          icons: [
+            { src: logoUrl, sizes: "192x192", type: "image/png" },
+            { src: logoUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
+          ]
+        })
       };
       return new Response(JSON.stringify(manifest), {
         headers: { "Content-Type": "application/manifest+json" }
