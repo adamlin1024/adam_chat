@@ -21,23 +21,6 @@ interface IProps {
   context: ChatContext;
   id: number;
 }
-const normalizeJpeg = async (file: { name: string; type: string; size: number; url: string }) => {
-  const img = new Image();
-  img.src = file.url;
-  await new Promise<void>((resolve, reject) => {
-    img.onload = () => resolve();
-    img.onerror = () => reject(new Error("Image load error"));
-  });
-  const canvas = document.createElement("canvas");
-  canvas.width = img.naturalWidth;
-  canvas.height = img.naturalHeight;
-  const ctx = canvas.getContext("2d")!;
-  ctx.drawImage(img, 0, 0);
-  const blob = await new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/jpeg", 0.92);
-  });
-  return { ...file, url: URL.createObjectURL(blob) };
-};
 
 const convertHeic2Jpg = async (file: { name: string; type: string; size: number; url: string }) => {
   const res = await fetch(file.url);
@@ -203,14 +186,10 @@ const useUploadFile = (props?: IProps) => {
     }
 
     const heifs: number[] = [];
-    const jpegs: number[] = [];
     filesData.forEach((f, idx) => {
       if (f.type.startsWith("image/hei")) {
         f.converting = true;
         heifs.push(idx);
-      } else if (f.type === "image/jpeg" || f.type === "image/jpg") {
-        f.converting = true;
-        jpegs.push(idx);
       }
     });
     dispatch(updateUploadFiles({ context, id, data: filesData }));
@@ -223,17 +202,6 @@ const useUploadFile = (props?: IProps) => {
           .catch(() => {
             toast.error("圖片格式無法處理，請轉換後再上傳");
             dispatch(updateUploadFiles({ context, id, operation: "remove", index: idx }));
-          });
-      });
-    }
-    if (jpegs.length) {
-      jpegs.forEach((idx) => {
-        normalizeJpeg(filesData[idx])
-          .then((res) => {
-            dispatch(updateUploadFiles({ context, id, data: { ...res, converting: false }, operation: "replace", idx }));
-          })
-          .catch(() => {
-            dispatch(updateUploadFiles({ context, id, data: { ...filesData[idx], converting: false }, operation: "replace", idx }));
           });
       });
     }

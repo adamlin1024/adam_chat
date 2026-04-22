@@ -87,6 +87,23 @@ const FileMessage: FC<Props> = ({
           .then((r) => r.blob())
           .then((blobFile) => new File([blobFile], name, { type }));
 
+        if (type === "image/jpeg" || type === "image/jpg") {
+          file = await new Promise<File>((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement("canvas");
+              canvas.width = img.naturalWidth;
+              canvas.height = img.naturalHeight;
+              canvas.getContext("2d")!.drawImage(img, 0, 0);
+              canvas.toBlob((blob) => {
+                resolve(blob ? new File([blob], name, { type: "image/jpeg" }) : file);
+              }, "image/jpeg", 0.92);
+            };
+            img.onerror = () => resolve(file);
+            img.src = URL.createObjectURL(file);
+          });
+        }
+
         await uploadFile(file);
         setUploadingFile(false);
       } catch (error) {
