@@ -21,7 +21,7 @@ const Notification = () => {
   useEffect(() => {
     const handleServiceWorkerMessage = (event: MessageEvent) => {
       const { newPath } = event.data;
-      if (newPath && document.hidden) {
+      if (newPath) {
         navigateTo(newPath);
       }
     };
