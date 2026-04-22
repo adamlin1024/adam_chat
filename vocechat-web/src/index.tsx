@@ -15,6 +15,21 @@ import "./i18n";
 import "./libs/polyfills";
 
 
+// When a new SW activates mid-load (clientsClaim), old JS chunks are 404 on the server.
+// Catch the resulting ChunkLoadError and reload so the new SW serves fresh assets.
+window.addEventListener("unhandledrejection", (event) => {
+  const err = event.reason;
+  if (
+    err?.name === "ChunkLoadError" ||
+    err?.message?.includes("Loading chunk") ||
+    err?.message?.includes("Failed to fetch dynamically imported module") ||
+    err?.message?.includes("error loading dynamically imported module")
+  ) {
+    event.preventDefault();
+    window.location.reload();
+  }
+});
+
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 // dark-only design — always apply dark class
 document.documentElement.classList.add("dark");
