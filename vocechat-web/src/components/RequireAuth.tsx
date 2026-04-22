@@ -32,10 +32,10 @@ const RequireAuth: FC<Props> = ({ children, redirectTo = "/login", guestMode }) 
   // 开启guest 并且没token 而且是允许guest访问的路由  则先去过渡页登录
   if (!token) {
     // 记录下当前的路径，登录后跳转回来
-    const ignorePath = `/setting/my_account`;
+    const shouldIgnore = location.pathname === "/setting/my_account" || location.pathname.startsWith("/setting");
     localStorage.setItem(
       KEY_LOCAL_TRY_PATH,
-      ignorePath == location.pathname ? "/" : `${location.pathname}${location.search}`
+      shouldIgnore ? "/" : `${location.pathname}${location.search}`
     );
     const guestLogin = guestMode && allowGuest;
     return guestLogin ? (
@@ -49,7 +49,8 @@ const RequireAuth: FC<Props> = ({ children, redirectTo = "/login", guestMode }) 
   const tryPath = localStorage.getItem(KEY_LOCAL_TRY_PATH);
   if (tryPath) {
     localStorage.removeItem(KEY_LOCAL_TRY_PATH);
-    return <Navigate to={tryPath} replace />;
+    const safePath = tryPath.startsWith("/setting") ? "/" : tryPath;
+    return <Navigate to={safePath} replace />;
   }
   return children;
 };
