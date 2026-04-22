@@ -5,25 +5,17 @@ import { vapidKey } from "@/app/config";
 import { useUpdateDeviceTokenMutation } from "@/app/services/auth";
 import useDeviceToken from "./useDeviceToken";
 
-let updated = false;
-let updating = false;
+let lastSentToken = "";
 const Notification = () => {
   const navigateTo = useNavigate();
   const token = useDeviceToken(vapidKey);
   const [updateDeviceToken] = useUpdateDeviceTokenMutation();
   useEffect(() => {
-    const updateToken = async (token: string) => {
-      if (!token || updating || updated) return;
-      try {
-        updating = true;
-        await updateDeviceToken(token);
-        updated = true;
-      } catch {
-        updating = false;
-        updated = true;
-      }
-    };
-    updateToken(token as string);
+    if (!token || token === lastSentToken) return;
+    lastSentToken = token;
+    updateDeviceToken(token).catch(() => {
+      lastSentToken = "";
+    });
   }, [token]);
 
   useEffect(() => {

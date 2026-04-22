@@ -4,41 +4,41 @@ import { getMessaging, getToken } from "firebase/messaging";
 
 import { firebaseConfig, KEY_DEVICE_TOKEN } from "@/app/config";
 
-let requesting = false;
-let error = false;
 const useDeviceToken = (vapidKey: string) => {
   const [token, setToken] = useState<string>("");
-  useEffect(() => {
-    if (token) {
-      localStorage.setItem(KEY_DEVICE_TOKEN, token);
-    }
-  }, [token]);
 
-  // https only
-  if (navigator.serviceWorker) {
-    const messaging = getMessaging(initializeApp(firebaseConfig));
-    if (requesting || error) return;
-    requesting = true;
-    getToken(messaging, {
-      vapidKey
-    })
-      .then((currentToken) => {
+  useEffect(() => {
+    if (!navigator.serviceWorker) return;
+
+    let cancelled = false;
+
+    const fetchToken = async () => {
+      try {
+        // Wait for SW to be fully active before requesting FCM token.
+        // Without this, getToken() fails when called before SW is ready (e.g. on first mount).
+        await navigator.serviceWorker.ready;
+        if (cancelled) return;
+
+        const messaging = getMessaging(initializeApp(firebaseConfig));
+        const currentToken = await getToken(messaging, { vapidKey });
+        if (cancelled) return;
+
         if (currentToken) {
           setToken(currentToken);
-          // updateDeviceToken(currentToken)
-          // Perform any other necessary action with the token
-        } else {
-          // Show permission request UI
-          console.info("No registration token available. Request permission to generate one.");
+          localStorage.setItem(KEY_DEVICE_TOKEN, currentToken);
         }
-        requesting = false;
-      })
-      .catch((err) => {
-        requesting = false;
-        error = true;
-        console.info("An error occurred while retrieving token. ", err);
-      });
-  }
+      } catch (err) {
+        console.info("FCM token error:", err);
+      }
+    };
+
+    fetchToken();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [vapidKey]);
+
   return token;
 };
 
