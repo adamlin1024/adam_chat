@@ -1,12 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { useAppSelector } from "../app/store";
 import getUnreadCount from "../routes/chat/utils";
 import { shallowEqual } from "react-redux";
 
-// type Props = {}
-let total = 0;
-let title = "";
+let totalUnreads = 0;
+let savedTitle = "";
+
+function getFaviconLink(): HTMLLinkElement {
+  let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+  if (!link) {
+    link = document.createElement("link");
+    link.rel = "icon";
+    document.head.appendChild(link);
+  }
+  return link;
+}
+
+function drawFaviconBadge(img: HTMLImageElement | null, count: number): string {
+  const canvas = document.createElement("canvas");
+  canvas.width = 32;
+  canvas.height = 32;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return "";
+  if (img) ctx.drawImage(img, 0, 0, 32, 32);
+  if (count > 0) {
+    ctx.fillStyle = "#ef4444";
+    ctx.beginPath();
+    ctx.arc(26, 6, 7, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.fillStyle = "#fff";
+    ctx.font = `bold ${count > 9 ? "7" : "9"}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(count > 99 ? "99" : String(count), 26, 6);
+  }
+  return canvas.toDataURL("image/png");
+}
+
 const UnreadTabTip = () => {
   const loginUid = useAppSelector((store) => store.authData.user?.uid ?? 0, shallowEqual);
   const muteChannels = useAppSelector((store) => store.footprint.muteChannels, shallowEqual);
@@ -18,71 +49,73 @@ const UnreadTabTip = () => {
   const channelMids = useAppSelector((store) => store.channelMessage, shallowEqual);
   const messageData = useAppSelector((store) => store.message, shallowEqual);
 
+  const faviconImgRef = useRef<HTMLImageElement | null>(null);
+  const faviconReadyRef = useRef(false);
+  const originalHrefRef = useRef("");
+
+  useEffect(() => {
+    const link = getFaviconLink();
+    originalHrefRef.current = link.href;
+    const img = new Image();
+    img.onload = () => {
+      faviconImgRef.current = img;
+      faviconReadyRef.current = true;
+      const url = drawFaviconBadge(img, totalUnreads);
+      if (url) getFaviconLink().href = url;
+    };
+    img.onerror = () => {
+      faviconReadyRef.current = true;
+    };
+    img.src = link.href;
+    return () => {
+      if (originalHrefRef.current) getFaviconLink().href = originalHrefRef.current;
+    };
+  }, []);
+
   useEffect(() => {
     if (loginUid === 0) {
-      if (title) {
-        document.title = title;
-      }
+      if (savedTitle) document.title = savedTitle;
       return;
     }
-    total = 0;
-    // dm
-    Object.entries(DMMap).forEach(([id, mids]) => {
-      if (!muteUsers[+id]) {
-        if (userData[+id]) {
-          const { unreads = 0 } = getUnreadCount({
-            mids,
-            readIndex: readUsers[+id],
-            messageData,
-            loginUid
-          });
-          total += unreads;
-        }
-      }
-    });
-    // channel
-    Object.entries(channelMids).map(([id, mids]) => {
-      if (!muteChannels[+id]) {
-        const { unreads = 0 } = getUnreadCount({
-          mids,
-          readIndex: readChannels[+id],
-          messageData,
-          loginUid
-        });
-        total += unreads;
-      }
-    });
-    const handler = () => {
-      console.log("changed", document.hidden, total);
 
+    totalUnreads = 0;
+    Object.entries(DMMap).forEach(([id, mids]) => {
+      if (!muteUsers[+id] && userData[+id]) {
+        const { unreads = 0 } = getUnreadCount({ mids, readIndex: readUsers[+id], messageData, loginUid });
+        totalUnreads += unreads;
+      }
+    });
+    Object.entries(channelMids).forEach(([id, mids]) => {
+      if (!muteChannels[+id]) {
+        const { unreads = 0 } = getUnreadCount({ mids, readIndex: readChannels[+id], messageData, loginUid });
+        totalUnreads += unreads;
+      }
+    });
+
+    // favicon badge — always visible
+    if (faviconReadyRef.current) {
+      const url = drawFaviconBadge(faviconImgRef.current, totalUnreads);
+      if (url) getFaviconLink().href = url;
+    }
+
+    // title — only when tab is hidden
+    const handler = () => {
       if (document.hidden) {
-        title = document.title;
-        if (total > 0) {
-          document.title = `[${total}]-${title}`;
-        }
+        savedTitle = document.title;
+        if (totalUnreads > 0) document.title = `[${totalUnreads}] ${savedTitle}`;
       } else {
-        document.title = title;
+        if (savedTitle) document.title = savedTitle;
       }
     };
     document.addEventListener("visibilitychange", handler);
-    if (document.hidden && total > 0) {
-      document.title = `[${total}]-${title}`;
+    if (document.hidden && totalUnreads > 0) {
+      savedTitle = document.title;
+      document.title = `[${totalUnreads}] ${savedTitle}`;
     }
     return () => {
       document.removeEventListener("visibilitychange", handler);
     };
-  }, [
-    userData,
-    DMMap,
-    channelMids,
-    readChannels,
-    messageData,
-    loginUid,
-    readUsers,
-    muteChannels,
-    muteUsers
-  ]);
-  console.log("unread tip", total);
+  }, [userData, DMMap, channelMids, readChannels, messageData, loginUid, readUsers, muteChannels, muteUsers]);
 
   return null;
 };
