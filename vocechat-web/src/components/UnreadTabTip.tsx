@@ -5,7 +5,6 @@ import getUnreadCount from "../routes/chat/utils";
 import { shallowEqual } from "react-redux";
 
 let totalUnreads = 0;
-let savedTitle = "";
 
 function getFaviconLink(): HTMLLinkElement {
   let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
@@ -55,17 +54,20 @@ const UnreadTabTip = () => {
   const messageData = useAppSelector((store) => store.message, shallowEqual);
 
   const originalHrefRef = useRef("");
+  const originalTitleRef = useRef("");
 
   useEffect(() => {
     originalHrefRef.current = getFaviconLink().href;
+    originalTitleRef.current = document.title;
     return () => {
       if (originalHrefRef.current) getFaviconLink().href = originalHrefRef.current;
+      document.title = originalTitleRef.current;
     };
   }, []);
 
   useEffect(() => {
     if (loginUid === 0) {
-      if (savedTitle) document.title = savedTitle;
+      if (originalTitleRef.current) document.title = originalTitleRef.current;
       return;
     }
 
@@ -91,20 +93,20 @@ const UnreadTabTip = () => {
       getFaviconLink().href = originalHrefRef.current;
     }
 
-    // title — only when tab is hidden
-    const cleanTitle = () => document.title.replace(/^\[\d+\]\s*/, "");
+    // title — only when tab is hidden; always use originalTitle as base to prevent stacking
+    const baseTitle = originalTitleRef.current || document.title;
     const handler = () => {
       if (document.hidden) {
-        savedTitle = cleanTitle();
-        if (totalUnreads > 0) document.title = `[${totalUnreads}] ${savedTitle}`;
+        if (totalUnreads > 0) document.title = `[${totalUnreads}] ${baseTitle}`;
       } else {
-        if (savedTitle) document.title = savedTitle;
+        document.title = baseTitle;
       }
     };
     document.addEventListener("visibilitychange", handler);
     if (document.hidden && totalUnreads > 0) {
-      savedTitle = cleanTitle();
-      document.title = `[${totalUnreads}] ${savedTitle}`;
+      document.title = `[${totalUnreads}] ${baseTitle}`;
+    } else if (!document.hidden) {
+      document.title = baseTitle;
     }
     return () => {
       document.removeEventListener("visibilitychange", handler);

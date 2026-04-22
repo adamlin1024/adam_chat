@@ -40,6 +40,7 @@ const Send: FC<IProps> = ({
   feedRef,
 }) => {
   const editorRef = useRef<PlateEditor | null>(null);
+  const sendingRef = useRef(false);
 
   const { t } = useTranslation("chat");
   const { unblockThisContact, blocked, isChannelOwner } = useUserOperation({
@@ -80,7 +81,8 @@ const Send: FC<IProps> = ({
     }
   };
   const handleSendMessage = async () => {
-    if (!id) return;
+    if (!id || sendingRef.current) return;
+    sendingRef.current = true;
     if (editorRef.current) {
       // Clear content via Transforms (no blur → iOS keyboard stays up)
       const e = editorRef.current as any;
@@ -127,6 +129,7 @@ const Send: FC<IProps> = ({
       });
       resetStageFiles();
     }
+    sendingRef.current = false;
   };
   const sendMarkdown = async (content: string) => {
     sendMessage({
