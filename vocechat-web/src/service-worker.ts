@@ -21,13 +21,13 @@ registerRoute(
   ({ url }) => url.pathname === "/manifest.json",
   async () => {
     const origin = self.location.origin;
+    const logoUrl = `${origin}/api/resource/organization/logo`;
     const fallbackManifest = {
-      name: "Neko-talk",
-      short_name: "Neko-talk",
+      name: "Nekotalk",
+      short_name: "Nekotalk",
       description: "Your private chat space",
       icons: [
-        { src: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-        { src: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+        { src: logoUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
       ],
       start_url: "/",
       scope: "/",
@@ -39,20 +39,11 @@ registerRoute(
     try {
       const resp = await fetch(`${origin}/api/server`);
       const server = await resp.json();
-      const logoUrl = `${origin}/api/resource/organization/logo`;
-      const logoResp = await fetch(logoUrl, { method: "HEAD" });
-      const hasLogo = logoResp.ok && (logoResp.headers.get("content-type") || "").startsWith("image/");
       const manifest = {
         ...fallbackManifest,
         name: server.name || fallbackManifest.name,
         short_name: server.name || fallbackManifest.short_name,
-        description: server.description || fallbackManifest.description,
-        ...(hasLogo && {
-          icons: [
-            { src: logoUrl, sizes: "192x192", type: "image/png" },
-            { src: logoUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
-          ]
-        })
+        description: server.description || fallbackManifest.description
       };
       return new Response(JSON.stringify(manifest), {
         headers: { "Content-Type": "application/manifest+json" }
