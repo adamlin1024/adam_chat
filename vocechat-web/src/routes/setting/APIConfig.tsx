@@ -69,7 +69,7 @@ export default function APIConfig() {
       <div className="text-xs text-orange-400">
         {t("third_app.key_tip")}
         <a
-          className="text-primary-500 font-bold"
+          className="text-accent font-bold"
           href="https://doc.voce.chat/login-with-other-account"
           target="_blank"
           rel="noopener noreferrer"

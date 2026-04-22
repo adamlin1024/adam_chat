@@ -132,7 +132,7 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
               </span>
             )}
             <button
-              className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors"
+              className="p-2 rounded text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors"
               onClick={animateClose}
             >
               ✕

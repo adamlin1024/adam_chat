@@ -115,7 +115,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
               <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">
                 {nav ? nav.title : title}
               </span>
-              <button onClick={animateClose} className="ml-auto text-fg-subtle p-1 text-lg leading-none">✕</button>
+              <button onClick={animateClose} className="ml-auto text-fg-subtle p-2 text-xl leading-none hover:text-fg-secondary transition-colors">✕</button>
             </div>
           </div>
 

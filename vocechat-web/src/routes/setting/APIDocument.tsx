@@ -25,7 +25,7 @@ const APIDocument = () => {
             href={APIUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="underline text-primary-600"
+            className="underline text-accent"
           >
             {APIUrl}
           </a>

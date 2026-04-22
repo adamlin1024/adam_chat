@@ -13,7 +13,7 @@ export const Link = ({
   children
 }: PropsWithChildren<{ to: string; newTab?: boolean }>) => {
   return (
-    <a href={to} className="text-primary-500" target={newTab ? "_blank" : "_self"} rel="noreferrer">
+    <a href={to} className="text-accent" target={newTab ? "_blank" : "_self"} rel="noreferrer">
       {children}
     </a>
   );

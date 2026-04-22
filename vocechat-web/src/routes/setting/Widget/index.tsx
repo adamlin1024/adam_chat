@@ -77,7 +77,7 @@ export default function Widget() {
         <p className="text-sm mb-2 text-gray-500 dark:text-gray-50 flex flex-col md:flex-row gap-4">
           {t("share_link")}{" "}
           <a
-            className="text-primary-500 flex gap-1 items-center"
+            className="text-accent flex gap-1 items-center"
             href="https://doc.voce.chat/widget"
             target="_blank"
             rel="noopener noreferrer"
@@ -89,7 +89,7 @@ export default function Widget() {
           <Input readOnly className={"large !pr-16"} value={widgetLink} />
           <Button
             onClick={copyLink}
-            className="ghost small border_less absolute right-1 top-1/2 -translate-y-1/2 dark:!text-primary-400"
+            className="ghost small border_less absolute right-1 top-1/2 -translate-y-1/2 dark:!text-accent"
           >
             {copied ? "Copied" : ct("action.copy")}
           </Button>
