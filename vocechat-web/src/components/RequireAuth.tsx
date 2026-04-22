@@ -25,7 +25,7 @@ const RequireAuth: FC<Props> = ({ children, redirectTo = "/login", guestMode }) 
   // (we'd return children anyway once guestMode resolves)
   if (typeof guestMode == "undefined") {
     if (token) return children;
-    return null;
+    return <div className="fixed inset-0 bg-bg-app" />;
   }
   //  未初始化 则先走setup 流程
   if (!initialized) return <Navigate to={`/onboarding`} replace />;

@@ -43,19 +43,6 @@ export function register(config: Config) {
 function registerValidSW(swUrl: string, config: Config) {
   if (!navigator.serviceWorker) return;
 
-  // Reload once when a new SW takes over, so old JS chunks don't mix with new ones.
-  // sessionStorage flag prevents a reload loop if controllerchange fires multiple times in the same session.
-  // Auto-cleared after 10s so future deployments can still trigger a reload.
-  sessionStorage.removeItem("sw-reloading"); // clear on fresh page load
-  let reloading = false;
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (reloading || sessionStorage.getItem("sw-reloading")) return;
-    reloading = true;
-    sessionStorage.setItem("sw-reloading", "1");
-    setTimeout(() => sessionStorage.removeItem("sw-reloading"), 10000);
-    window.location.reload();
-  });
-
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
