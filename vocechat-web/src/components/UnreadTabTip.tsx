@@ -61,7 +61,7 @@ const UnreadTabTip = () => {
     originalTitleRef.current = document.title;
 
     // fetch as blob (same-origin) to avoid canvas CORS taint
-    fetch("/favicon.ico")
+    fetch("/android-chrome-192x192.png")
       .then((r) => r.blob())
       .then((blob) => {
         const blobUrl = URL.createObjectURL(blob);
@@ -105,24 +105,13 @@ const UnreadTabTip = () => {
       getFaviconLink().href = originalHrefRef.current;
     }
 
-    // title: [N] prefix only when tab is hidden, always use originalTitle as base
+    // title: [N] prefix persists until messages are actually read (totalUnreads → 0)
     const baseTitle = originalTitleRef.current || document.title;
-    const handler = () => {
-      if (document.hidden) {
-        if (totalUnreads > 0) document.title = `[${totalUnreads}] ${baseTitle}`;
-      } else {
-        document.title = baseTitle;
-      }
-    };
-    document.addEventListener("visibilitychange", handler);
-    if (document.hidden && totalUnreads > 0) {
+    if (totalUnreads > 0) {
       document.title = `[${totalUnreads}] ${baseTitle}`;
-    } else if (!document.hidden) {
+    } else {
       document.title = baseTitle;
     }
-    return () => {
-      document.removeEventListener("visibilitychange", handler);
-    };
   }, [userData, DMMap, channelMids, readChannels, messageData, loginUid, readUsers, muteChannels, muteUsers]);
 
   return null;
