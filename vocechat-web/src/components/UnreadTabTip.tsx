@@ -16,30 +16,29 @@ function getFaviconLink(): HTMLLinkElement {
   return link;
 }
 
-function drawFaviconBadge(count: number): string {
+function drawBadge(baseImg: HTMLImageElement | null): string {
   const canvas = document.createElement("canvas");
   canvas.width = 32;
   canvas.height = 32;
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
-  // dark circle background
-  ctx.fillStyle = "#0c0d10";
-  ctx.beginPath();
-  ctx.arc(16, 16, 16, 0, 2 * Math.PI);
-  ctx.fill();
-  // red badge
+  if (baseImg) {
+    try {
+      ctx.drawImage(baseImg, 0, 0, 32, 32);
+    } catch {
+      // tainted — skip background
+    }
+  }
+  // small red dot, no number, top-right corner
   ctx.fillStyle = "#ef4444";
   ctx.beginPath();
-  ctx.arc(16, 16, 12, 0, 2 * Math.PI);
+  ctx.arc(26, 6, 6, 0, 2 * Math.PI);
   ctx.fill();
-  // count text
-  const label = count > 99 ? "99" : String(count);
-  ctx.fillStyle = "#fff";
-  ctx.font = `bold ${label.length > 1 ? "11" : "14"}px Arial`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(label, 16, 17);
-  return canvas.toDataURL("image/png");
+  try {
+    return canvas.toDataURL("image/png");
+  } catch {
+    return "";
+  }
 }
 
 const UnreadTabTip = () => {
@@ -55,10 +54,18 @@ const UnreadTabTip = () => {
 
   const originalHrefRef = useRef("");
   const originalTitleRef = useRef("");
+  const faviconImgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     originalHrefRef.current = getFaviconLink().href;
     originalTitleRef.current = document.title;
+
+    // load PNG favicon with crossOrigin for canvas compositing
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => { faviconImgRef.current = img; };
+    img.src = "/favicon-32x32.png";
+
     return () => {
       if (originalHrefRef.current) getFaviconLink().href = originalHrefRef.current;
       document.title = originalTitleRef.current;
@@ -85,15 +92,15 @@ const UnreadTabTip = () => {
       }
     });
 
-    // favicon badge — always visible
+    // favicon: small red dot overlay (no number), restore when no unreads
     if (totalUnreads > 0) {
-      const url = drawFaviconBadge(totalUnreads);
+      const url = drawBadge(faviconImgRef.current);
       if (url) getFaviconLink().href = url;
     } else if (originalHrefRef.current) {
       getFaviconLink().href = originalHrefRef.current;
     }
 
-    // title — only when tab is hidden; always use originalTitle as base to prevent stacking
+    // title: [N] prefix only when tab is hidden, always use originalTitle as base
     const baseTitle = originalTitleRef.current || document.title;
     const handler = () => {
       if (document.hidden) {
