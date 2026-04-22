@@ -35,17 +35,14 @@ function HomePage() {
     (store) => store.ui.rememberedNavs,
     shallowEqual
   );
-  // preload basic data
-  const { success } = usePreload();
+  // preload basic data (kick off SSE + prefetch; result not used to gate render)
+  usePreload();
   useEffect(() => {
     if (isChatHomePath) {
       dispatch(updateRememberedNavs({ key: "chat", path: "/chat" }));
     }
   }, [isChatHomePath]);
 
-  if (!success) {
-    return <div className="w-screen h-screen bg-bg-app" />;
-  }
   const isSettingPage = pathname.startsWith("/setting");
   const isChattingPage = isHomePath || pathname.startsWith("/chat");
   if (isSettingPage) {

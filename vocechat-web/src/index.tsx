@@ -41,6 +41,14 @@ document.addEventListener("focusin", (e) => {
     setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 400);
   }
 });
+// Fade out the HTML splash once React is ready
+const splash = document.getElementById("splash");
+if (splash) {
+  splash.style.transition = "opacity 350ms ease";
+  splash.style.opacity = "0";
+  setTimeout(() => splash.remove(), 350);
+}
+
 root.render(
   <Suspense fallback="loading">
     <Toaster

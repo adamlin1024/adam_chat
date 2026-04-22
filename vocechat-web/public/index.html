@@ -230,6 +230,17 @@
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="splash" style="position:fixed;inset:0;background:#08090b;display:flex;align-items:center;justify-content:center;z-index:99999;">
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span class="s-dot"></span>
+        <span class="s-dot" style="animation-delay:0.16s"></span>
+        <span class="s-dot" style="animation-delay:0.32s"></span>
+      </div>
+    </div>
+    <style>
+      @keyframes sDot{0%,60%,100%{opacity:.2;transform:scale(.75)}30%{opacity:1;transform:scale(1)}}
+      .s-dot{width:9px;height:9px;border-radius:50%;background:#5eead4;animation:sDot 1.2s ease-in-out infinite;}
+    </style>
     <div id="root"></div>
     <div id="root-modal"></div>
     <div id="modal-modal"></div>

@@ -1,25 +1,41 @@
-import { useAppSelector } from "@/app/store";
-import clsx from "clsx";
-// import { useEffect } from "react";
-// import { toast } from "react-hot-toast";
+import { useEffect, useRef, useState } from "react";
 import { shallowEqual } from "react-redux";
+import { useAppSelector } from "@/app/store";
 
-// type Props = {};
 const StreamStatus = () => {
   const status = useAppSelector((store) => store.ui.SSEStatus, shallowEqual);
+  const [visible, setVisible] = useState(false);
+  const [opacity, setOpacity] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    clearTimeout(timerRef.current);
+    if (status === "reconnecting") {
+      setVisible(true);
+      requestAnimationFrame(() => setOpacity(1));
+    } else if (status === "connected" && visible) {
+      setOpacity(0);
+      timerRef.current = setTimeout(() => setVisible(false), 380);
+    }
+  }, [status]);
+
+  if (!visible) return null;
 
   return (
-    <aside className="fixed right-2 bottom-2">
-      <div
-        className={clsx(
-          "w-1 h-1 rounded-full",
-          status === "connected" && "bg-green-500",
-          status === "disconnected" && "bg-red-500",
-          status === "reconnecting" && "bg-blue-500",
-          status === "connecting" && "bg-yellow-500"
-        )}
-      ></div>
-    </aside>
+    <div
+      className="fixed inset-0 z-[9999] bg-bg-app flex items-center justify-center"
+      style={{ opacity, transition: "opacity 350ms ease" }}
+    >
+      <div className="flex items-center gap-2.5">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="w-2 h-2 rounded-full bg-accent"
+            style={{ animation: "sDot 1.2s ease-in-out infinite", animationDelay: `${i * 160}ms` }}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 

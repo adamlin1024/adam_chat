@@ -3,7 +3,6 @@ import { matchRoutes, Navigate, useLocation } from "react-router-dom";
 
 import { GuestRoutes, KEY_LOCAL_TRY_PATH } from "@/app/config";
 import { useAppSelector } from "@/app/store";
-import Loading from "./Loading";
 import { shallowEqual } from "react-redux";
 
 interface Props {
@@ -22,9 +21,11 @@ const RequireAuth: FC<Props> = ({ children, redirectTo = "/login", guestMode }) 
   const guest = useAppSelector((store) => store.authData.guest, shallowEqual);
   const initialized = useAppSelector((store) => store.authData.initialized, shallowEqual);
   console.info("check basic info", guestMode);
-  // 初始化login配置检查
+  // loginConfig not yet loaded — if we already have a token, render children directly
+  // (we'd return children anyway once guestMode resolves)
   if (typeof guestMode == "undefined") {
-    return <Loading fullscreen={true} reload context="auth-route" />;
+    if (token) return children;
+    return null;
   }
   //  未初始化 则先走setup 流程
   if (!initialized) return <Navigate to={`/onboarding`} replace />;
