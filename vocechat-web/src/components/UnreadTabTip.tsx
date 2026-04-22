@@ -60,11 +60,16 @@ const UnreadTabTip = () => {
     originalHrefRef.current = getFaviconLink().href;
     originalTitleRef.current = document.title;
 
-    // load PNG favicon with crossOrigin for canvas compositing
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => { faviconImgRef.current = img; };
-    img.src = "/favicon-32x32.png";
+    // fetch as blob (same-origin) to avoid canvas CORS taint
+    fetch("/favicon-32x32.png")
+      .then((r) => r.blob())
+      .then((blob) => {
+        const blobUrl = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => { faviconImgRef.current = img; };
+        img.src = blobUrl;
+      })
+      .catch(() => {});
 
     return () => {
       if (originalHrefRef.current) getFaviconLink().href = originalHrefRef.current;
