@@ -168,7 +168,7 @@ export default function LoginPage() {
   if (loadingSMTPStatus) return null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg-app">
+    <div className="flex min-h-screen items-center justify-center bg-bg-app overflow-y-auto py-6">
       <div className="relative flex w-[360px] flex-col items-center gap-3.5 rounded-xl border border-border bg-bg-elevated px-[26px] py-7 shadow-overlay">
         {emailInputted && (
           <IconBack
