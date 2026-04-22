@@ -74,8 +74,8 @@ const User: FC<Props> = ({
     <div className={statusContainerClass}>
       <IconBot className={compact ? "w-[10px] h-[10px]" : "w-3 h-3"} />
     </div>
-  ) : showStatus ? (
-    <div className={statusClass}></div>
+  ) : (showStatus && online) ? (
+    <div className={clsx(statusContainerClass, "bg-green-500", compact ? "w-[10px] h-[10px]" : "w-3 h-3")}></div>
   ) : null;
   if (!popover)
     return (

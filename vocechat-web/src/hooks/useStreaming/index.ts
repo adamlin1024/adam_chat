@@ -489,37 +489,19 @@ export default function useStreaming() {
       console.info("debug SSE: visibility changed", isTabHidden());
       const tabHidden = isTabHidden();
       if (tabHidden) {
-        // 记录隐藏时间
         hiddenTime = new Date().getTime();
+        // Disconnect after 3s delay so server marks user offline and sends push notifications.
+        // Delay avoids churn when quickly switching apps.
+        setTimeout(() => {
+          if (isTabHidden()) stopStreaming();
+        }, 3000);
       } else {
-        const elapsedTime = (new Date().getTime() - hiddenTime) / 1000;
-        // 大于 1 天
-        const timeSpan = 24 * 60 * 60;
-        // const timeSpan = 5;
-        const canReconnect = elapsedTime > timeSpan || !SSE;
-        console.info(
-          "debug SSE: visibility changed elapsedTime",
-          elapsedTime,
-          hiddenTime,
-          canReconnect,
-          !SSE
-        );
-        // 超过 1 天或者已断线，强制重连
-        if (canReconnect) {
-          // 设置重连状态
+        // Always reconnect when returning to foreground
+        if (!SSE || SSE.readyState !== EventSource.OPEN) {
           toast.dismiss();
           toast.loading("Reconnecting...");
           dispatch(updateSSEStatus("reconnecting"));
-          if (SSE) {
-            // 先停掉
-            stopStreaming();
-            setTimeout(() => {
-              startStreaming();
-            }, 1500);
-          } else {
-            // 直接重连
-            startStreaming();
-          }
+          startStreaming();
         }
       }
     };

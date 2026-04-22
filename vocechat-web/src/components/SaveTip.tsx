@@ -1,8 +1,5 @@
-// import clsx from "clsx";
 import { FC, MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
-
-import Button from "./styled/Button";
 
 interface Props {
   saveHandler: (e: MouseEvent) => void;
@@ -11,24 +8,24 @@ interface Props {
 
 const SaveTip: FC<Props> = ({ saveHandler, resetHandler }) => {
   const { t } = useTranslation("setting");
-  // const btnClass=clsx("")
   return (
-    <div
-      className="z-[999] w-full max-w-lg p-2 fixed bottom-4 md:bottom-16
-    flex flex-col md:flex-row items-center justify-between font-semibold text-gray-700 border 
-    border-solid border-gray-200 dark:border-gray-400 bg-white dark:bg-gray-600 shadow-2xl dark:shadow-primary-400/50 rounded-full"
-    >
-      <span className="p-2 text-sm dark:text-gray-200">{t("save_tip")}</span>
-      <div className="flex items-center gap-3">
-        <Button
-          className="small ghost border_less !text-gray-700 !shadow-none dark:!text-gray-100"
+    <div className="z-[999] fixed bottom-4 left-4 right-4 mx-auto max-w-lg
+      flex items-center justify-between gap-3 px-4 py-2.5
+      bg-bg-elevated border border-border rounded-xl shadow-overlay">
+      <span className="text-sm font-medium text-fg-secondary">{t("save_tip")}</span>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
           onClick={resetHandler}
+          className="px-3 py-1.5 rounded-md text-[13px] font-mono font-bold text-fg-secondary border border-border hover:border-border-strong transition-colors"
         >
           {t("reset")}
-        </Button>
-        <Button className="small !rounded-full" onClick={saveHandler}>
+        </button>
+        <button
+          onClick={saveHandler}
+          className="px-3 py-1.5 rounded-md text-[13px] font-mono font-bold bg-accent text-accent-on hover:opacity-90 transition-opacity"
+        >
           {t("save_change")}
-        </Button>
+        </button>
       </div>
     </div>
   );
