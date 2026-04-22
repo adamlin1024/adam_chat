@@ -18,6 +18,14 @@ import "./libs/polyfills";
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 // dark-only design — always apply dark class
 document.documentElement.classList.add("dark");
+
+// iOS PWA: scroll focused input into view after keyboard animates up
+document.addEventListener("focusin", (e) => {
+  const el = e.target as HTMLElement;
+  if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+    setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 400);
+  }
+});
 root.render(
   <Suspense fallback="loading">
     <Toaster
