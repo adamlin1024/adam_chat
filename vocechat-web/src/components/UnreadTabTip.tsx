@@ -15,7 +15,7 @@ function getFaviconLink(): HTMLLinkElement {
   return link;
 }
 
-function drawBadge(baseImg: HTMLImageElement | null): string {
+function drawFavicon(baseImg: HTMLImageElement | null, hasBadge: boolean): string {
   const canvas = document.createElement("canvas");
   canvas.width = 32;
   canvas.height = 32;
@@ -24,10 +24,12 @@ function drawBadge(baseImg: HTMLImageElement | null): string {
   if (baseImg) {
     try { ctx.drawImage(baseImg, 0, 0, 32, 32); } catch { /* tainted — skip */ }
   }
-  ctx.fillStyle = "#ff2222";
-  ctx.beginPath();
-  ctx.arc(27, 5, 5, 0, 2 * Math.PI);
-  ctx.fill();
+  if (hasBadge) {
+    ctx.fillStyle = "#ff2222";
+    ctx.beginPath();
+    ctx.arc(27, 5, 5, 0, 2 * Math.PI);
+    ctx.fill();
+  }
   try { return canvas.toDataURL("image/png"); } catch { return ""; }
 }
 
@@ -47,42 +49,56 @@ const UnreadTabTip = () => {
 
   const originalHrefRef = useRef("");
   const originalTitleRef = useRef("");
-  const faviconImgRef = useRef<HTMLImageElement | null>(null);
-  const badgeActiveRef = useRef(false);
+  const normalUrlRef = useRef<string>("");
+  const badgeUrlRef = useRef<string>("");
+  const lastSetHrefRef = useRef<string>("");
 
-  // One-time init
   useEffect(() => {
-    originalHrefRef.current = getFaviconLink().href;
+    const link = getFaviconLink();
+    originalHrefRef.current = link.href;
     originalTitleRef.current = document.title;
+    lastSetHrefRef.current = link.href;
 
-    fetch("/neko-icon.png")
-      .then((r) => r.blob())
-      .then((blob) => {
-        const img = new Image();
-        img.onload = () => { faviconImgRef.current = img; };
-        img.src = URL.createObjectURL(blob);
-      })
-      .catch(() => {});
+    const load = (attempt = 0) => {
+      fetch("/neko-icon.png")
+        .then((r) => r.blob())
+        .then((blob) => {
+          const img = new Image();
+          img.onload = () => {
+            normalUrlRef.current = drawFavicon(img, false);
+            badgeUrlRef.current = drawFavicon(img, true);
+          };
+          img.src = URL.createObjectURL(blob);
+        })
+        .catch(() => {
+          if (attempt < 2) setTimeout(() => load(attempt + 1), 1000 * (attempt + 1));
+        });
+    };
+    load();
 
     return () => {
       getFaviconLink().href = originalHrefRef.current;
       document.title = originalTitleRef.current;
-      badgeActiveRef.current = false;
     };
   }, []);
 
-  // Tab visibility
   useEffect(() => {
     const sync = () => setIsTabVisible(!document.hidden);
     document.addEventListener("visibilitychange", sync);
     return () => document.removeEventListener("visibilitychange", sync);
   }, []);
 
-  // Badge + title
   useEffect(() => {
-    if (!loginUid) { document.title = originalTitleRef.current; return; }
+    if (!loginUid) {
+      document.title = originalTitleRef.current;
+      const link = getFaviconLink();
+      if (link.href !== originalHrefRef.current) {
+        link.href = originalHrefRef.current;
+        lastSetHrefRef.current = originalHrefRef.current;
+      }
+      return;
+    }
 
-    // Always compute the real unread total first
     let total = 0;
     for (const [id, mids] of Object.entries(DMMap)) {
       if (muteUsers[+id] || !userData[+id]) continue;
@@ -95,20 +111,19 @@ const UnreadTabTip = () => {
       total += unreads;
     }
 
-    // Suppress when the user is actively watching the chat page
     const onChat = pathname === "/" || pathname.startsWith("/chat");
     const count = isTabVisible && onChat ? 0 : total;
 
-    // Favicon — only touch href on badge state transitions to avoid browser async-fetch race
-    if (count > 0 && !badgeActiveRef.current) {
-      const url = drawBadge(faviconImgRef.current);
-      if (url) { getFaviconLink().href = url; badgeActiveRef.current = true; }
-    } else if (count === 0 && badgeActiveRef.current) {
-      getFaviconLink().href = originalHrefRef.current;
-      badgeActiveRef.current = false;
+    const targetHref = count > 0
+      ? (badgeUrlRef.current || drawFavicon(null, true) || originalHrefRef.current)
+      : (normalUrlRef.current || originalHrefRef.current);
+
+    const link = getFaviconLink();
+    if (lastSetHrefRef.current !== targetHref || link.href !== lastSetHrefRef.current) {
+      link.href = targetHref;
+      lastSetHrefRef.current = targetHref;
     }
 
-    // Title — always in sync with count
     document.title = count > 0
       ? `[${count}] ${originalTitleRef.current}`
       : originalTitleRef.current;
