@@ -6,10 +6,12 @@ import BASE_URL from "@/app/config";
 import { useAppSelector } from "@/app/store";
 import FileBox from "@/components/FileBox";
 import FilterChannel from "./Filter/Channel";
-import { useLazyGetFilesQuery } from "@/app/services/server";
+import { useLazyGetFilesQuery, useLazyDeleteSingleFileQuery } from "@/app/services/server";
+import toast from "react-hot-toast";
 import { shallowEqual, useDispatch } from "react-redux";
 import { updateFileListView } from "@/app/slices/ui";
 import ChannelIcon from "@/components/ChannelIcon";
+import ImagePreviewModal from "@/components/ImagePreviewModal";
 
 import IconUnknown from "@/assets/icons/file.unknown.svg";
 import IconImage from "@/assets/icons/file.image.svg";
@@ -20,6 +22,7 @@ import IconPdf from "@/assets/icons/file.pdf.svg";
 import IconList from "@/assets/icons/file.list.svg";
 import IconGrid from "@/assets/icons/file.grid.svg";
 import ArrowDown from "@/assets/icons/arrow.down.svg";
+import CheckSign from "@/assets/icons/check.sign.svg";
 
 const typeFilters = [
   { icon: <IconUnknown className="w-[15px] h-5" />, title: "全部", type: "" },
@@ -33,9 +36,13 @@ const typeFilters = [
 function Files() {
   const dispatch = useDispatch();
   const [getFiles, { data }] = useLazyGetFilesQuery();
+  const [deleteSingleFile] = useLazyDeleteSingleFileQuery();
   const [fileType, setFileType] = useState("");
   const [gid, setGid] = useState<number | undefined>(undefined);
   const [channelMenuVisible, setChannelMenuVisible] = useState(false);
+  const [typeMenuVisible, setTypeMenuVisible] = useState(false);
+  const [localDeleted, setLocalDeleted] = useState<Set<number>>(new Set());
+  const [previewImage, setPreviewImage] = useState<{ url: string; name: string } | null>(null);
   const view = useAppSelector((store) => store.ui.fileListView, shallowEqual);
   const channelMap = useAppSelector((store) => store.channels.byId, shallowEqual);
 
@@ -48,78 +55,126 @@ function Files() {
 
   if (!data) return null;
 
-  const files = [...data.filter((item) => !item.expired)].sort(
+  const files = [...data.filter((item) => !item.expired && !localDeleted.has(item.mid))].sort(
     (a, b) => b.created_at - a.created_at
   );
 
+  const selectedTypeLabel = typeFilters.find((f) => f.type === fileType)?.title ?? "全部";
+
+  const handleDelete = async (mid: number, file_path: string, thumbnail_path?: string) => {
+    setLocalDeleted((prev) => new Set(prev).add(mid));
+    try {
+      const res = await deleteSingleFile(file_path);
+      if (thumbnail_path && thumbnail_path !== file_path) {
+        await deleteSingleFile(thumbnail_path);
+      }
+      if ("error" in res && res.error) {
+        console.error("deleteSingleFile error", res.error);
+        toast.error("刪除失敗，伺服器不支援單檔刪除");
+        setLocalDeleted((prev) => {
+          const next = new Set(prev);
+          next.delete(mid);
+          return next;
+        });
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    const f: Record<string, unknown> = { page_size: 1000 };
+    if (fileType) f.file_type = fileType;
+    if (gid) f.gid = gid;
+    getFiles(f, false);
+  };
+
   return (
     <div className="h-full flex overflow-hidden bg-bg-canvas md:mt-2 md:mr-6 md:mb-2.5 md:rounded-lg md:border md:border-border-subtle">
-      {/* Sidebar — type filter */}
-      <div className="shrink-0 md:min-w-[200px] p-2 border-r border-border-subtle">
-        <ul className="flex flex-col gap-0.5">
-          {typeFilters.map(({ icon, title, type }) => (
-            <li
-              key={type}
-              className={clsx(
-                type === fileType
-                  ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
-                  : "text-fg-subtle",
-                "cursor-pointer flex items-center gap-2 px-2.5 py-[7px] rounded-md hover:bg-[#0f1014] transition-colors"
-              )}
-              onClick={() => setFileType(type)}
-            >
-              <span className="[&>svg]:w-[14px] [&>svg]:h-[14px] [&>svg]:fill-current shrink-0">
-                {icon}
-              </span>
-              <span className="hidden md:block font-mono text-[11.5px] font-medium">{title}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
       {/* Content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header bar */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-subtle shrink-0">
-          {/* Channel filter */}
-          <Tippy
-            interactive
-            visible={channelMenuVisible}
-            onClickOutside={() => setChannelMenuVisible(false)}
-            placement="bottom-start"
-            popperOptions={{ strategy: "fixed" }}
-            content={
-              <FilterChannel
-                select={gid}
-                updateFilter={({ gid: g }) => {
-                  setGid(g);
-                  setChannelMenuVisible(false);
-                }}
-              />
-            }
-          >
-            <button
-              onClick={() => setChannelMenuVisible((v) => !v)}
-              className={clsx(
-                "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-colors",
-                gid
-                  ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
-                  : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
-              )}
+          <div className="flex items-center gap-2">
+            {/* Channel filter */}
+            <Tippy
+              interactive
+              visible={channelMenuVisible}
+              onClickOutside={() => setChannelMenuVisible(false)}
+              placement="bottom-start"
+              popperOptions={{ strategy: "fixed" }}
+              content={
+                <FilterChannel
+                  select={gid}
+                  updateFilter={({ gid: g }) => {
+                    setGid(g);
+                    setChannelMenuVisible(false);
+                  }}
+                />
+              }
             >
-              <ChannelIcon
-                personal={gid ? !channelMap[gid]?.is_public : false}
-                className="[&>svg]:w-3.5 [&>svg]:h-3.5 text-fg-subtle"
-              />
-              <span className="max-w-[120px] truncate">
-                {gid && channelMap[gid] ? channelMap[gid].name : "頻道"}
-              </span>
-              <ArrowDown className="w-3 h-3 shrink-0 stroke-current fill-none" />
-            </button>
-          </Tippy>
+              <button
+                onClick={() => setChannelMenuVisible((v) => !v)}
+                className={clsx(
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                  gid
+                    ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
+                    : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
+                )}
+              >
+                <ChannelIcon
+                  personal={gid ? !channelMap[gid]?.is_public : false}
+                  className="[&>svg]:w-3.5 [&>svg]:h-3.5 text-fg-subtle"
+                />
+                <span className="max-w-[120px] truncate">
+                  {gid && channelMap[gid] ? channelMap[gid].name : "頻道"}
+                </span>
+                <ArrowDown className="w-3 h-3 shrink-0 stroke-current fill-none" />
+              </button>
+            </Tippy>
+
+            {/* File type filter */}
+            <Tippy
+              interactive
+              visible={typeMenuVisible}
+              onClickOutside={() => setTypeMenuVisible(false)}
+              placement="bottom-start"
+              popperOptions={{ strategy: "fixed" }}
+              content={
+                <div className="rounded-lg bg-bg-elevated border border-border-subtle shadow-lg overflow-auto max-h-[360px] min-w-[140px]">
+                  <ul className="flex flex-col py-1">
+                    {typeFilters.map(({ title, type }) => (
+                      <li
+                        key={type}
+                        className="relative cursor-pointer flex items-center gap-2.5 px-3 py-2.5 hover:bg-bg-surface transition-colors"
+                        onClick={() => {
+                          setFileType(type);
+                          setTypeMenuVisible(false);
+                        }}
+                      >
+                        <span className="text-fg-secondary font-medium text-[13px] flex-1">{title}</span>
+                        {fileType === type && <CheckSign className="fill-accent" />}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              }
+            >
+              <button
+                onClick={() => setTypeMenuVisible((v) => !v)}
+                className={clsx(
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                  fileType
+                    ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
+                    : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
+                )}
+              >
+                <span>{selectedTypeLabel}</span>
+                <ArrowDown className="w-3 h-3 shrink-0 stroke-current fill-none" />
+              </button>
+            </Tippy>
+          </div>
 
           {/* View toggle */}
-          <ul className="hidden md:flex items-center border border-border-subtle rounded-md overflow-hidden">
+          <ul className="flex items-center border border-border-subtle rounded-md overflow-hidden">
             <li
               className={clsx(
                 "cursor-pointer p-1.5 flex-center transition-colors",
@@ -145,7 +200,7 @@ function Files() {
         <div
           className={clsx(
             "flex-1 overflow-y-auto no-scrollbar p-4 pb-[80px] md:pb-4",
-            view === "item" ? "flex flex-col gap-3" : "grid gap-3 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+            view === "item" ? "flex flex-col gap-3" : "grid gap-3 grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
           )}
         >
           {files.length === 0 && (
@@ -159,6 +214,7 @@ function Files() {
             const url = `${BASE_URL}/resource/file?file_path=${encodeURIComponent(
               thumbnail || content
             )}`;
+            const isImage = /^image/gi.test(content_type);
             return (
               <FileBox
                 preview={view === "grid"}
@@ -170,11 +226,21 @@ function Files() {
                 from_uid={from_uid}
                 size={size}
                 name={name}
+                mid={mid}
+                onDelete={view === "grid" ? () => handleDelete(mid, content, thumbnail) : undefined}
+                onImageClick={isImage && view === "grid" ? () => setPreviewImage({ url, name }) : undefined}
               />
             );
           })}
         </div>
       </div>
+
+      {previewImage && (
+        <ImagePreviewModal
+          data={{ originUrl: previewImage.url, name: previewImage.name }}
+          closeModal={() => setPreviewImage(null)}
+        />
+      )}
     </div>
   );
 }

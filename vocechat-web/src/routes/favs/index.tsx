@@ -1,19 +1,23 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import Tippy from "@tippyjs/react";
 
 import { ContentTypes } from "@/app/config";
 import { Favorite } from "@/app/slices/favorites";
 import { useAppSelector } from "@/app/store";
 import FavoredMessage from "@/components/Message/FavoredMessage";
 import useFavMessage from "@/hooks/useFavMessage";
+import ImagePreviewModal from "@/components/ImagePreviewModal";
 import IconChannel from "@/assets/icons/channel.svg";
 import IconRemove from "@/assets/icons/close.svg";
 import IconAudio from "@/assets/icons/file.audio.svg";
 import IconImage from "@/assets/icons/file.image.svg";
 import IconUnknown from "@/assets/icons/file.unknown.svg";
 import IconVideo from "@/assets/icons/file.video.svg";
+import ArrowDown from "@/assets/icons/arrow.down.svg";
+import CheckSign from "@/assets/icons/check.sign.svg";
 import { shallowEqual } from "react-redux";
 
 type filter = "audio" | "video" | "image" | "";
@@ -21,7 +25,9 @@ type filter = "audio" | "video" | "image" | "";
 function FavsPage() {
   const { t } = useTranslation("fav");
   const [filter, setFilter] = useState<filter>("");
+  const [filterMenuVisible, setFilterMenuVisible] = useState(false);
   const [favs, setFavs] = useState<Favorite[]>([]);
+  const [previewImage, setPreviewImage] = useState<{ url: string; name: string } | null>(null);
   const { removeFavorite } = useFavMessage({});
   const Filters = [
     { icon: <IconUnknown className="w-[15px] h-5" />, title: t("all_items"), filter: "" },
@@ -54,76 +60,120 @@ function FavsPage() {
     removeFavorite(id);
   };
 
+  const selectedFilterLabel = Filters.find((f) => f.filter === filter)?.title ?? t("all_items");
+
   return (
     <div className="h-full flex overflow-hidden bg-bg-canvas md:mt-2 md:mr-6 md:mb-2.5 md:rounded-lg md:border md:border-border-subtle">
-      {/* Sidebar filter */}
-      <div className="shrink-0 md:min-w-[200px] p-2 border-r border-border-subtle">
-        <ul className="flex flex-col gap-0.5">
-          {Filters.map(({ icon, title, filter: f }) => (
-            <li
-              key={f}
+      {/* Right side */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header bar */}
+        <div className="flex items-center px-4 py-2.5 border-b border-border-subtle shrink-0">
+          <Tippy
+            interactive
+            visible={filterMenuVisible}
+            onClickOutside={() => setFilterMenuVisible(false)}
+            placement="bottom-start"
+            popperOptions={{ strategy: "fixed" }}
+            content={
+              <div className="rounded-lg bg-bg-elevated border border-border-subtle shadow-lg overflow-auto max-h-[360px] min-w-[140px]">
+                <ul className="flex flex-col py-1">
+                  {Filters.map(({ title, filter: f }) => (
+                    <li
+                      key={f}
+                      className="relative cursor-pointer flex items-center gap-2.5 px-3 py-2.5 hover:bg-bg-surface transition-colors"
+                      onClick={() => {
+                        setFilter(f as filter);
+                        setFilterMenuVisible(false);
+                      }}
+                    >
+                      <span className="text-fg-secondary font-medium text-[13px] flex-1">{title}</span>
+                      {filter === f && <CheckSign className="fill-accent" />}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            }
+          >
+            <button
+              onClick={() => setFilterMenuVisible((v) => !v)}
               className={clsx(
-                f === filter
+                "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                filter
                   ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
-                  : "text-fg-subtle",
-                "cursor-pointer flex items-center gap-2 px-2.5 py-[7px] rounded-md hover:bg-[#0f1014] transition-colors"
+                  : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
               )}
-              onClick={() => setFilter(f as filter)}
             >
-              <span className="[&>svg]:w-[14px] [&>svg]:h-[14px] [&>svg]:fill-current shrink-0">
-                {icon}
+              <span>{selectedFilterLabel}</span>
+              <ArrowDown className="w-3 h-3 shrink-0 stroke-current fill-none" />
+            </button>
+          </Tippy>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto no-scrollbar p-4 md:p-5 flex flex-col gap-6 pb-[80px] md:pb-6">
+          {favs.length === 0 && (
+            <div className="flex-1 flex items-center justify-center py-16 text-fg-disabled text-sm">
+              {t("all_items")} 0
+            </div>
+          )}
+          {favs.map(({ id, created_at, messages }) => {
+            if (!messages || messages.length === 0) return null;
+            const [{ source: { gid, uid } }] = messages;
+            const tip = (
+              <span className="inline-flex items-center gap-1 mr-2">
+                {gid ? (
+                  <>
+                    <IconChannel className="w-3 h-3 fill-fg-subtle" />
+                    <span className="text-fg-secondary">{channelData[gid]?.name}</span>
+                  </>
+                ) : (
+                  <>
+                    From{" "}
+                    <strong className="font-semibold text-fg-secondary">{userData[uid]?.name}</strong>
+                  </>
+                )}
               </span>
-              <span className="hidden md:block font-mono text-[11.5px] font-medium">{title}</span>
-            </li>
-          ))}
-        </ul>
+            );
+
+            // Check if this favorite contains a single image message
+            const singleImageMsg = messages.length === 1 && messages[0].content_type === ContentTypes.file
+              && /^image/i.test(messages[0].properties?.content_type || "")
+              ? messages[0]
+              : null;
+
+            return (
+              <div className="max-w-[600px] flex flex-col gap-1.5" key={id}>
+                <h4 className="inline-flex items-center font-mono text-[10px] text-fg-disabled">
+                  {tip}
+                  {dayjs(created_at).format("YYYY-MM-DD")}
+                </h4>
+                <div className="relative group rounded-md border border-border overflow-hidden">
+                  <div
+                    className={clsx(singleImageMsg && "cursor-pointer")}
+                    onClick={singleImageMsg ? () => setPreviewImage({ url: singleImageMsg.content, name: singleImageMsg.properties?.name || "" }) : undefined}
+                  >
+                    <FavoredMessage key={id} id={id} />
+                  </div>
+                  <button
+                    className="absolute top-2 right-2 flex-center w-5 h-5 p-1 border border-border bg-bg-surface rounded-sm invisible group-hover:visible hover:border-border-strong transition-colors"
+                    data-id={id}
+                    onClick={handleRemove}
+                  >
+                    <IconRemove className="fill-fg-subtle" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-4 md:p-5 flex flex-col gap-6 pb-[80px] md:pb-6">
-        {favs.length === 0 && (
-          <div className="flex-1 flex items-center justify-center py-16 text-fg-disabled text-sm">
-            {t("all_items")} 0
-          </div>
-        )}
-        {favs.map(({ id, created_at, messages }) => {
-          if (!messages || messages.length === 0) return null;
-          const [{ source: { gid, uid } }] = messages;
-          const tip = (
-            <span className="inline-flex items-center gap-1 mr-2">
-              {gid ? (
-                <>
-                  <IconChannel className="w-3 h-3 fill-fg-subtle" />
-                  <span className="text-fg-secondary">{channelData[gid]?.name}</span>
-                </>
-              ) : (
-                <>
-                  From{" "}
-                  <strong className="font-semibold text-fg-secondary">{userData[uid]?.name}</strong>
-                </>
-              )}
-            </span>
-          );
-          return (
-            <div className="max-w-[600px] flex flex-col gap-1.5" key={id}>
-              <h4 className="inline-flex items-center font-mono text-[10px] text-fg-disabled">
-                {tip}
-                {dayjs(created_at).format("YYYY-MM-DD")}
-              </h4>
-              <div className="relative group rounded-md border border-border overflow-hidden">
-                <FavoredMessage key={id} id={id} />
-                <button
-                  className="absolute top-2 right-2 flex-center w-5 h-5 p-1 border border-border bg-bg-surface rounded-sm invisible group-hover:visible hover:border-border-strong transition-colors"
-                  data-id={id}
-                  onClick={handleRemove}
-                >
-                  <IconRemove className="fill-fg-subtle" />
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {previewImage && (
+        <ImagePreviewModal
+          data={{ originUrl: previewImage.url, name: previewImage.name }}
+          closeModal={() => setPreviewImage(null)}
+        />
+      )}
     </div>
   );
 }

@@ -14,6 +14,7 @@ import {
 } from "./preview";
 import { shallowEqual } from "react-redux";
 import DownloadArea from "../FileMessage/DownloadArea";
+import IconDelete from "@/assets/icons/delete.svg";
 
 interface Data {
   file_type: string;
@@ -69,6 +70,9 @@ interface Props {
   created_at: number;
   from_uid: number;
   content: string;
+  mid?: number;
+  onDelete?: () => void;
+  onImageClick?: () => void;
 }
 
 const FileBox: FC<Props> = ({
@@ -80,6 +84,8 @@ const FileBox: FC<Props> = ({
   created_at,
   from_uid,
   content,
+  onDelete,
+  onImageClick,
 }) => {
   const [fetchError, setFetchError] = useState(false);
   const { isExpired, setExpired } = useExpiredResMap();
@@ -113,12 +119,13 @@ const FileBox: FC<Props> = ({
 
   const previewContent = renderPreview({ file_type, content, name });
   const withPreview = preview && previewContent && !fetchError && !expired;
+  const isImage = /^image/gi.test(file_type);
 
   return (
     <div
       className={clsx(
-        `rounded-md border border-border bg-bg-surface`,
-        flex ? "w-full max-w-3xl" : "w-72 md:w-[370px]",
+        `group rounded-md border border-border bg-bg-surface`,
+        flex ? "w-full max-w-3xl" : "w-full md:w-[370px]",
         withPreview ? "relative overflow-hidden h-[281px]" : "h-[66px]",
         file_type.startsWith("audio") && "h-[125px]"
       )}
@@ -137,7 +144,22 @@ const FileBox: FC<Props> = ({
         </div>
         <DownloadArea copyLink={content} downloadLink={`${content}&download=true`} />
       </div>
-      {withPreview && <div className="h-[calc(100%_-_64px)] overflow-hidden">{previewContent}</div>}
+      {withPreview && (
+        <div
+          className={clsx("relative h-[calc(100%_-_64px)] overflow-hidden", isImage && onImageClick && "cursor-pointer")}
+          onClick={isImage && onImageClick ? onImageClick : undefined}
+        >
+          {previewContent}
+          {onDelete && (
+            <button
+              className="absolute top-2 right-2 flex-center w-9 h-9 rounded-md bg-black/60 hover:bg-black/80 transition-colors"
+              onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            >
+              <IconDelete className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

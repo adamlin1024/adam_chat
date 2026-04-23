@@ -6,6 +6,7 @@ import Download from "yet-another-react-lightbox/plugins/download";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/plugins/captions.css";
+
 export interface PreviewImageData {
   originUrl: string;
   thumbnail?: string;
@@ -22,18 +23,19 @@ interface Props {
 
 const ImagePreviewModal: FC<Props> = ({ download = true, data, closeModal }) => {
   if (!data) return null;
-  const { originUrl, downloadLink, name, type } = data;
+  const { originUrl, downloadLink, name } = data;
+
   return (
     <Lightbox
       open
       close={closeModal}
+      zoom={{
+        maxZoomPixelRatio: 5,
+        scrollToZoom: true,
+      }}
       styles={{
-        navigationNext: {
-          display: "none",
-        },
-        navigationPrev: {
-          display: "none",
-        },
+        navigationNext: { display: "none" },
+        navigationPrev: { display: "none" },
       }}
       slides={[
         {
