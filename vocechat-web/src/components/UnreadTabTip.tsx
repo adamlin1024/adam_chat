@@ -5,8 +5,6 @@ import { useAppSelector } from "../app/store";
 import getUnreadCount from "../routes/chat/utils";
 import { shallowEqual } from "react-redux";
 
-let totalUnreads = 0;
-
 function getFaviconLink(): HTMLLinkElement {
   let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
   if (!link) {
@@ -54,11 +52,11 @@ const UnreadTabTip = () => {
 
   const { pathname } = useLocation();
   const [isTabVisible, setIsTabVisible] = useState(!document.hidden);
-  const isOnChatPage = pathname === "/" || pathname.startsWith("/chat");
 
   const originalHrefRef = useRef("");
   const originalTitleRef = useRef("");
   const faviconImgRef = useRef<HTMLImageElement | null>(null);
+  const badgeActiveRef = useRef(false);
 
   useEffect(() => {
     originalHrefRef.current = getFaviconLink().href;
@@ -77,6 +75,7 @@ const UnreadTabTip = () => {
     return () => {
       if (originalHrefRef.current) getFaviconLink().href = originalHrefRef.current;
       document.title = originalTitleRef.current;
+      badgeActiveRef.current = false;
     };
   }, []);
 
@@ -86,15 +85,19 @@ const UnreadTabTip = () => {
     return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
+  const isOnChatPage = pathname === "/" || pathname.startsWith("/chat");
+
   useEffect(() => {
     if (loginUid === 0) {
-      if (originalTitleRef.current) document.title = originalTitleRef.current;
+      document.title = originalTitleRef.current;
       return;
     }
 
-    // Tab visible + on any chat page → user can see new messages directly, suppress badge
-    totalUnreads = 0;
-    if (!isTabVisible || !isOnChatPage) {
+    // When tab is visible on any chat page, user can see messages directly → no badge
+    const shouldShowBadge = !isTabVisible || !isOnChatPage;
+
+    let totalUnreads = 0;
+    if (shouldShowBadge) {
       Object.entries(DMMap).forEach(([id, mids]) => {
         if (!muteUsers[+id] && userData[+id]) {
           const { unreads = 0 } = getUnreadCount({ mids, readIndex: readUsers[+id], messageData, loginUid });
@@ -109,19 +112,24 @@ const UnreadTabTip = () => {
       });
     }
 
-    if (totalUnreads > 0) {
+    // Favicon — only touch href when the badge state changes (on→off or off→on)
+    // to avoid a race with the browser's async fetch of the org-logo URL.
+    if (totalUnreads > 0 && !badgeActiveRef.current) {
       const url = drawBadge(faviconImgRef.current);
-      if (url) getFaviconLink().href = url;
-    } else if (originalHrefRef.current) {
+      if (url) {
+        getFaviconLink().href = url;
+        badgeActiveRef.current = true;
+      }
+    } else if (totalUnreads === 0 && badgeActiveRef.current) {
       getFaviconLink().href = originalHrefRef.current;
+      badgeActiveRef.current = false;
     }
 
-    const baseTitle = originalTitleRef.current || document.title;
-    if (totalUnreads > 0) {
-      document.title = `[${totalUnreads}] ${baseTitle}`;
-    } else {
-      document.title = baseTitle;
-    }
+    // Title — tied to the same totalUnreads, no separate condition
+    document.title = totalUnreads > 0
+      ? `[${totalUnreads}] ${originalTitleRef.current}`
+      : originalTitleRef.current;
+
   }, [userData, DMMap, channelMids, readChannels, messageData, loginUid, readUsers, muteChannels, muteUsers, isTabVisible, isOnChatPage]);
 
   return null;
