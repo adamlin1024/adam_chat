@@ -102,7 +102,7 @@ const RegWithUsername: FC = () => {
           name="username"
           value={username}
           required
-          placeholder="Type a name"
+          placeholder={t("placeholder_name")}
           onChange={handleInput}
         />
         <Button type="submit" disabled={isLoading || !username || isSuccess}>

@@ -45,7 +45,7 @@ const UpdateFrontendURL = ({ refreshInviteLink }: Props) => {
           <StyledInput
             type={"url"}
             className="!shadow-none md:!bg-transparent"
-            placeholder="Frontend URL"
+            placeholder={t("placeholder_frontend_url")}
             value={frontUrl}
             onChange={handleUpdateUrl}
           />

@@ -58,6 +58,12 @@
   "status": {
     "uploading": "上傳中"
   },
+  "placeholder": {
+    "search_user_or_channel": "搜尋用戶或頻道",
+    "leave_message": "留個訊息",
+    "no_password": "無密碼",
+    "new_password": "請輸入新密碼"
+  },
   "tip": {
     "email_msg_tip": "您的地區收不到訊息提醒，升級到 Pro 版本可以使用郵件提醒功能",
     "update": "更新成功！",

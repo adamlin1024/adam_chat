@@ -37,7 +37,7 @@ const Index = () => {
   return (
     <SettingBlock title={t("overview.url.title")} desc={t("overview.url.desc")}>
       <div className="flex items-center gap-4 mt-2">
-        <StyledInput placeholder="frontend url" value={url} onChange={handleChange} />
+        <StyledInput placeholder={t("overview.url.placeholder")} value={url} onChange={handleChange} />
         <StyledButton disabled={!url || isLoading} className="small" onClick={handleUpdate}>
           {" "}
           {ct("action.update")}

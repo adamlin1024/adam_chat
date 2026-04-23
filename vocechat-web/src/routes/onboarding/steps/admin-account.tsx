@@ -78,7 +78,7 @@ const AdminAccount: FC<Props> = ({ serverName }) => {
       <form ref={formRef} action="/" className="flex flex-col gap-2 w-full">
         <StyledInput
           className="large"
-          placeholder="Enter your email"
+          placeholder={t("placeholder_email")}
           type={"email"}
           required
           value={email}
@@ -89,7 +89,7 @@ const AdminAccount: FC<Props> = ({ serverName }) => {
           type="password"
           required
           minLength={6}
-          placeholder="Enter your password"
+          placeholder={t("placeholder_password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -98,7 +98,7 @@ const AdminAccount: FC<Props> = ({ serverName }) => {
           type="password"
           required
           minLength={6}
-          placeholder="Confirm your password"
+          placeholder={t("placeholder_confirm_password")}
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
         />

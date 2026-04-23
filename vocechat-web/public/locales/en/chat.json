@@ -76,5 +76,6 @@
   "remark": "Add friend nickname",
   "remark_clear": "Reset friend nickname",
   "remark_intro": "Find a friend faster with a personal nickname. It will only be visible to you in your direct messages.",
-  "remark_placeholder": "Set Nickname"
+  "remark_placeholder": "Set Nickname",
+  "placeholder_generating": "Generating"
 }

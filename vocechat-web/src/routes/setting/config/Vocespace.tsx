@@ -332,7 +332,7 @@ export function ConfigVocespace() {
             onChange={handleChange}
             value={password}
             name="password"
-            placeholder="This is optional field"
+            placeholder={t("domain_placeholder")}
           />
         </div>
       </div>

@@ -120,7 +120,7 @@ export default function Logins() {
             <Input
               disabled={!google}
               onChange={handleGoogleClientIdChange}
-              placeholder="Client ID"
+              placeholder={t("google_client_id_placeholder")}
               value={clientId}
             />
           </div>
@@ -144,14 +144,14 @@ export default function Logins() {
               disabled={!github}
               data-key={"client_id"}
               onChange={handleGithubAuthChange}
-              placeholder="GitHub Client ID"
+              placeholder={t("github_client_id_placeholder")}
               value={githubAuthConfig?.client_id}
             />
             <Input
               disabled={!github}
               data-key={"client_secret"}
               onChange={handleGithubAuthChange}
-              placeholder="GitHub Client Secret"
+              placeholder={t("github_client_secret_placeholder")}
               value={githubAuthConfig?.client_secret}
             />
           </div>

@@ -81,7 +81,7 @@ export default function ConfigSMTP() {
             onChange={handleChange}
             value={host}
             name="host"
-            placeholder="SMTP Host"
+            placeholder={t("host_placeholder")}
           />
         </div>
         <div className="input">
@@ -93,7 +93,7 @@ export default function ConfigSMTP() {
             onChange={handleChange}
             value={port}
             name="port"
-            placeholder="SMTP Port"
+            placeholder={t("port_placeholder")}
           />
         </div>
         <div className="input">
@@ -104,7 +104,7 @@ export default function ConfigSMTP() {
             onChange={handleChange}
             value={from}
             name="from"
-            placeholder="SMTP From"
+            placeholder={t("from_placeholder")}
           />
         </div>
         <div className="input">
@@ -115,7 +115,7 @@ export default function ConfigSMTP() {
             onChange={handleChange}
             value={username}
             name="username"
-            placeholder="SMTP Username"
+            placeholder={t("username_placeholder")}
           />
         </div>
         <div className="input">
@@ -127,7 +127,7 @@ export default function ConfigSMTP() {
             onChange={handleChange}
             value={password}
             name="password"
-            placeholder="SMTP Password"
+            placeholder={t("password_placeholder")}
           />
         </div>
       </div>

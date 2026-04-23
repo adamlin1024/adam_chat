@@ -36,6 +36,11 @@
     "admin_account": "管理員帳號",
     "who_sign_up": "註冊權限",
     "invites": "邀請",
-    "update_domain_tip": "連結網域有問題？可在此更新設定："
+    "update_domain_tip": "連結網域有問題？可在此更新設定：",
+    "placeholder_email": "請輸入您的信箱",
+    "placeholder_password": "請輸入您的密碼",
+    "placeholder_confirm_password": "請再次輸入密碼",
+    "placeholder_frontend_url": "前端網址",
+    "placeholder_generating": "產生中"
   }
 }

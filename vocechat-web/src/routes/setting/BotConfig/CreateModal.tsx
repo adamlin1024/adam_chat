@@ -91,7 +91,7 @@ const CreateModal = ({ closeModal }: Props) => {
               onChange={handleInputChange}
               value={name}
               data-name={"name"}
-              placeholder="Please input bot name"
+              placeholder={t("bot_name_placeholder")}
             ></Input>
           </div>
           <div className="flex flex-col items-start gap-1 w-full">
@@ -103,7 +103,7 @@ const CreateModal = ({ closeModal }: Props) => {
               value={webhook_url}
               data-name={"webhook_url"}
               type="url"
-              placeholder="Please input webhook url"
+              placeholder={t("webhook_url_placeholder")}
             ></Input>
           </div>
         </div>

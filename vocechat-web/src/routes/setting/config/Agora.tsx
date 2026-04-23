@@ -99,7 +99,7 @@ export default function ConfigAgora() {
                 onChange={handleChange}
                 value={_url}
                 name="url"
-                placeholder="Agora URL"
+                placeholder={t("url_placeholder")}
               />
             </div>
             <div className="input">
@@ -111,7 +111,7 @@ export default function ConfigAgora() {
                 onChange={handleChange}
                 value={project_id}
                 name="project_id"
-                placeholder="Project ID"
+                placeholder={t("project_id_placeholder")}
               />
             </div>
             <div className="input">
@@ -123,7 +123,7 @@ export default function ConfigAgora() {
                 onChange={handleChange}
                 value={app_id}
                 name="app_id"
-                placeholder="APP ID"
+                placeholder={t("app_id_placeholder")}
               />
             </div>
             <div className="input">
@@ -135,7 +135,7 @@ export default function ConfigAgora() {
                 onChange={handleChange}
                 value={app_certificate}
                 name="app_certificate"
-                placeholder="APP Certificate"
+                placeholder={t("app_certificate_placeholder")}
               />
             </div>
             <div className="input">
@@ -147,7 +147,7 @@ export default function ConfigAgora() {
                 onChange={handleChange}
                 value={customer_id}
                 name="customer_id"
-                placeholder="Customer ID for RESTful API"
+                placeholder={t("customer_id_placeholder")}
               />
             </div>
             <div className="input">
@@ -159,7 +159,7 @@ export default function ConfigAgora() {
                 onChange={handleChange}
                 value={customer_secret}
                 name="customer_secret"
-                placeholder="Customer Secret for RESTful API"
+                placeholder={t("customer_secret_placeholder")}
               />
             </div>
           </div>

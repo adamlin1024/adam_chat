@@ -1,5 +1,7 @@
 {
   "welcome": "👋 你好，很高興認識你！",
   "placeholder_send": "請輸入訊息",
+  "placeholder_name": "您的姓名",
+  "placeholder_email": "您的電子郵件",
   "start_chat": "開始聊天"
 }

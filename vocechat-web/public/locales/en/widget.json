@@ -1,5 +1,7 @@
 {
   "welcome": "👋 Hi there, Nice to meet you!",
   "placeholder_send": "Type and press enter",
+  "placeholder_name": "Name",
+  "placeholder_email": "Email",
   "start_chat": "Start Chat"
 }

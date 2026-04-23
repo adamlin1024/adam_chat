@@ -24,7 +24,7 @@ const TestAPIKeyModal = ({ closeModal }: Props) => {
   const inputRef = useRef<HTMLTextAreaElement | undefined>();
   const msgInputRef = useRef<HTMLTextAreaElement | undefined>();
   const [key, setKey] = useState("");
-  // const { t } = useTranslation("setting", { keyPrefix: "bot" });
+  const { t } = useTranslation("setting", { keyPrefix: "bot" });
   const { t: ct } = useTranslation();
   const handleSetKey = () => {
     const input = inputRef?.current;
@@ -83,12 +83,12 @@ const TestAPIKeyModal = ({ closeModal }: Props) => {
             </ul>
           ) : null
         ) : (
-          <Textarea rows={6} ref={inputRef} placeholder="Input API Key First" />
+          <Textarea rows={6} ref={inputRef} placeholder={t("api_key_placeholder")} />
         )}
 
         {currCid ? (
           <div className="mt-4 flex flex-col items-start gap-2">
-            <Textarea ref={msgInputRef} placeholder="Input Something..." />
+            <Textarea ref={msgInputRef} placeholder={t("test_msg_placeholder")} />
             <ul className="flex gap-1">
               {Object.entries(MessageTypes).map(([key, value]) => {
                 return (

@@ -36,6 +36,11 @@
     "admin_account": "Admin Account",
     "who_sign_up": "Who Can Sign Up",
     "invites": "Invites",
-    "update_domain_tip": "Incorrect link domain?Please update it here:"
+    "update_domain_tip": "Incorrect link domain?Please update it here:",
+    "placeholder_email": "Enter your email",
+    "placeholder_password": "Enter your password",
+    "placeholder_confirm_password": "Confirm your password",
+    "placeholder_frontend_url": "Frontend URL",
+    "placeholder_generating": "Generating"
   }
 }

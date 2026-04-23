@@ -58,6 +58,12 @@
   "status": {
     "uploading": "Uploading"
   },
+  "placeholder": {
+    "search_user_or_channel": "Search user or channel",
+    "leave_message": "Leave a message",
+    "no_password": "No Password",
+    "new_password": "Input New Password"
+  },
   "tip": {
     "email_msg_tip": "Your region has blocked notifications, upgrade to Pro to use email notification.",
     "update": "Update Successfully!",

@@ -92,7 +92,7 @@ const ForwardModal: FC<IProps> = ({ mids, closeModal }) => {
               className="px-2 py-2.5 text-sm dark:text-white bg-black/10 rounded-lg w-full"
               value={input}
               onChange={handleSearchChange}
-              placeholder="Search user or channel"
+              placeholder={t("placeholder.search_user_or_channel")}
             />
           </div>
           <ul className="flex flex-col pb-5">
@@ -174,7 +174,7 @@ const ForwardModal: FC<IProps> = ({ mids, closeModal }) => {
           </label>
           <Input
             className="mb-8"
-            placeholder="Leave a message"
+            placeholder={t("placeholder.leave_message")}
             value={appendText}
             onChange={updateAppendText}
           ></Input>

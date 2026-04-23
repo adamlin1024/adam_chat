@@ -51,7 +51,7 @@ const IssuerList: FC<Props> = ({ issuers = [], onChange }) => {
                     readOnly
                     value={domain}
                     prefix="https://"
-                    placeholder="Issuer Domain"
+                    placeholder={t("setting:login.issuer_placeholder")}
                     className="w-[280px]"
                   />
                 </div>

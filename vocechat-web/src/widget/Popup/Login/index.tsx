@@ -108,8 +108,8 @@ const Login = () => {
       <div className="bg-white dark:bg-gray-700 border dark:border-gray-500 rounded-lg">
         <form className="px-4 py-3 flex flex-col gap-2" onSubmit={handleSubmit}>
           {/* input email as username */}
-          <Input required placeholder="Name" type="text" name="username" />
-          <Input required placeholder="Email" type="email" name="email" />
+          <Input required placeholder={t("placeholder_name")} type="text" name="username" />
+          <Input required placeholder={t("placeholder_email")} type="email" name="email" />
           <StyledButton
             style={{ backgroundColor: color, color: fgColor }}
             disabled={isLoading}

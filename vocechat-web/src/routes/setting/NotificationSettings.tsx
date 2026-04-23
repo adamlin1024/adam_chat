@@ -294,7 +294,7 @@ export default function NotificationSettings() {
               <Input
                 value={formData.name || ""}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="My Notification Channel"
+                placeholder={t("channel_name_placeholder")}
                 className="w-full"
               />
             </div>

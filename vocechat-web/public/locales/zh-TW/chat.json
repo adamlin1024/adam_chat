@@ -75,5 +75,6 @@
   "remark": "備註",
   "remark_clear": "重置備註",
   "remark_intro": "為聯絡人加備註，方便日後查找，備註僅您可見",
-  "remark_placeholder": "備註此用戶"
+  "remark_placeholder": "備註此用戶",
+  "placeholder_generating": "產生中"
 }

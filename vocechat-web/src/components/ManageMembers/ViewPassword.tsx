@@ -1,4 +1,5 @@
 // import React from "react";
+import { useTranslation } from "react-i18next";
 import Modal from "../Modal";
 import { useGetUserByAdminQuery } from "@/app/services/user";
 import Input from "../styled/Input";
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const ViewPassword = ({ uid, onClose }: Props) => {
+  const { t } = useTranslation();
   const {  data } = useGetUserByAdminQuery(uid ?? 0, { skip: !uid });
   console.log({ data });
 
@@ -20,9 +22,9 @@ const ViewPassword = ({ uid, onClose }: Props) => {
         <label htmlFor="pwd" className="dark:text-slate-200">
           Password:
         </label>
-        <Input readOnly value={data?.password} placeholder="No Password" />
+        <Input readOnly value={data?.password} placeholder={t("placeholder.no_password")} />
         <StyledButton className="small" onClick={onClose}>
-          Close
+          {t("action.close")}
         </StyledButton>
       </div>
     </Modal>

@@ -1,4 +1,5 @@
 // import React from "react";
+import { useTranslation } from "react-i18next";
 import Modal from "../Modal";
 import Input from "../styled/Input";
 import StyledButton from "../styled/Button";
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const UpdatePassword = ({ uid, onClose }: Props) => {
+  const { t } = useTranslation();
   const [pwd, setPwd] = useState("");
   const { updatePassword } = useUserOperation({ uid });
   const handleUpdate = () => {
@@ -32,13 +34,13 @@ const UpdatePassword = ({ uid, onClose }: Props) => {
         <label htmlFor="pwd" className="dark:text-slate-200">
           Password:
         </label>
-        <Input id="pwd" value={pwd} onChange={handleChange} placeholder="Input New Password" />
+        <Input id="pwd" value={pwd} onChange={handleChange} placeholder={t("placeholder.new_password")} />
         <div className="flex items-center gap-2">
           <StyledButton disabled={!pwd} className="small" onClick={handleUpdate}>
-            Update
+            {t("action.update")}
           </StyledButton>
           <StyledButton className="small cancel" onClick={onClose}>
-            Close
+            {t("action.close")}
           </StyledButton>
         </div>
       </div>

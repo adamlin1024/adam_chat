@@ -21,7 +21,7 @@ export default function InviteLink() {
         <StyledInput
           className="large !border-none !shadow-none"
           readOnly
-          placeholder="Generating"
+          placeholder={t("placeholder_generating")}
           value={link}
         />
         <StyledButton

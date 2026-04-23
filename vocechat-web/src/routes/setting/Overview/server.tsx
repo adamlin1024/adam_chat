@@ -88,7 +88,7 @@ const Index = () => {
             value={name}
             name="name"
             id="name"
-            placeholder="Server Name"
+            placeholder={t("overview.name_placeholder")}
           />
         </div>
         <div className="w-full flex flex-col items-start gap-2">
@@ -101,7 +101,7 @@ const Index = () => {
             rows={4}
             name="desc"
             id="desc"
-            placeholder="Tell the world a bit about this server"
+            placeholder={t("overview.desc_placeholder")}
           />
         </div>
       </div>

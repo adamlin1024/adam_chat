@@ -75,7 +75,7 @@ const InviteLink: FC<Props> = ({ context = "members", cid }) => {
           </p>
         )}
         <div className="w-full md:w-[512px] mb-3 relative">
-          <Input readOnly className={"large !pr-16"} placeholder="Generating" value={link} />
+          <Input readOnly className={"large !pr-16"} placeholder={t("placeholder_generating")} value={link} />
           <Button
             onClick={copyLink}
             className="ghost small border_less absolute right-1 top-1/2 -translate-y-1/2"
