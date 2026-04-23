@@ -45,6 +45,7 @@
     "mute": "静默通知",
     "unmute": "取消静默",
     "mark_read": "标记已读",
+    "delete_dm": "删除对话",
     "hide_session": "隐藏会话",
     "reload": "刷新页面",
     "install": "安装",

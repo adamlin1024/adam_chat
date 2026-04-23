@@ -29,6 +29,7 @@ type Props = {
   mid: number;
   hide: () => void;
   deleteChannel: (param: number) => void;
+  deleteDM?: (param: number) => void;
   setInviteChannelId: (param: number) => void;
   children: ReactElement;
 };
@@ -40,6 +41,7 @@ const SessionContextMenu: FC<Props> = ({
   mid,
   hide,
   deleteChannel,
+  deleteDM,
   setInviteChannelId,
   children,
 }) => {
@@ -128,8 +130,12 @@ const SessionContextMenu: FC<Props> = ({
           },
           {
             title: t("action.hide_session"),
-            danger: true,
             handler: handleRemoveSession,
+          },
+          deleteDM && {
+            title: t("action.delete_dm"),
+            danger: true,
+            handler: deleteDM.bind(null, id),
           },
         ]
       : [

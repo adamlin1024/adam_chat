@@ -234,6 +234,7 @@ const Session: FC<IProps> = ({
         pinned={pinned}
         setInviteChannelId={setInviteChannelId}
         deleteChannel={setDeleteChannelId}
+        deleteDM={setDeleteDMId}
       >
         <NavLink
           ref={drop}

@@ -45,6 +45,7 @@
     "mute": "Silenciar",
     "unmute": "Quitar Silencio",
     "mark_read": "Marcar como Leído",
+    "delete_dm": "Eliminar conversación",
     "hide_session": "Ocultar Sesión",
     "reload": "Recargar",
     "install": "Instalar",

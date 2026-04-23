@@ -45,6 +45,7 @@
     "mute": "Mute",
     "unmute": "Unmute",
     "mark_read": "Mark As Read",
+    "delete_dm": "Excluir conversa",
     "hide_session": "Hide Session",
     "reload": "reload",
     "install": "Install",

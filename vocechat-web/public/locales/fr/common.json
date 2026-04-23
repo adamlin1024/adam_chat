@@ -45,6 +45,7 @@
     "mute": "Couper le son",
     "unmute": "Réactiver le son",
     "mark_read": "Marquer comme Lu",
+    "delete_dm": "Supprimer la conversation",
     "hide_session": "Masquer la Session",
     "reload": "Recharger",
     "install": "Installer",

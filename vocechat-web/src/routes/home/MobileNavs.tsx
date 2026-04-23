@@ -6,6 +6,8 @@ import clsx from "clsx";
 import ChatIcon from "@/assets/icons/chat.svg";
 import SettingIcon from "@/assets/icons/setting.svg";
 import UserIcon from "@/assets/icons/user.svg";
+import BookmarkIcon from "@/assets/icons/bookmark.svg";
+import FolderIcon from "@/assets/icons/folder.svg";
 import { useAppSelector } from "../../app/store";
 import { shallowEqual } from "react-redux";
 
@@ -23,6 +25,7 @@ const MobileNavs = () => {
     (store) => store.ui.rememberedNavs,
     shallowEqual
   );
+  const isAdmin = useAppSelector((store) => store.authData.user?.is_admin ?? false, shallowEqual);
 
   const linkClass = `flex`;
   const isChatPage = isHomePath || pathname.startsWith("/chat");
@@ -68,6 +71,36 @@ const MobileNavs = () => {
           }}
         </NavLink>
       </li>
+      <li>
+        <NavLink className={() => `${linkClass}`} to={"/favs"}>
+          {({ isActive: active }) => {
+            return (
+              <div className="flex flex-col gap-1 items-center px-4 py-1">
+                <BookmarkIcon className={clsx("w-6 h-6", !active ? "fill-fg-subtle" : "fill-accent")} />
+                <span className={clsx("text-xs", !active ? "text-fg-muted" : "text-accent")}>
+                  {t("favs")}
+                </span>
+              </div>
+            );
+          }}
+        </NavLink>
+      </li>
+      {isAdmin && (
+        <li>
+          <NavLink className={() => `${linkClass}`} to={"/files"}>
+            {({ isActive: active }) => {
+              return (
+                <div className="flex flex-col gap-1 items-center px-4 py-1">
+                  <FolderIcon className={clsx("w-6 h-6", !active ? "fill-fg-subtle" : "fill-accent")} />
+                  <span className={clsx("text-xs", !active ? "text-fg-muted" : "text-accent")}>
+                    {t("files")}
+                  </span>
+                </div>
+              );
+            }}
+          </NavLink>
+        </li>
+      )}
       <li>
         <NavLink className={() => `${linkClass}`} to={"/setting"}>
           {({ isActive: active }) => {

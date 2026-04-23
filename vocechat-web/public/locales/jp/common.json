@@ -43,6 +43,7 @@
     "mute": "ミュート",
     "unmute": "ミュートを解除する",
     "mark_read": "既読にする",
+    "delete_dm": "会話を削除",
     "hide_session": "メッセージを隠す"
   },
   "status": {
