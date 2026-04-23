@@ -88,7 +88,10 @@ const FileMessage: FC<Props> = ({
           .then((r) => r.blob())
           .then((blobFile) => new File([blobFile], name, { type }));
 
-        if (type === "image/jpeg" || type === "image/jpg" || type.startsWith("image/hei")) {
+        // Detect JPEG by magic bytes (FF D8 FF) — reliable regardless of MIME type
+        const header = new Uint8Array(await file.slice(0, 3).arrayBuffer());
+        const isJpeg = header[0] === 0xFF && header[1] === 0xD8 && header[2] === 0xFF;
+        if (isJpeg) {
           const objUrl = URL.createObjectURL(file);
           const normalized = await new Promise<File | null>((resolve) => {
             const img = new Image();
