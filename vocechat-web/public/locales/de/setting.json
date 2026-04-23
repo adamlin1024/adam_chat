@@ -161,6 +161,13 @@
       "self_right": "Rechts",
       "alternating": "Alternating"
     },
+    "font_size": {
+      "title": "Schriftgröße",
+      "desc": "Passt die Textgröße an (pro Konto gespeichert)",
+      "small": "Klein",
+      "medium": "Mittel",
+      "large": "Groß"
+    },
     "contact_verify": {
       "title": "Kontaktüberprüfung",
       "desc": "Standardmäßig können sich alle Servermitglieder sehen. Um Kontaktverwaltung zu ermöglichen, aktiviere diese Funktion (Admins sind standardmäßig in der Kontaktliste).",

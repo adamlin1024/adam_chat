@@ -116,6 +116,13 @@
       "self_right": "Droite",
       "alternating": "Alternating"
     },
+    "font_size": {
+      "title": "Taille de Police",
+      "desc": "Ajuster la taille du texte (enregistré par compte)",
+      "small": "Petit",
+      "medium": "Moyen",
+      "large": "Grand"
+    },
     "contact_verify": {
       "title": "Vérification des Contacts",
       "desc": "Par défaut, tous les membres du serveur peuvent se voir. Si vous souhaitez que les membres du serveur ajoutent et gèrent leurs propres contacts, veuillez activer la fonctionnalité de contact (l'administrateur sera dans la liste des contacts par défaut).",

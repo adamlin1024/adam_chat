@@ -268,7 +268,7 @@ const Session: FC<IProps> = ({
               <span className={clsx(`flex items-center gap-1 min-w-0`)}>
                 <i
                   className={clsx(
-                    "not-italic font-medium text-[15px] text-[#e4e4e7] truncate",
+                    "not-italic font-medium ts-msg text-[#e4e4e7] truncate",
                     !previewMsg.created_at && "max-w-full"
                   )}
                 >
@@ -276,12 +276,12 @@ const Session: FC<IProps> = ({
                 </i>
                 {!is_public && <IconLock className="fill-fg-subtle shrink-0" />}
               </span>
-              <span className="font-mono text-[12px] text-fg-disabled shrink-0">
+              <span className="font-mono ts-mini text-fg-disabled shrink-0">
                 {fromNowTime(previewMsg.created_at)}
               </span>
             </div>
             <div className="flex items-center justify-between mt-px">
-              <span className={clsx("text-[13px] text-fg-subtle truncate", unreads > 0 ? `flex-1 mr-1` : ``)}>
+              <span className={clsx("ts-meta text-fg-subtle truncate", unreads > 0 ? `flex-1 mr-1` : ``)}>
                 {renderPreviewMessage(previewMsg)}
               </span>
               {unreads > 0 && !isCurrentPath ? (

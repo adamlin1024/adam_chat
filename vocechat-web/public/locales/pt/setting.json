@@ -109,6 +109,13 @@
       "self_right": "Right",
       "alternating": "Alternating"
     },
+    "font_size": {
+      "title": "Tamanho da Fonte",
+      "desc": "Ajustar tamanho do texto (salvo por conta)",
+      "small": "Pequeno",
+      "medium": "Médio",
+      "large": "Grande"
+    },
     "contact_verify": {
       "title": "Contact Verification",
       "desc": "By default all server members can see each other. If you want server members to add and manage their own contacts, please enable the contact feature (admin will be in the contacts list by default).",

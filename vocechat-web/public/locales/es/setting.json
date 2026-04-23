@@ -110,6 +110,13 @@
       "self_right": "Derecha",
       "alternating": "Alternating"
     },
+    "font_size": {
+      "title": "Tamaño de Fuente",
+      "desc": "Ajustar el tamaño del texto (guardado por cuenta)",
+      "small": "Pequeño",
+      "medium": "Medio",
+      "large": "Grande"
+    },
     "contact_verify": {
       "title": "Verificación de Contactos",
       "desc": "Por defecto, todos los miembros del servidor pueden ver a los demás. Si quieres que los miembros del servidor añadan y gestionen sus propios contactos, habilita la función de contactos (el administrador estará en la lista de contactos por defecto).",

@@ -155,6 +155,13 @@
       "self_right": "居右",
       "alternating": "Alternating"
     },
+    "font_size": {
+      "title": "字体大小",
+      "desc": "调整消息与列表文字大小（跟随账号）",
+      "small": "小",
+      "medium": "中",
+      "large": "大"
+    },
     "contact_verify": {
       "title": "联系人验证",
       "desc": "关闭：服务器内的所有成员能够互相看见；开启：通过搜索添加好友（管理员默认是所有人好友）",

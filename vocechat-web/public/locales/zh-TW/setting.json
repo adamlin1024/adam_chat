@@ -57,6 +57,8 @@
     "title_feat": "功能開關",
     "name": "伺服器名稱",
     "desc": "伺服器說明",
+    "name_placeholder": "請輸入伺服器名稱",
+    "desc_placeholder": "用幾句話介紹這個伺服器",
     "upload_desc": "圖片最小 128x128，建議上傳 512x512 大小的圖片，最大不超過 5MB。",
 
     "sign_up": {
@@ -124,7 +126,8 @@
     },
     "url": {
       "title": "更新前端網址",
-      "desc": "更新目前的前端網址"
+      "desc": "更新目前的前端網址",
+      "placeholder": "前端網址"
     },
     "lang": {
       "title": "語言",
@@ -155,6 +158,13 @@
       "left": "靠左",
       "self_right": "靠右",
       "alternating": "交互（自己靠右，對方靠左）"
+    },
+    "font_size": {
+      "title": "字體大小",
+      "desc": "調整訊息與列表文字大小（跟著帳號走）",
+      "small": "小",
+      "medium": "中",
+      "large": "大"
     },
     "contact_verify": {
       "title": "聯絡人驗證",
@@ -219,6 +229,11 @@
     "tip_confirm": "開始付款"
   },
   "bot": {
+    "bot_name_placeholder": "請輸入機器人名稱",
+    "webhook_url_placeholder": "請輸入 Webhook 網址",
+    "api_key_name_placeholder": "請輸入 API Key 名稱",
+    "api_key_placeholder": "請先輸入 API Key",
+    "test_msg_placeholder": "請輸入測試訊息...",
     "add_api_key": "新增 API Key",
     "no_api_key": "尚未建立 API Key",
     "bot_tip_title": "使用機器人向頻道傳送訊息",
@@ -284,6 +299,11 @@
     "from": "寄件來源",
     "username": "使用者名稱",
     "password": "密碼",
+    "host_placeholder": "SMTP 主機",
+    "port_placeholder": "SMTP 連接埠",
+    "from_placeholder": "寄件來源地址",
+    "username_placeholder": "SMTP 使用者名稱",
+    "password_placeholder": "SMTP 密碼",
     "how_to": "如何設定 SMTP？",
     "send_test_email": "傳送測試郵件"
   },
@@ -291,6 +311,12 @@
     "desc": "對於視訊和語音通話，我們使用 Agora API。",
     "sub_desc": "每個 Agora 專案每月可享受 10,000 分鐘的免費 API 使用時間。請自行建立一個專案並依照以下說明設定您的 Agora。",
     "enable": "開啟",
+    "url_placeholder": "Agora 網址",
+    "project_id_placeholder": "專案 ID",
+    "app_id_placeholder": "App ID",
+    "app_certificate_placeholder": "App 認證金鑰",
+    "customer_id_placeholder": "RESTful API 的客戶端 ID",
+    "customer_secret_placeholder": "RESTful API 的客戶端密鑰",
     "how_to": "如何設定 Agora？"
   },
   "vocespace": {
@@ -309,6 +335,7 @@
       "企業客製或需要協助，請聯絡 han@privoce.com"
     ],
     "domain_desc": "自訂網域需要是解析到本機 IP 的網域",
+    "domain_placeholder": "此欄位可選填",
     "enable": "啟用",
     "how_to": "啟用後，請設定網域並儲存，其餘步驟將自動完成",
     "old": "您目前的伺服器版本過舊，已開啟官方部署的 VoceSpace 地址（vocespace.com）作為預設音視訊服務，如需私有部署，請將 vocechat-server 更新至 0.5.8 以上版本。"
@@ -336,7 +363,11 @@
     "oidc": "OIDC",
     "oidc_desc": "允許用戶使用 OIDC 登入",
     "oidc_custom": "自訂",
-    "more_details": "更多詳情，請參閱 <0> 參考文件 </0> 。"
+    "more_details": "更多詳情，請參閱 <0> 參考文件 </0> 。",
+    "google_client_id_placeholder": "Google Client ID",
+    "github_client_id_placeholder": "GitHub Client ID",
+    "github_client_secret_placeholder": "GitHub Client Secret",
+    "issuer_placeholder": "Issuer 網域"
   },
   "passkey": {
     "title": "通行金鑰",
@@ -418,6 +449,7 @@
     "create_channel": "建立渠道",
     "edit_channel": "編輯渠道",
     "channel_name": "渠道名稱",
+    "channel_name_placeholder": "我的通知渠道",
     "channel_config": "渠道設定",
     "enable_notifications": "啟用通知",
     "trigger_conditions": "觸發條件",

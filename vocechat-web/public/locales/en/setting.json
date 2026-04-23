@@ -62,6 +62,8 @@
     "title_feat": "Features",
     "name": "Server Name",
     "desc": "Server Description",
+    "name_placeholder": "Server Name",
+    "desc_placeholder": "Tell the world a bit about this server",
     "upload_desc": "Minimum size is 128x128, We recommend at least 512x512 for the server. Max size limited to 5M.",
     "sign_up": {
       "title": "Default Sign Up",
@@ -126,7 +128,8 @@
     },
     "url": {
       "title": "Update Frontend URL",
-      "desc": "Update the frontend url"
+      "desc": "Update the frontend url",
+      "placeholder": "Frontend URL"
     },
     "lang": {
       "title": "Languages",
@@ -157,6 +160,13 @@
       "left": "Left",
       "self_right": "Right",
       "alternating": "Alternating (self right, others left)"
+    },
+    "font_size": {
+      "title": "Font Size",
+      "desc": "Adjust message and list text size (saved per account)",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
     },
     "contact_verify": {
       "title": "Contact Verification",
@@ -220,6 +230,11 @@
     "tip_confirm": "Start Payment"
   },
   "bot": {
+    "bot_name_placeholder": "Please input bot name",
+    "webhook_url_placeholder": "Please input webhook URL",
+    "api_key_name_placeholder": "Please input API Key name",
+    "api_key_placeholder": "Input API Key first",
+    "test_msg_placeholder": "Input something...",
     "add_api_key": "Add API Key",
     "no_api_key": "No API Key Yet",
     "bot_tip_title": "Bots can send messages to channels.",
@@ -285,6 +300,11 @@
     "from": "From",
     "username": "Username",
     "password": "Password",
+    "host_placeholder": "SMTP Host",
+    "port_placeholder": "SMTP Port",
+    "from_placeholder": "SMTP From",
+    "username_placeholder": "SMTP Username",
+    "password_placeholder": "SMTP Password",
     "how_to": "How to setup SMTP?",
     "send_test_email": "Send Test Email"
   },
@@ -292,6 +312,12 @@
     "desc": "For video and audio calls, we use Agora API. ",
     "sub_desc": "Each Agora project will enjoy 10,000 mins free API usages per month. Please create a project by yourself. Follow the instruction below to configure your Agora correctly.",
     "enable": "Enable",
+    "url_placeholder": "Agora URL",
+    "project_id_placeholder": "Project ID",
+    "app_id_placeholder": "APP ID",
+    "app_certificate_placeholder": "APP Certificate",
+    "customer_id_placeholder": "Customer ID for RESTful API",
+    "customer_secret_placeholder": "Customer Secret for RESTful API",
     "how_to": "How to setup Agora?"
   },
   "vocespace": {
@@ -310,6 +336,7 @@
     ],
     "sub_desc": "Each VoceSpace account will enjoy no limit minutes, 5 person concurrent and 4k resolution for free. No account creation required. Follow the instruction below to configure your VoceSpace correctly.",
     "domain_desc": "This domain needs to have a DNS A record pointing to the current server IP you are hosting VoceChat.",
+    "domain_placeholder": "This is optional field",
     "enable": "Enable",
     "how_to": "After enabling, please set a custom domain then click save, and the system will automatically enable VoceSpace.",
     "old": "Your current server version is outdated. We have enabled the official VoceSpace (vocespace.com) as your default audio/video service. To use your own private deployment, please update vocechat-server to v0.5.8 or higher."
@@ -337,7 +364,11 @@
     "oidc": "OIDC",
     "oidc_desc": "Allows members login with OIDC.",
     "oidc_custom": "Custom",
-    "more_details": "Need more detail? See our <0>doc</0>."
+    "more_details": "Need more detail? See our <0>doc</0>.",
+    "google_client_id_placeholder": "Client ID",
+    "github_client_id_placeholder": "GitHub Client ID",
+    "github_client_secret_placeholder": "GitHub Client Secret",
+    "issuer_placeholder": "Issuer Domain"
   },
   "passkey": {
     "title": "Passkeys",
@@ -419,6 +450,7 @@
     "create_channel": "Create Channel",
     "edit_channel": "Edit Channel",
     "channel_name": "Channel Name",
+    "channel_name_placeholder": "My Notification Channel",
     "channel_config": "Channel Configuration",
     "enable_notifications": "Enable notifications",
     "trigger_conditions": "Trigger conditions",

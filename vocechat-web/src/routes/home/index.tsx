@@ -12,6 +12,7 @@ import Tooltip from "@/components/Tooltip";
 import UnreadTabTip from "@/components/UnreadTabTip";
 import Voice from "@/components/Voice";
 import usePreload from "@/hooks/usePreload";
+import { useFontSize } from "@/hooks/useFontSize";
 import FavIcon from "@/assets/icons/bookmark.svg";
 import ChatIcon from "@/assets/icons/chat.svg";
 import FolderIcon from "@/assets/icons/folder.svg";
@@ -37,6 +38,8 @@ function HomePage() {
   );
   // preload basic data (kick off SSE + prefetch; result not used to gate render)
   usePreload();
+  // apply per-user font scale to :root --msg-scale
+  useFontSize();
   useEffect(() => {
     if (isChatHomePath) {
       dispatch(updateRememberedNavs({ key: "chat", path: "/chat" }));

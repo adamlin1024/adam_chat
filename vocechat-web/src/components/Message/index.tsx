@@ -173,7 +173,7 @@ const Message: FC<IProps> = ({
           <div
             className={clsx(`mb-0.5 flex items-baseline gap-2`, alignRight && "flex-row-reverse")}
           >
-            <span className="text-[15px] font-semibold tracking-tight text-fg-primary">
+            <span className="ts-msg font-semibold tracking-tight text-fg-primary">
               {currUser?.name ? (
                 <NameWithRemark uid={currUser.uid} showName={false} name={currUser.name} />
               ) : (
@@ -187,7 +187,7 @@ const Message: FC<IProps> = ({
               placement="top"
               tip={dayjsTime.format("YYYY-MM-DD h:mm:ss A")}
             >
-              <time className="font-mono text-[12px] text-fg-disabled">
+              <time className="font-mono ts-mini text-fg-disabled">
                 {timePrefix
                   ? `${timePrefix} ${dayjsTime.format("h:mm A")}`
                   : dayjsTime.format("YYYY-MM-DD h:mm:ss A")}
@@ -201,7 +201,7 @@ const Message: FC<IProps> = ({
           </div>
           <div
             className={clsx(
-              `vc-msg select-text text-[15px] leading-[1.55] text-fg-body wb whitespace-pre-wrap pr-6 md:pr-0`,
+              `vc-msg select-text ts-msg text-fg-body wb whitespace-pre-wrap pr-6 md:pr-0`,
               sending && "opacity-70"
             )}
           >

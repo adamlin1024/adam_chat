@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { useAppSelector } from "@/app/store";
 import ChatLayout from "./ChatLayout";
+import FontSize from "./FontSize";
 import ContactVerification from "./ContactVerification";
 import DarkMode from "./DarkMode";
 import FrontendURL from "./FrontendURL";
@@ -57,8 +58,6 @@ export default function Overview() {
 
           {/* 是否显示在线提示 */}
           <OnlineStatus />
-          {/* 会话布局 */}
-          <ChatLayout />
           {/* 联系人验证模式 */}
           <ContactVerification />
           {/* 前端自动更新 */}
@@ -68,6 +67,10 @@ export default function Overview() {
 
       <Language />
       <DarkMode />
+      {/* 字体大小（普通用户也可设定） */}
+      <FontSize />
+      {/* 会话布局（普通用户也可设定） */}
+      <ChatLayout />
       {/* 新消息声音 */}
       <MessageSound />
       {isAdmin && <OnlyAdminCreateGroup />}

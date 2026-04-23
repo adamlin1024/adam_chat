@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root { --msg-scale: 1; }
+
+@layer utilities {
+  .ts-msg  { font-size: calc(15px * var(--msg-scale)); line-height: calc(22px * var(--msg-scale)); }
+  .ts-sm   { font-size: calc(14px * var(--msg-scale)); line-height: calc(20px * var(--msg-scale)); }
+  .ts-meta { font-size: calc(13px * var(--msg-scale)); line-height: calc(18px * var(--msg-scale)); }
+  .ts-mini { font-size: calc(12px * var(--msg-scale)); line-height: calc(16px * var(--msg-scale)); }
+  .ts-xs   { font-size: calc(11px * var(--msg-scale)); line-height: calc(15px * var(--msg-scale)); }
+  .ts-2xs  { font-size: calc(10px * var(--msg-scale)); line-height: calc(14px * var(--msg-scale)); }
+}
+
 @keyframes sDot {
   0%, 60%, 100% { opacity: 0.2; transform: scale(0.75); }
   30%            { opacity: 1;   transform: scale(1);    }
