@@ -117,23 +117,21 @@ const FileBox: FC<Props> = ({
   return (
     <div
       className={clsx(
-        `rounded-md border border-solid border-gray-300 dark:border-gray-500 bg-gray-100 dark:bg-gray-900`,
+        `rounded-md border border-border bg-bg-surface`,
         flex ? "w-full max-w-3xl" : "w-72 md:w-[370px]",
-        withPreview ? "relative overflow-hidden h-[281px]" : "h-[66px] ",
+        withPreview ? "relative overflow-hidden h-[281px]" : "h-[66px]",
         file_type.startsWith("audio") && "h-[125px]"
       )}
     >
       <div className="w-full p-2 flex items-center justify-between gap-2">
         {icon}
         <div className="flex flex-col gap-1 w-full overflow-hidden">
-          <span className="font-semibold text-sm text-gray-800 dark:text-gray-200 truncate">
-            {name}
-          </span>
-          <em className="text-xs text-gray-500 flex gap-4 not-italic">
-            <span className="size">{formatBytes(size)}</span>
-            <span className="hidden md:block time">{fromNowTime(created_at)}</span>
+          <span className="font-semibold text-sm text-fg-primary truncate">{name}</span>
+          <em className="text-xs text-fg-subtle flex gap-4 not-italic">
+            <span>{formatBytes(size)}</span>
+            <span className="hidden md:block">{fromNowTime(created_at)}</span>
             <span>
-              by <strong className="font-bold">{fromUser?.name || "Deleted User"}</strong>
+              by <strong className="font-bold text-fg-secondary">{fromUser?.name || "Deleted User"}</strong>
             </span>
           </em>
         </div>

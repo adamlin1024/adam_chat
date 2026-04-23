@@ -15,33 +15,27 @@ const Channel: FC<Props> = ({ select = 0, updateFilter }) => {
   };
 
   return (
-    <div className="rounded-lg p-1 pt-0 bg-white dark:bg-gray-800 overflow-auto max-h-[400px] flex flex-col items-start relative drop-shadow">
-      <ul className="w-full min-w-48 flex flex-col gap-4 p-2">
+    <div className="rounded-lg bg-bg-elevated border border-border-subtle shadow-lg overflow-auto max-h-[360px] min-w-[200px]">
+      <ul className="flex flex-col py-1">
         <li
-          className="relative cursor-pointer flex items-center gap-2"
+          className="relative cursor-pointer flex items-center gap-2.5 px-3 py-2.5 hover:bg-bg-surface transition-colors"
           onClick={handleClick.bind(null, undefined)}
         >
-          <ChannelIcon />
-          <span className="text-gray-500 dark:text-gray-100 font-semibold text-sm">
-            Any Channel
-          </span>
-          {!select && <CheckSign className="absolute right-0 top-1/2 -translate-y-1/2" />}
+          <ChannelIcon className="text-fg-subtle" />
+          <span className="text-fg-secondary font-medium text-[13px] flex-1">Any Channel</span>
+          {!select && <CheckSign className="fill-accent" />}
         </li>
-        {channels.map(({ gid, is_public, name }) => {
-          return (
-            <li
-              key={gid}
-              className="relative cursor-pointer flex items-center gap-2 justify-between"
-              onClick={handleClick.bind(null, gid)}
-            >
-              <ChannelIcon personal={!is_public} />
-              <span className="text-gray-500 dark:text-gray-100 font-semibold text-sm flex-1">
-                {name}
-              </span>
-              {select == gid && <CheckSign className="" />}
-            </li>
-          );
-        })}
+        {channels.map(({ gid, is_public, name }) => (
+          <li
+            key={gid}
+            className="relative cursor-pointer flex items-center gap-2.5 px-3 py-2.5 hover:bg-bg-surface transition-colors"
+            onClick={handleClick.bind(null, gid)}
+          >
+            <ChannelIcon personal={!is_public} className="text-fg-subtle" />
+            <span className="text-fg-secondary font-medium text-[13px] flex-1 truncate">{name}</span>
+            {select == gid && <CheckSign className="fill-accent" />}
+          </li>
+        ))}
       </ul>
     </div>
   );
