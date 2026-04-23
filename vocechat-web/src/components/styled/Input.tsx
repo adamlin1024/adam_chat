@@ -38,25 +38,18 @@ const Input: FC<Props> = ({ type = "text", prefix = "", className = "", ...rest 
 
   const isLarge = className.includes("large");
   const isNone = className.includes("none");
-  // const noInner=!className.includes("inner");
   const isPwd = type == "password";
   const inputClass = clsx(
-    `w-full text-sm text-gray-800 dark:text-gray-200 p-2 outline-none 
-    bg-inherit
-  disabled:text-gray-500 disabled:bg-gray-100 
-  dark:disabled:text-gray-500 
-  dark:disabled:bg-gray-800/50
-  dark:disabled:border-gray-600 
-  placeholder:text-gray-400`,
-    // noInner && 'rounded border border-solid border-gray-200 shadow',
+    `w-full text-sm text-fg-primary p-2 outline-none bg-inherit
+    disabled:opacity-50 disabled:pointer-events-none
+    placeholder:text-fg-subtle`,
     isLarge && "py-3",
     isNone && "!border-none bg-transparent shadow-none",
     isPwd && "pr-[30px]"
   );
+  const wrapperClass = `w-full relative flex overflow-hidden rounded-md border border-solid border-border-subtle bg-bg-surface focus-within:border-border-strong transition-colors ${className}`;
   return type == "password" ? (
-    <div
-      className={`w-full relative flex overflow-hidden rounded border border-solid border-gray-200 dark:border-gray-400 shadow-sm ${className}`}
-    >
+    <div className={wrapperClass}>
       <input
         type={inputType}
         autoComplete={inputType == "password" ? "current-password" : "on"}
@@ -68,18 +61,16 @@ const Input: FC<Props> = ({ type = "text", prefix = "", className = "", ...rest 
         onClick={togglePasswordVisible}
       >
         {inputType == "password" ? (
-          <IconEyeClose className="fill-gray-500" />
+          <IconEyeClose className="fill-fg-subtle" />
         ) : (
-          <IconEyeOpen className="fill-gray-500" />
+          <IconEyeOpen className="fill-fg-subtle" />
         )}
       </div>
     </div>
   ) : prefix ? (
-    <div
-      className={`w-full relative flex overflow-hidden rounded border border-solid border-gray-200 dark:border-gray-400 shadow-sm bg-white dark:bg-gray-800 ${className}`}
-    >
+    <div className={wrapperClass}>
       {typeof prefix === "string" ? (
-        <span className="px-4 py-2 text-sm text-gray-500 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 shadow-[rgb(0_0_0_/_10%)_-1px_0px_0px_inset]">
+        <span className="px-4 py-2 text-sm text-fg-secondary bg-bg-elevated border-r border-border-subtle">
           {prefix}
         </span>
       ) : (
@@ -90,7 +81,7 @@ const Input: FC<Props> = ({ type = "text", prefix = "", className = "", ...rest 
   ) : (
     <input
       type={inputType}
-      className={`${inputClass} rounded border border-solid border-gray-200 dark:border-gray-400 shadow-sm ${className}`}
+      className={`${inputClass} rounded-md border border-solid border-border-subtle bg-bg-surface focus:border-border-strong transition-colors ${className}`}
       {...rest}
     />
   );

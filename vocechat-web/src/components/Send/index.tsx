@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 
@@ -14,11 +14,12 @@ import useUploadFile from "@/hooks/useUploadFile";
 import useUserOperation from "@/hooks/useUserOperation";
 import Replying from "./Replying";
 import Toolbar from "./Toolbar";
+import PlusMenu from "./PlusMenu";
 import UploadFileList from "./UploadFileList";
 import { shallowEqual } from "react-redux";
 import MessageInput from "../MessageInput";
 import { Emoji } from "@udecode/plate-emoji";
-import { EmojiInputPicker } from "../MessageInput/plate-ui/emoji-input-picker";
+import { EmojiInputButton, EmojiInputPanel } from "../MessageInput/plate-ui/emoji-input-picker";
 import { MessageWithMentions } from "@/types/message";
 import { PlateEditor } from "@udecode/plate-common";
 import { Transforms, Editor as SlateEditor } from "slate";
@@ -41,6 +42,9 @@ const Send: FC<IProps> = ({
 }) => {
   const editorRef = useRef<PlateEditor | null>(null);
   const sendingRef = useRef(false);
+  const emojiButtonRef = useRef<HTMLButtonElement>(null);
+  const emojiPanelRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
 
   const { t } = useTranslation("chat");
   const { unblockThisContact, blocked, isChannelOwner } = useUserOperation({
@@ -55,6 +59,7 @@ const Send: FC<IProps> = ({
   });
   const [markdownEditor, setMarkdownEditor] = useState(null);
   const [markdownFullscreen, setMarkdownFullscreen] = useState(false);
+  const [emojiOpen, setEmojiOpen] = useState(false);
   const dispatch = useAppDispatch();
   const addLocalFileMessage = useAddLocalFileMessage({ context, to: id });
   // 谁发的
@@ -74,12 +79,47 @@ const Send: FC<IProps> = ({
   const { sendMessage } = useSendMessage({ context, from: from_uid, to: id });
 
   const insertEmoji = (emoji: Emoji) => {
+    const { native } = emoji.skins[0];
     if (mode == Modes.markdown && markdownEditor) {
-      // markdown insert emoji
-      const { native } = emoji.skins[0];
       markdownEditor.insertText(native);
+      return;
+    }
+    if (editorRef.current) {
+      const editor = editorRef.current as any;
+      if (!editor.selection) {
+        Transforms.select(editor, SlateEditor.end(editor, []));
+      }
+      Transforms.insertText(editor, native);
     }
   };
+  const toggleEmoji = () => {
+    setEmojiOpen((prev) => {
+      const next = !prev;
+      if (next) {
+        if (typeof document !== "undefined") {
+          const active = document.activeElement as HTMLElement | null;
+          active?.blur?.();
+        }
+      }
+      return next;
+    });
+  };
+  useEffect(() => {
+    if (!emojiOpen) return;
+    const handler = (e: Event) => {
+      const target = e.target as Node;
+      if (emojiPanelRef.current?.contains(target)) return;
+      if (emojiButtonRef.current?.contains(target)) return;
+      if (toolbarRef.current?.contains(target)) return;
+      setEmojiOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [emojiOpen]);
   const handleSendMessage = async () => {
     if (!id || sendingRef.current) return;
     sendingRef.current = true;
@@ -161,7 +201,7 @@ const Send: FC<IProps> = ({
   }
   if (context == "dm" && blocked) {
     return (
-      <div className="mx-5 mb-4 px-4 py-3 rounded-lg border border-danger/30 bg-danger/10 text-danger font-mono text-[10.5px] flex items-center gap-3">
+      <div className="mx-5 mb-4 px-4 py-3 rounded-lg border border-danger/30 bg-danger/10 text-danger font-mono ts-xs flex items-center gap-3">
         {t("contact_block_tip")}
         <button className="underline hover:no-underline" onClick={unblockThisContact}>
           {t("unblock")}
@@ -174,7 +214,7 @@ const Send: FC<IProps> = ({
       {/* PC input */}
       <div
         className={clsx(
-          `send relative w-full px-5 pt-3 pb-4 ${mode} ${
+          `send relative w-full px-0 pt-2 pb-3 md:px-3 ${mode} ${
             markdownFullscreen ? "fullscreen" : ""
           } ${replying_mid ? "reply" : ""} ${context}`,
           isMarkdownMode && markdownFullscreen && "-mt-9"
@@ -185,48 +225,74 @@ const Send: FC<IProps> = ({
 
         <div
           className={clsx(
-            `flex items-center gap-2.5 rounded-lg border border-border bg-bg-sidebar px-3.5 py-3 focus-within:border-border-strong transition-colors`,
-            isMarkdownMode ? `grid grid-cols-[1fr_1fr] grid-rows-[auto_auto] gap-0` : ""
+            `flex items-center gap-1 border-t border-border bg-bg-sidebar px-2 py-2 focus-within:bg-bg-canvas transition-colors md:rounded-lg md:border md:focus-within:border-border-strong`,
+            isMarkdownMode && `!rounded-lg md:!border !px-3.5 !py-3 grid grid-cols-[1fr_1fr] grid-rows-[auto_auto] gap-0`
           )}
         >
-          {mode == Modes.markdown && (
-            <EmojiInputPicker
-              context="markdown"
-              options={{ closeOnSelect: false }}
-              onSelectEmoji={insertEmoji}
-            />
-          )}
           {mode == Modes.text && (
-            <MessageInput
-              editorRef={editorRef}
-              members={members}
-              id={`${context}_${id}`}
-              updateMessage={setMsg}
-              sendMessage={handleSendMessage}
-              placeholder={placeholder}
-            />
+            <>
+              <PlusMenu
+                context={context}
+                to={id}
+                isMarkdown={false}
+                toggleMode={toggleMode}
+              />
+              <MessageInput
+                editorRef={editorRef}
+                members={members}
+                id={`${context}_${id}`}
+                updateMessage={setMsg}
+                sendMessage={handleSendMessage}
+                placeholder={placeholder}
+              />
+              <EmojiInputButton ref={emojiButtonRef} open={emojiOpen} onToggle={toggleEmoji} />
+              <Toolbar
+                ref={toolbarRef}
+                sendMessages={handleSendMessage}
+                sendVisible={msg.text.trim().length > 0 || uploadFiles.length > 0}
+                mode={mode}
+                fullscreen={markdownFullscreen}
+                toggleMarkdownFullscreen={toggleMarkdownFullscreen}
+              />
+            </>
           )}
-          <Toolbar
-            sendMessages={handleSendMessage}
-            sendVisible={msg.text.trim().length > 0 || uploadFiles.length > 0}
-            context={context}
-            to={id}
-            mode={mode}
-            toggleMode={toggleMode}
-            fullscreen={markdownFullscreen}
-            toggleMarkdownFullscreen={toggleMarkdownFullscreen}
-          />
           {mode == Modes.markdown && (
-            <MarkdownEditor
-              updateDraft={getUpdateDraft("markdown")}
-              initialValue={getDraft("markdown")}
-              height={markdownFullscreen ? `calc(100dvh - 168px)` : `30vh`}
-              placeholder={placeholder}
-              setEditorInstance={setMarkdownEditor}
-              sendMarkdown={sendMarkdown}
-            />
+            <>
+              <div className="flex items-center gap-2">
+                <PlusMenu
+                  context={context}
+                  to={id}
+                  isMarkdown={true}
+                  toggleMode={toggleMode}
+                />
+                <EmojiInputButton ref={emojiButtonRef} open={emojiOpen} onToggle={toggleEmoji} />
+              </div>
+              <Toolbar
+                ref={toolbarRef}
+                sendMessages={handleSendMessage}
+                sendVisible={msg.text.trim().length > 0 || uploadFiles.length > 0}
+                mode={mode}
+                fullscreen={markdownFullscreen}
+                toggleMarkdownFullscreen={toggleMarkdownFullscreen}
+              />
+              <MarkdownEditor
+                updateDraft={getUpdateDraft("markdown")}
+                initialValue={getDraft("markdown")}
+                height={markdownFullscreen ? `calc(100dvh - 168px)` : `30vh`}
+                placeholder={placeholder}
+                setEditorInstance={setMarkdownEditor}
+                sendMarkdown={sendMarkdown}
+              />
+            </>
           )}
         </div>
+        {emojiOpen && (
+          <EmojiInputPanel
+            ref={emojiPanelRef}
+            options={{ closeOnSelect: false }}
+            onSelectEmoji={insertEmoji}
+          />
+        )}
       </div>
     </>
   );

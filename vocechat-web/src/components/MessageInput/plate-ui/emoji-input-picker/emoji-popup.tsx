@@ -14,10 +14,11 @@ export function EmojiPopup({ control, isOpen, setIsOpen, children }: EmojiPopupP
       <Popover.Trigger asChild>{control}</Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          align="start"
-          alignOffset={-12}
-          sideOffset={20}
-          className="z-[100] bg-gray-200 dark:bg-gray-800"
+          side="top"
+          align="end"
+          alignOffset={0}
+          sideOffset={8}
+          className="z-[100] rounded-lg overflow-hidden shadow-xl bg-bg-elevated border border-border-subtle"
         >
           {children}
         </Popover.Content>

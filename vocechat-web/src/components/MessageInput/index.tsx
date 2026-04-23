@@ -8,7 +8,6 @@ import { getMessageFromPlateValues, ParagraphInput } from "@/utils";
 import { Editor } from "./plate-ui/editor";
 import { MentionCombobox } from "./plate-ui/mention/combobox";
 
-import { EmojiInputPicker } from "./plate-ui/emoji-input-picker";
 import { MentionData, MessageWithMentions } from "@/types/message";
 import { useAppSelector } from "@/app/store";
 import { shallowEqual } from "react-redux";
@@ -104,17 +103,10 @@ export default function MessageInput({
           plugins={plugins({ enableMention: members.length > 0 })}
           value={input}
         >
-          <div className="flex items-end gap-2 w-full">
-            <div className="flex-shrink-0 pb-[2px]">
-              <EmojiInputPicker />
-            </div>
-            <div className="flex-1 min-w-0">
-              <Editor
-                sendMessage={handleSendMessage}
-                placeholder={placeholder}
-              />
-            </div>
-          </div>
+          <Editor
+            sendMessage={handleSendMessage}
+            placeholder={placeholder}
+          />
           <MentionCombobox items={items} />
         </Plate>
       </div>

@@ -8,6 +8,10 @@ import { EmojiPickerPreview } from "./emoji-picker-preview";
 import { EmojiPickerSearchAndClear } from "./emoji-picker-search-and-clear";
 import { EmojiPickerSearchBar } from "./emoji-picker-search-bar";
 
+type Props = UseEmojiPickerType & {
+  inline?: boolean;
+};
+
 export function EmojiPicker({
   i18n,
   searchValue,
@@ -25,13 +29,16 @@ export function EmojiPicker({
   focusedCategory,
   visibleCategories,
   refs,
-  settings = EmojiSettings
-}: UseEmojiPickerType) {
+  settings = EmojiSettings,
+  inline = false
+}: Props) {
   return (
     <div
       className={cn(
         "flex flex-col rounded dark:text-gray-300",
-        "h-[400px] w-[316px] shadow-[rgb(15_15_15_/_5%)_0_0_0_1px,_rgb(15_15_15_/_10%)_0_3px_6px,_rgb(15_15_15_/_20%)_0_9px_24px]"
+        inline
+          ? "w-full h-full"
+          : "h-[400px] w-[316px] shadow-[rgb(15_15_15_/_5%)_0_0_0_1px,_rgb(15_15_15_/_10%)_0_3px_6px,_rgb(15_15_15_/_20%)_0_9px_24px]"
       )}
     >
       <EmojiPickerNavigation
@@ -59,7 +66,9 @@ export function EmojiPicker({
         onMouseOver={onMouseOver}
         refs={refs}
       />
-      <EmojiPickerPreview i18n={i18n} emoji={emoji} hasFound={hasFound} isSearching={isSearching} />
+      {!inline && (
+        <EmojiPickerPreview i18n={i18n} emoji={emoji} hasFound={hasFound} isSearching={isSearching} />
+      )}
     </div>
   );
 }
