@@ -20,13 +20,13 @@ const PinList: FC<Props> = ({ id }: Props) => {
   const noPins = pins.length == 0;
   return (
     <div className="p-3 overflow-y-scroll no-scrollbar min-w-[320px] md:min-w-[460px] md:max-h-[80vh] rounded-xl bg-bg-elevated border border-border shadow-overlay">
-      <h4 className="font-mono text-[11px] font-semibold text-fg-subtle uppercase tracking-widest mb-3 px-1">
+      <h4 className="font-mono ts-xs font-semibold text-fg-subtle uppercase tracking-widest mb-3 px-1">
         {t("pinned_msg")} · {pins.length}
       </h4>
       {noPins ? (
         <div className="flex flex-col items-center gap-2 w-full p-6">
           <IconSurprise className="opacity-30" />
-          <div className="font-mono text-[11px] text-fg-disabled text-center">
+          <div className="font-mono ts-xs text-fg-disabled text-center">
             {t("pin_empty_tip")}
           </div>
         </div>

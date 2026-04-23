@@ -24,7 +24,7 @@ interface Props {
 const classes = {
   box: "w-[188px] h-[144px] cursor-pointer bg-bg-surface border border-border hover:border-border-strong rounded-xl flex-center flex-col gap-3 transition-colors",
   boxIcon: "w-7 h-7",
-  boxTip: "px-4 font-mono text-[11px] font-semibold tracking-wide text-fg-secondary text-center",
+  boxTip: "px-4 font-mono ts-xs font-semibold tracking-wide text-fg-secondary text-center",
 };
 const BlankPlaceholder: FC<Props> = ({ type = "chat" }) => {
   const navigate = useNavigate();
@@ -66,7 +66,7 @@ const BlankPlaceholder: FC<Props> = ({ type = "chat" }) => {
           <h2 className="text-center text-2xl font-bold tracking-tight text-fg-primary">
             {t("title", { name: server.name })}
           </h2>
-          <p className="font-mono text-[11.5px] text-fg-subtle max-w-md text-center relative whitespace-normal">
+          <p className="font-mono ts-xs text-fg-subtle max-w-md text-center relative whitespace-normal">
             <Linkify
               options={{
                 render: {

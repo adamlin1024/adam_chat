@@ -60,7 +60,7 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
   const isCard = type == "card";
   const canRemoveFromServer = !isCard && canRemove;
   const hasMore = email || canRemoveFromChannel || canRemoveFromServer;
-  const iconClass = `cursor-pointer flex flex-col items-center gap-1 rounded-md px-4 py-3 text-fg-secondary bg-bg-surface hover:border-border-strong border border-border text-[12px] transition-colors duration-200`;
+  const iconClass = `cursor-pointer flex flex-col items-center gap-1 rounded-md px-4 py-3 text-fg-secondary bg-bg-surface hover:border-border-strong border border-border text-xs transition-colors duration-200`;
   const containerClass = clsx(
     `flex-center flex-col gap-1 z-[99] select-none`,
     isCard
@@ -82,11 +82,11 @@ const Profile: FC<Props> = ({ uid, type = "embed", cid }) => {
             name={name}
           />
           <Remark uid={uid} />
-          <h2 className={clsx("select-text font-bold text-fg-primary", isCard ? "mt-2 text-[16px]" : "text-lg")}>
-            {name} {canDM && <span className="font-normal text-fg-muted text-[11px]">#{uid}</span>}
+          <h2 className={clsx("select-text font-bold text-fg-primary", isCard ? "mt-2 text-base" : "text-lg")}>
+            {name} {canDM && <span className="font-normal text-fg-muted ts-xs">#{uid}</span>}
           </h2>
           {canCopyEmail && (
-            <span className="font-mono text-[12px] text-fg-muted select-text">{email}</span>
+            <span className="font-mono text-xs text-fg-muted select-text">{email}</span>
           )}
           {canDM && (
             <ul className="mt-2.5 w-full grid grid-cols-2 gap-2">

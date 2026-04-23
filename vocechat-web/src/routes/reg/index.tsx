@@ -24,7 +24,7 @@ export default function RegContainer() {
   }, [tokenIsValid, magic_token]);
   if (checkingToken) return (
     <div className="flex min-h-screen items-center justify-center bg-bg-app">
-      <p className="font-mono text-[12px] text-fg-muted">VALIDATING INVITE...</p>
+      <p className="font-mono text-xs text-fg-muted">VALIDATING INVITE...</p>
     </div>
   );
   return (

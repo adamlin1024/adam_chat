@@ -115,7 +115,7 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
               >
                 <li className={`${toolClass}`}>
                   {pinCount > 0 ? (
-                    <span className="absolute -top-2 -right-2 flex-center w-4 h-4 rounded-full bg-accent text-accent-on font-mono font-bold text-[9px]">
+                    <span className="absolute -top-2 -right-2 flex-center w-4 h-4 rounded-full bg-accent text-accent-on font-mono font-bold ts-2xs">
                       {pinCount}
                     </span>
                   ) : null}

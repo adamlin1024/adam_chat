@@ -67,7 +67,7 @@ export default function MessageSearch({ context, id, onLocate, headerInputMode =
     <div className="absolute left-0 right-0 top-full bg-bg-elevated border-b border-border shadow-overlay z-50">
       <div className="max-h-80 overflow-y-auto no-scrollbar">
         {query && searchResults.length === 0 && (
-          <div className="p-4 text-center font-mono text-[11px] text-fg-disabled">未找到匹配的訊息</div>
+          <div className="p-4 text-center font-mono ts-xs text-fg-disabled">未找到匹配的訊息</div>
         )}
         {searchResults.map((msg) => {
           const user = usersData[msg.from_uid || 0];
@@ -80,16 +80,16 @@ export default function MessageSearch({ context, id, onLocate, headerInputMode =
               <Avatar width={24} height={24} src={user?.avatar} name={user?.name} className="rounded-full shrink-0 mt-0.5" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-baseline justify-between gap-2 mb-0.5">
-                  <span className="text-[14px] font-semibold tracking-tight text-fg-primary truncate">
+                  <span className="text-sm font-semibold tracking-tight text-fg-primary truncate">
                     {user?.name}
                   </span>
-                  <span className="font-mono text-[10px] text-fg-disabled whitespace-nowrap">
+                  <span className="font-mono ts-2xs text-fg-disabled whitespace-nowrap">
                     {dayjs(msg.created_at).isSame(dayjs(), "day")
                       ? dayjs(msg.created_at).format("HH:mm")
                       : dayjs(msg.created_at).format("MM-DD HH:mm")}
                   </span>
                 </div>
-                <div className="text-[13px] text-fg-subtle line-clamp-2 leading-[1.55]">
+                <div className="ts-meta text-fg-subtle line-clamp-2 leading-[1.55]">
                   {typeof msg.content === "string" ? msg.content : ""}
                 </div>
               </div>
@@ -110,7 +110,7 @@ export default function MessageSearch({ context, id, onLocate, headerInputMode =
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="搜尋訊息..."
-          className="flex-1 text-[14px] text-fg-body placeholder:text-fg-disabled bg-transparent outline-none"
+          className="flex-1 text-sm text-fg-body placeholder:text-fg-disabled bg-transparent outline-none"
           autoFocus
         />
         <button onClick={handleClose} className="flex-center p-1">
@@ -141,7 +141,7 @@ export default function MessageSearch({ context, id, onLocate, headerInputMode =
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="搜尋訊息..."
-                className="flex-1 font-mono text-[13px] text-fg-body placeholder:text-fg-disabled bg-transparent outline-none"
+                className="flex-1 font-mono ts-meta text-fg-body placeholder:text-fg-disabled bg-transparent outline-none"
                 autoFocus
               />
               <button onClick={handleClose} className="flex-center">
@@ -151,7 +151,7 @@ export default function MessageSearch({ context, id, onLocate, headerInputMode =
           </div>
           <div className="max-h-80 overflow-y-auto no-scrollbar">
             {query && searchResults.length === 0 && (
-              <div className="p-4 text-center font-mono text-[11px] text-fg-disabled">未找到匹配的訊息</div>
+              <div className="p-4 text-center font-mono ts-xs text-fg-disabled">未找到匹配的訊息</div>
             )}
             {searchResults.map((msg) => {
               const user = usersData[msg.from_uid || 0];
@@ -164,16 +164,16 @@ export default function MessageSearch({ context, id, onLocate, headerInputMode =
                   <Avatar width={24} height={24} src={user?.avatar} name={user?.name} className="rounded-full shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-2 mb-0.5">
-                      <span className="text-[14px] font-semibold tracking-tight text-fg-primary truncate">
+                      <span className="text-sm font-semibold tracking-tight text-fg-primary truncate">
                         {user?.name}
                       </span>
-                      <span className="font-mono text-[10px] text-fg-disabled whitespace-nowrap">
+                      <span className="font-mono ts-2xs text-fg-disabled whitespace-nowrap">
                         {dayjs(msg.created_at).isSame(dayjs(), "day")
                           ? dayjs(msg.created_at).format("HH:mm")
                           : dayjs(msg.created_at).format("MM-DD HH:mm")}
                       </span>
                     </div>
-                    <div className="text-[13px] text-fg-subtle line-clamp-2 leading-[1.55]">
+                    <div className="ts-meta text-fg-subtle line-clamp-2 leading-[1.55]">
                       {typeof msg.content === "string" ? msg.content : ""}
                     </div>
                   </div>

@@ -49,7 +49,7 @@ const renderContent = (data: MessagePayload, context: ChatContext, to: number) =
           res = (
             <div className="flex gap-1">
               {icon}
-              <span className="text-[10px] text-gray-500 dark:text-gray-100">{name}</span>
+              <span className="ts-2xs text-gray-500 dark:text-gray-100">{name}</span>
             </div>
           );
         }
@@ -114,7 +114,7 @@ const Reply: FC<ReplyProps> = ({ mid, interactive = true, context, to = 0 }) => 
   const defaultClass = `mb-1.5 rounded-r-sm border-l-2 border-accent bg-gradient-to-r from-accent/10 to-transparent px-2.5 py-0.5`;
   if (!data)
     return (
-      <blockquote key={mid} data-mid={mid} className={clsx(defaultClass, "italic text-fg-muted text-[10.5px]")}>
+      <blockquote key={mid} data-mid={mid} className={clsx(defaultClass, "italic text-fg-muted ts-2xs")}>
         {t("reply_msg_del")}
       </blockquote>
     );
@@ -128,8 +128,8 @@ const Reply: FC<ReplyProps> = ({ mid, interactive = true, context, to = 0 }) => 
       className={clsx(defaultClass, interactive ? "cursor-pointer" : "")}
       onClick={interactive ? handleClick : undefined}
     >
-      <div className="font-mono text-[11.5px] font-semibold text-accent">{currUser.name}</div>
-      <div className={clsx("text-[13px] text-fg-muted truncate", interactive && "relative")}>
+      <div className="font-mono ts-xs font-semibold text-accent">{currUser.name}</div>
+      <div className={clsx("ts-meta text-fg-muted truncate", interactive && "relative")}>
         {renderContent(data, context, to)}
         {interactive && <div className="absolute top-0 left-0 w-full h-full"></div>}
       </div>

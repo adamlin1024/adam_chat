@@ -80,13 +80,13 @@ const Reaction: FC<Props> = ({ mid, reactions = null, readOnly = false }) => {
               placement="top"
               content={<ReactionDetails uids={uids} emoji={reaction as keyof Emojis} index={idx} />}
             >
-              <i className="emoji text-[12px] not-italic">
+              <i className="emoji text-xs not-italic">
                 <ReactionItem native={reaction as keyof Emojis} />
               </i>
             </Tippy>
 
             {uids.length > 1 ? (
-              <i className="text-[12px] not-italic">{`${uids.length}`}</i>
+              <i className="text-xs not-italic">{`${uids.length}`}</i>
             ) : null}
           </span>
         ) : null;

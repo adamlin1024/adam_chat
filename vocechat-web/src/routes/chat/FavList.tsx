@@ -20,13 +20,13 @@ const FavList: FC<Props> = ({ cid = null, uid = null, bare = false }) => {
       ? "w-full"
       : "p-3 bg-bg-elevated border border-border rounded-xl w-full md:min-w-[460px] max-h-[70vh] md:max-h-[480px] overflow-auto shadow-overlay"
     }>
-      <h4 className="font-mono text-[11px] font-semibold text-fg-subtle uppercase tracking-widest mb-3 px-1">
+      <h4 className="font-mono ts-xs font-semibold text-fg-subtle uppercase tracking-widest mb-3 px-1">
         {t("fav_msg")} · {favorites.length}
       </h4>
       {noFavs ? (
         <div className="flex flex-col gap-2 w-full items-center p-6">
           <IconSurprise className="opacity-30" />
-          <div className="font-mono text-[11px] text-fg-disabled text-center">
+          <div className="font-mono ts-xs text-fg-disabled text-center">
             {t("fav_empty_tip")}
           </div>
         </div>

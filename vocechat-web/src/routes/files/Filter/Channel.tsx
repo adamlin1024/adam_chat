@@ -22,7 +22,7 @@ const Channel: FC<Props> = ({ select = 0, updateFilter }) => {
           onClick={handleClick.bind(null, undefined)}
         >
           <ChannelIcon className="text-fg-subtle" />
-          <span className="text-fg-secondary font-medium text-[13px] flex-1">Any Channel</span>
+          <span className="text-fg-secondary font-medium ts-meta flex-1">Any Channel</span>
           {!select && <CheckSign className="fill-accent" />}
         </li>
         {channels.map(({ gid, is_public, name }) => (
@@ -32,7 +32,7 @@ const Channel: FC<Props> = ({ select = 0, updateFilter }) => {
             onClick={handleClick.bind(null, gid)}
           >
             <ChannelIcon personal={!is_public} className="text-fg-subtle" />
-            <span className="text-fg-secondary font-medium text-[13px] flex-1 truncate">{name}</span>
+            <span className="text-fg-secondary font-medium ts-meta flex-1 truncate">{name}</span>
             {select == gid && <CheckSign className="fill-accent" />}
           </li>
         ))}

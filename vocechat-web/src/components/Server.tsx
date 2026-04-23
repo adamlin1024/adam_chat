@@ -44,8 +44,8 @@ export default function Server({ readonly = false }: Props) {
     <div className="relative flex items-center justify-between gap-2 px-4 py-3.5 border-b border-border-subtle">
       <NavLink to={`/setting/overview?f=${pathname}`}>
         <div className="flex flex-col gap-0.5">
-          <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-fg-subtle">WORKSPACE</span>
-          <h3 className="text-[15px] font-semibold text-fg-primary truncate" title={description}>
+          <span className="font-mono ts-xs tracking-[0.14em] uppercase text-fg-subtle">WORKSPACE</span>
+          <h3 className="ts-msg font-semibold text-fg-primary truncate" title={description}>
             {name}
           </h3>
         </div>

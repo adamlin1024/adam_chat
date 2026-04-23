@@ -48,7 +48,7 @@ const renderContent = (data: MessagePayload) => {
           res = (
             <div className="flex items-center gap-1">
               {icon}
-              <span className="ml-1 text-[10px] text-gray-400">{name}</span>
+              <span className="ml-1 ts-2xs text-gray-400">{name}</span>
             </div>
           );
         }

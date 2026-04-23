@@ -40,7 +40,7 @@ const Search: FC<Props> = ({ input, updateInput, openModal, type = "users" }) =>
         <input
           value={input}
           placeholder={`${t("action.search_user")}...`}
-          className="w-full font-mono text-[13px] text-fg-body placeholder:text-fg-disabled outline-none bg-transparent"
+          className="w-full font-mono ts-meta text-fg-body placeholder:text-fg-disabled outline-none bg-transparent"
           onChange={handleInput}
         />
       </div>

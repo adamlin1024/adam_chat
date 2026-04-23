@@ -86,7 +86,7 @@ function FavsPage() {
                         setFilterMenuVisible(false);
                       }}
                     >
-                      <span className="text-fg-secondary font-medium text-[13px] flex-1">{title}</span>
+                      <span className="text-fg-secondary font-medium ts-meta flex-1">{title}</span>
                       {filter === f && <CheckSign className="fill-accent" />}
                     </li>
                   ))}
@@ -97,7 +97,7 @@ function FavsPage() {
             <button
               onClick={() => setFilterMenuVisible((v) => !v)}
               className={clsx(
-                "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
                 filter
                   ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
                   : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
@@ -143,7 +143,7 @@ function FavsPage() {
 
             return (
               <div className="max-w-[600px] flex flex-col gap-1.5" key={id}>
-                <h4 className="inline-flex items-center font-mono text-[10px] text-fg-disabled">
+                <h4 className="inline-flex items-center font-mono ts-2xs text-fg-disabled">
                   {tip}
                   {dayjs(created_at).format("YYYY-MM-DD")}
                 </h4>

@@ -146,7 +146,7 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
             <li
               key={item.title}
               onClick={() => handleItem(item)}
-              className={`flex items-center justify-between px-4 py-3.5 cursor-pointer transition-colors active:bg-bg-surface text-[14px] ${
+              className={`flex items-center justify-between px-4 py-3.5 cursor-pointer transition-colors active:bg-bg-surface text-sm ${
                 item.danger ? "text-red-400" : "text-fg-body"
               }`}
             >

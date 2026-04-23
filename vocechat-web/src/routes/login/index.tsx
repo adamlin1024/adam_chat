@@ -184,10 +184,10 @@ export default function LoginPage() {
             className="w-full h-full object-cover"
           />
         </div>
-        <h2 className="text-[20px] font-bold tracking-tight text-fg-primary text-center">
+        <h2 className="text-xl font-bold tracking-tight text-fg-primary text-center">
           {t("login.title", { name: serverName })}
         </h2>
-        <p className="font-mono text-[12px] text-fg-muted">輸入帳號密碼繼續</p>
+        <p className="font-mono text-xs text-fg-muted">輸入帳號密碼繼續</p>
         <form
           className="flex flex-col gap-2.5 w-full"
           autoComplete="false"
@@ -204,7 +204,7 @@ export default function LoginPage() {
               data-type="email"
               onChange={handleInput}
               className="w-full rounded-md border border-border bg-bg-app px-3 py-2.5
-                         text-[14.5px] text-fg-body placeholder:text-fg-subtle
+                         text-sm text-fg-body placeholder:text-fg-subtle
                          focus:border-border-strong outline-none transition-colors"
             />
           )}
@@ -218,7 +218,7 @@ export default function LoginPage() {
               onChange={handleInput}
               placeholder={t("placeholder_pwd")}
               className="w-full rounded-md border border-border bg-bg-app px-3 py-2.5
-                         text-[14.5px] text-fg-body placeholder:text-fg-subtle
+                         text-sm text-fg-body placeholder:text-fg-subtle
                          focus:border-border-strong outline-none transition-colors"
             />
           )}
@@ -226,7 +226,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-md bg-accent py-2.5 font-mono text-[13px] font-bold tracking-wider text-accent-on
+              className="w-full rounded-md bg-accent py-2.5 font-mono ts-meta font-bold tracking-wider text-accent-on
                          disabled:bg-bg-surface disabled:text-fg-disabled transition-colors"
             >
               {isLoading ? "SIGNING IN..." : "SIGN IN"}
@@ -234,7 +234,7 @@ export default function LoginPage() {
           ) : (
             <button
               type="submit"
-              className="w-full rounded-md bg-accent py-2.5 font-mono text-[13px] font-bold tracking-wider text-accent-on transition-colors"
+              className="w-full rounded-md bg-accent py-2.5 font-mono ts-meta font-bold tracking-wider text-accent-on transition-colors"
             >
               CONTINUE
             </button>
@@ -246,7 +246,7 @@ export default function LoginPage() {
               <button
                 onClick={handlePasskeyLogin}
                 disabled={isPasskeyLoading || isLoading}
-                className="w-full rounded-md border border-border py-2.5 font-mono text-[11px] font-bold tracking-wider text-fg-secondary
+                className="w-full rounded-md border border-border py-2.5 font-mono ts-xs font-bold tracking-wider text-fg-secondary
                            hover:border-border-strong hover:text-fg-primary transition-colors
                            disabled:opacity-50"
               >

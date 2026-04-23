@@ -114,7 +114,7 @@ function Files() {
               <button
                 onClick={() => setChannelMenuVisible((v) => !v)}
                 className={clsx(
-                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
                   gid
                     ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
                     : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
@@ -150,7 +150,7 @@ function Files() {
                           setTypeMenuVisible(false);
                         }}
                       >
-                        <span className="text-fg-secondary font-medium text-[13px] flex-1">{title}</span>
+                        <span className="text-fg-secondary font-medium ts-meta flex-1">{title}</span>
                         {fileType === type && <CheckSign className="fill-accent" />}
                       </li>
                     ))}
@@ -161,7 +161,7 @@ function Files() {
               <button
                 onClick={() => setTypeMenuVisible((v) => !v)}
                 className={clsx(
-                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[12px] font-medium transition-colors",
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
                   fileType
                     ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
                     : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"

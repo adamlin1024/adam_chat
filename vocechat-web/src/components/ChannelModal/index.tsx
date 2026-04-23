@@ -135,10 +135,10 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
 
   const nameInput = (
     <div className="w-full flex flex-col gap-1.5">
-      <span className="font-mono text-[10.5px] uppercase tracking-widest text-fg-disabled">{t("channel_name")}</span>
+      <span className="font-mono ts-2xs uppercase tracking-widest text-fg-disabled">{t("channel_name")}</span>
       <div className="relative">
         <input
-          className="font-mono text-[12px] text-fg-body rounded-md px-3 py-2 pl-8 border border-border focus:border-border-strong w-full bg-bg-surface outline-none transition-colors placeholder:text-fg-disabled"
+          className="font-mono text-xs text-fg-body rounded-md px-3 py-2 pl-8 border border-border focus:border-border-strong w-full bg-bg-surface outline-none transition-colors placeholder:text-fg-disabled"
           onChange={handleNameInput}
           value={name}
           placeholder="new-channel"
@@ -150,17 +150,17 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
 
   const privateToggle = (
     <div className="w-full flex items-center justify-between">
-      <span className="font-mono text-[11.5px] text-fg-secondary">{t("private_channel")}</span>
+      <span className="font-mono ts-xs text-fg-secondary">{t("private_channel")}</span>
       <StyledToggle checked={!is_public} disabled={!loginUser?.is_admin} onClick={handleToggle} />
     </div>
   );
 
   const actionButtons = (onClose: () => void) => (
     <div className="w-full flex gap-3 items-center justify-end">
-      <button onClick={onClose} className="px-4 py-2 rounded-md font-mono text-[13px] font-bold text-fg-secondary border border-border hover:border-border-strong transition-colors">
+      <button onClick={onClose} className="px-4 py-2 rounded-md font-mono ts-meta font-bold text-fg-secondary border border-border hover:border-border-strong transition-colors">
         {t("action.cancel", { ns: "common" })}
       </button>
-      <button disabled={isLoading} onClick={handleCreate} className="px-4 py-2 rounded-md font-mono text-[13px] font-bold bg-accent text-accent-on hover:opacity-90 transition-opacity disabled:opacity-40">
+      <button disabled={isLoading} onClick={handleCreate} className="px-4 py-2 rounded-md font-mono ts-meta font-bold bg-accent text-accent-on hover:opacity-90 transition-opacity disabled:opacity-40">
         {t("action.create", { ns: "common" })}
       </button>
     </div>
@@ -192,14 +192,14 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
           </div>
           {/* Content: desc → name → toggle → member picker → buttons */}
           <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-5">
-            <p className="font-mono text-[12px] text-fg-subtle">
+            <p className="font-mono text-xs text-fg-subtle">
               {!is_public ? t("create_private_channel_desc") : t("create_channel_desc")}
             </p>
             {nameInput}
             {privateToggle}
             {!is_public && (
               <div className="flex flex-col gap-2">
-                <span className="font-mono text-[10.5px] uppercase tracking-widest text-fg-disabled">{t("search_user_placeholder")}</span>
+                <span className="font-mono ts-2xs uppercase tracking-widest text-fg-disabled">{t("search_user_placeholder")}</span>
                 <input
                   className="w-full bg-bg-surface rounded-md px-3 py-2 text-sm border border-border focus:border-border-strong outline-none text-fg-body placeholder:text-fg-disabled transition-colors"
                   value={input}
@@ -242,8 +242,8 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
         <div className="flex flex-col items-start p-7 gap-5 relative w-full md:min-w-[380px]">
           <button onClick={closeModal} className="absolute top-4 right-4 p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
           <div>
-            <h3 className="font-bold text-[17px] tracking-tight text-fg-primary mb-1">{t("create_channel")}</h3>
-            <p className="font-mono text-[12px] text-fg-subtle">{!is_public ? t("create_private_channel_desc") : t("create_channel_desc")}</p>
+            <h3 className="font-bold text-base tracking-tight text-fg-primary mb-1">{t("create_channel")}</h3>
+            <p className="font-mono text-xs text-fg-subtle">{!is_public ? t("create_private_channel_desc") : t("create_channel_desc")}</p>
           </div>
           {nameInput}
           {privateToggle}

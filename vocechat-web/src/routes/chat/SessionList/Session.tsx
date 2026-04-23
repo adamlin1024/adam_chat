@@ -202,13 +202,13 @@ const Session: FC<IProps> = ({
       >
         <button
           onClick={handleHide}
-          className="flex-1 flex flex-col items-center justify-center bg-zinc-600 text-white text-[13px] font-medium gap-0.5"
+          className="flex-1 flex flex-col items-center justify-center bg-zinc-600 text-white ts-meta font-medium gap-0.5"
         >
           <span>隱藏</span>
         </button>
         <button
           onClick={handleDelete}
-          className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white text-[13px] font-medium gap-0.5"
+          className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white ts-meta font-medium gap-0.5"
         >
           <span>刪除</span>
         </button>
@@ -287,13 +287,13 @@ const Session: FC<IProps> = ({
               {unreads > 0 && !isCurrentPath ? (
                 <span className="flex items-center gap-0.5 shrink-0">
                   {hasMention && (
-                    <strong className="font-mono text-[11px] font-bold px-1.5 py-px rounded-sm bg-accent text-accent-on">
+                    <strong className="font-mono ts-xs font-bold px-1.5 py-px rounded-sm bg-accent text-accent-on">
                       @
                     </strong>
                   )}
                   <strong
                     className={clsx(
-                      `font-mono text-[11px] font-bold px-1.5 py-px rounded-sm`,
+                      `font-mono ts-xs font-bold px-1.5 py-px rounded-sm`,
                       muted ? "bg-fg-subtle text-bg-app" : "bg-accent text-accent-on"
                     )}
                   >

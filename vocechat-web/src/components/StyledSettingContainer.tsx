@@ -126,7 +126,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                 {navs.map(({ title: groupTitle, items }) => (
                   <div key={groupTitle} className="mb-6">
                     {groupTitle && (
-                      <div className="font-mono text-[10px] text-fg-subtle uppercase tracking-widest mb-2 px-1">
+                      <div className="font-mono ts-2xs text-fg-subtle uppercase tracking-widest mb-2 px-1">
                         {groupTitle}
                       </div>
                     )}
@@ -135,12 +135,12 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                         <li key={name} className="border-b border-border-subtle last:border-0">
                           {link ? (
                             <a href={link} target="_blank" rel="noreferrer"
-                              className="flex items-center justify-between px-1 py-3.5 text-[14px] text-fg-body">
+                              className="flex items-center justify-between px-1 py-3.5 text-sm text-fg-body">
                               {itemTitle} <span className="text-xs text-fg-subtle">↗</span>
                             </a>
                           ) : (
                             <NavLink to={`${pathPrefix}/${name}`}
-                              className="flex items-center justify-between px-1 py-3.5 text-[14px] text-fg-body">
+                              className="flex items-center justify-between px-1 py-3.5 text-sm text-fg-body">
                               {itemTitle}
                               <IconBack className="w-5 h-5 dark:stroke-white rotate-180" />
                             </NavLink>
@@ -154,7 +154,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                   if (typeof d === "boolean" || !d) return null;
                   return (
                     <button key={d.title} onClick={d.handler}
-                      className="w-full text-left px-1 py-3.5 text-[14px] text-red-400 border-t border-border-subtle">
+                      className="w-full text-left px-1 py-3.5 text-sm text-red-400 border-t border-border-subtle">
                       {d.title}
                     </button>
                   );

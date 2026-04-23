@@ -16,13 +16,13 @@ const SaveTip: FC<Props> = ({ saveHandler, resetHandler }) => {
       <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={resetHandler}
-          className="px-3 py-1.5 rounded-md text-[13px] font-mono font-bold text-fg-secondary border border-border hover:border-border-strong transition-colors"
+          className="px-3 py-1.5 rounded-md ts-meta font-mono font-bold text-fg-secondary border border-border hover:border-border-strong transition-colors"
         >
           {t("reset")}
         </button>
         <button
           onClick={saveHandler}
-          className="px-3 py-1.5 rounded-md text-[13px] font-mono font-bold bg-accent text-accent-on hover:opacity-90 transition-opacity"
+          className="px-3 py-1.5 rounded-md ts-meta font-mono font-bold bg-accent text-accent-on hover:opacity-90 transition-opacity"
         >
           {t("save_change")}
         </button>

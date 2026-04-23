@@ -170,7 +170,7 @@ const VoiceChat = ({ id, context = "channel" }: Props) => {
           <>
             {memberCount > 0 && (
               <span
-                className={`${badgeClass} flex-center font-bold text-[10px] group-hover:invisible`}
+                className={`${badgeClass} flex-center font-bold ts-2xs group-hover:invisible`}
               >
                 {memberCount}
               </span>
@@ -183,7 +183,7 @@ const VoiceChat = ({ id, context = "channel" }: Props) => {
         <>
           {memberCount > 0 && (
             <span
-              className={`${badgeClass} flex-center font-bold text-[10px] group-hover:invisible`}
+              className={`${badgeClass} flex-center font-bold ts-2xs group-hover:invisible`}
             >
               {memberCount}
             </span>
