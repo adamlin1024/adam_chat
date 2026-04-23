@@ -54,6 +54,7 @@ const UnreadTabTip = () => {
 
   const { pathname } = useLocation();
   const [isTabVisible, setIsTabVisible] = useState(!document.hidden);
+  const isOnChatPage = pathname === "/" || pathname.startsWith("/chat");
 
   const originalHrefRef = useRef("");
   const originalTitleRef = useRef("");
@@ -85,33 +86,28 @@ const UnreadTabTip = () => {
     return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
-  // Parse which chat the user is currently viewing
-  const activeDMUid = pathname.match(/^\/chat\/dm\/(\d+)/)?.[1];
-  const activeChannelId = pathname.match(/^\/chat\/channel\/(\d+)/)?.[1];
-
   useEffect(() => {
     if (loginUid === 0) {
       if (originalTitleRef.current) document.title = originalTitleRef.current;
       return;
     }
 
+    // Tab visible + on any chat page → user can see new messages directly, suppress badge
     totalUnreads = 0;
-    Object.entries(DMMap).forEach(([id, mids]) => {
-      if (!muteUsers[+id] && userData[+id]) {
-        // Tab visible + currently in this DM → don't count its unreads
-        if (isTabVisible && activeDMUid && +id === +activeDMUid) return;
-        const { unreads = 0 } = getUnreadCount({ mids, readIndex: readUsers[+id], messageData, loginUid });
-        totalUnreads += unreads;
-      }
-    });
-    Object.entries(channelMids).forEach(([id, mids]) => {
-      if (!muteChannels[+id]) {
-        // Tab visible + currently in this channel → don't count its unreads
-        if (isTabVisible && activeChannelId && +id === +activeChannelId) return;
-        const { unreads = 0 } = getUnreadCount({ mids, readIndex: readChannels[+id], messageData, loginUid });
-        totalUnreads += unreads;
-      }
-    });
+    if (!isTabVisible || !isOnChatPage) {
+      Object.entries(DMMap).forEach(([id, mids]) => {
+        if (!muteUsers[+id] && userData[+id]) {
+          const { unreads = 0 } = getUnreadCount({ mids, readIndex: readUsers[+id], messageData, loginUid });
+          totalUnreads += unreads;
+        }
+      });
+      Object.entries(channelMids).forEach(([id, mids]) => {
+        if (!muteChannels[+id]) {
+          const { unreads = 0 } = getUnreadCount({ mids, readIndex: readChannels[+id], messageData, loginUid });
+          totalUnreads += unreads;
+        }
+      });
+    }
 
     if (totalUnreads > 0) {
       const url = drawBadge(faviconImgRef.current);
@@ -126,7 +122,7 @@ const UnreadTabTip = () => {
     } else {
       document.title = baseTitle;
     }
-  }, [userData, DMMap, channelMids, readChannels, messageData, loginUid, readUsers, muteChannels, muteUsers, isTabVisible, pathname]);
+  }, [userData, DMMap, channelMids, readChannels, messageData, loginUid, readUsers, muteChannels, muteUsers, isTabVisible, isOnChatPage]);
 
   return null;
 };
