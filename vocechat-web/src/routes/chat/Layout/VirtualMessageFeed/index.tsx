@@ -20,6 +20,7 @@ import { ChatContext } from "@/types/common";
 import { renderMessageFragment } from "../../utils";
 import NewMessageBottomTip from "../NewMessageBottomTip";
 import CustomHeader from "./CustomHeader";
+import FloatingDate from "./FloatingDate";
 import { makeSelectVisibleMessages } from "@/app/selectors/message";
 import { updateSelectMessages } from "@/app/slices/ui";
 
@@ -338,17 +339,21 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     [id, context]
   );
 
+  const feedId = `VOCECHAT_FEED_${context}_${id}`;
+
   return (
     <>
-      <div
-        id={`VOCECHAT_FEED_${context}_${id}`}
-        className="px-3 md:px-4 py-4.5 overflow-x-hidden overflow-y-scroll flex-1"
-      >
-        <Virtualizer
-          ref={vRef}
-          shift={isPrependRef.current}
-          onScroll={handleScroll}
+      <div className="relative flex-1 flex flex-col min-h-0">
+        <FloatingDate containerId={feedId} />
+        <div
+          id={feedId}
+          className="px-0 py-4.5 overflow-x-hidden overflow-y-scroll flex-1"
         >
+          <Virtualizer
+            ref={vRef}
+            shift={isPrependRef.current}
+            onScroll={handleScroll}
+          >
           {/* Channel header as first virtual item */}
           {context === "channel" && (
             <div key="__header__">
@@ -363,7 +368,8 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
             </div>
           )}
           {stableMids.map((mid, idx) => renderItem(mid, idx))}
-        </Virtualizer>
+          </Virtualizer>
+        </div>
       </div>
       {!atBottom && (
         <NewMessageBottomTip context={context} id={id} scrollToBottom={handleScrollBottom} />

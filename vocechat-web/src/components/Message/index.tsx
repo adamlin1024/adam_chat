@@ -92,16 +92,16 @@ const Message: FC<IProps> = ({
     failed = false,
   } = message;
   
-  // if (!message) return null;
-  let timePrefix = null;
   const dayjsTime = dayjs(time);
-  timePrefix = dayjsTime.isToday() ? "Today" : dayjsTime.isYesterday() ? "Yesterday" : null;
-
-  // return null;
   const _key = properties?.local_id || mid;
   const showExpire = (expires_in ?? 0) > 0;
   const isSelf = fromUid == loginUid;
   const alignRight = chatLayout === "Right" || (chatLayout === "Alternating" && isSelf);
+  // Alternating 模式下自己的訊息：隱藏頭像與名稱（LINE 風格）
+  const hideIdentity = chatLayout === "Alternating" && isSelf;
+  // 純文字/markdown 才套泡泡樣式；檔案、圖片、語音、轉傳保留原本卡片
+  const useBubble = content_type === "text/plain" || content_type === "text/markdown";
+  const timeText = dayjsTime.format("HH:mm");
   return (
     <div
       key={_key}
@@ -114,35 +114,38 @@ const Message: FC<IProps> = ({
         handleContextMenuEvent(evt);
       }}
       data-msg-mid={mid}
+      data-created-at={time}
       ref={inViewRef}
       className={clsx(
-        `group w-full relative flex items-start gap-3 -mx-5 px-5 py-1 transition-colors duration-[120ms]`,
+        `group w-full relative flex items-start gap-2 md:gap-3 px-2 md:px-3 py-1 transition-colors duration-[120ms]`,
         !readOnly && "hover:bg-[#0d0e11]",
         showExpire && "bg-danger/10",
         pinInfo && "bg-accent-bg !pt-7 border-l-2 border-accent",
         alignRight && "flex-row-reverse"
       )}
     >
-      <Tippy
-        key={_key}
-        popperOptions={{ strategy: "fixed" }}
-        disabled={readOnly}
-        interactive
-        placement="right"
-        trigger="click"
-        appendTo={() => document.body}
-        content={<Profile uid={fromUid || 0} type="card" cid={context == "dm" ? 0 : contextId} />}
-      >
-        <div className="cursor-pointer w-9 h-9 shrink-0 mt-0.5" data-uid={fromUid} ref={avatarRef}>
-          <Avatar
-            className="w-9 h-9 rounded-full object-cover"
-            width={36}
-            height={36}
-            src={currUser?.avatar}
-            name={currUser?.name}
-          />
-        </div>
-      </Tippy>
+      {!hideIdentity && (
+        <Tippy
+          key={_key}
+          popperOptions={{ strategy: "fixed" }}
+          disabled={readOnly}
+          interactive
+          placement="right"
+          trigger="click"
+          appendTo={() => document.body}
+          content={<Profile uid={fromUid || 0} type="card" cid={context == "dm" ? 0 : contextId} />}
+        >
+          <div className="cursor-pointer w-9 h-9 shrink-0 mt-0.5" data-uid={fromUid} ref={avatarRef}>
+            <Avatar
+              className="w-9 h-9 rounded-full object-cover"
+              width={36}
+              height={36}
+              src={currUser?.avatar}
+              name={currUser?.name}
+            />
+          </div>
+        </Tippy>
+      )}
       <ContextMenu
         editMessage={toggleEditMessage}
         context={context}
@@ -154,7 +157,8 @@ const Message: FC<IProps> = ({
       >
         <div
           className={clsx(
-            "w-full flex flex-col gap-2",
+            "flex flex-col gap-1 min-w-0",
+            hideIdentity ? "max-w-[85%] md:max-w-[75%]" : "w-full",
             pinInfo && "relative",
             alignRight && "items-end"
           )}
@@ -170,59 +174,79 @@ const Message: FC<IProps> = ({
               {`pinned by ${pinCreatorName || ""}`}
             </span>
           )}
-          <div
-            className={clsx(`mb-0.5 flex items-baseline gap-2`, alignRight && "flex-row-reverse")}
-          >
-            <span className="ts-msg font-semibold tracking-tight text-fg-primary">
-              {currUser?.name ? (
-                <NameWithRemark uid={currUser.uid} showName={false} name={currUser.name} />
-              ) : (
-                "Deleted User"
-              )}
-            </span>
-            {currUser?.is_admin && <IconAdmin className="w-3 h-3 fill-accent" />}
-            <Tooltip
-              delay={200}
-              disabled={!timePrefix || readOnly}
-              placement="top"
-              tip={dayjsTime.format("YYYY-MM-DD h:mm:ss A")}
+          {!hideIdentity && (
+            <div
+              className={clsx(`mb-0.5 flex items-baseline gap-2`, alignRight && "flex-row-reverse")}
             >
-              <time className="font-mono ts-mini text-fg-disabled">
-                {timePrefix
-                  ? `${timePrefix} ${dayjsTime.format("h:mm A")}`
-                  : dayjsTime.format("YYYY-MM-DD h:mm:ss A")}
-              </time>
-            </Tooltip>
-            {failed && (
-              <span className="text-danger text-[10px] font-mono flex items-center gap-1">
-                <IconInfo className="stroke-danger w-3 h-3" /> Send Failed
+              <span className="ts-msg font-semibold tracking-tight text-fg-primary">
+                {currUser?.name ? (
+                  <NameWithRemark uid={currUser.uid} showName={false} name={currUser.name} />
+                ) : (
+                  "Deleted User"
+                )}
               </span>
-            )}
-          </div>
+              {currUser?.is_admin && <IconAdmin className="w-3 h-3 fill-accent" />}
+              {failed && (
+                <span className="text-danger ts-2xs font-mono flex items-center gap-1">
+                  <IconInfo className="stroke-danger w-3 h-3" /> Send Failed
+                </span>
+              )}
+            </div>
+          )}
           <div
             className={clsx(
-              `vc-msg select-text ts-msg text-fg-body wb whitespace-pre-wrap pr-6 md:pr-0`,
-              sending && "opacity-70"
+              "flex items-end gap-1.5 max-w-full",
+              alignRight && "flex-row-reverse"
             )}
           >
-            {reply_mid && (
-              <Reply key={reply_mid} mid={reply_mid} context={context} to={contextId} />
-            )}
-            {edit ? (
-              <EditMessage mid={mid} cancelEdit={toggleEditMessage} />
-            ) : (
-              renderContent({
-                context,
-                to: contextId,
-                from_uid: fromUid,
-                created_at: time,
-                content_type,
-                properties,
-                content,
-                thumbnail,
-                download,
-                edited,
-              })
+            <div
+              className={clsx(
+                "vc-msg select-text ts-msg text-fg-body wb whitespace-pre-wrap min-w-0",
+                useBubble && [
+                  "px-3 py-2 rounded-2xl break-words",
+                  alignRight
+                    ? "bg-primary-500/20 text-fg-primary rounded-tr-sm"
+                    : "bg-bg-surface border border-border-subtle rounded-tl-sm",
+                  hideIdentity ? "max-w-full" : "max-w-[85%] md:max-w-[70%]"
+                ],
+                !useBubble && "pr-6 md:pr-0",
+                sending && "opacity-70"
+              )}
+            >
+              {reply_mid && (
+                <Reply key={reply_mid} mid={reply_mid} context={context} to={contextId} />
+              )}
+              {edit ? (
+                <EditMessage mid={mid} cancelEdit={toggleEditMessage} />
+              ) : (
+                renderContent({
+                  context,
+                  to: contextId,
+                  from_uid: fromUid,
+                  created_at: time,
+                  content_type,
+                  properties,
+                  content,
+                  thumbnail,
+                  download,
+                  edited,
+                })
+              )}
+            </div>
+            <Tooltip
+              delay={200}
+              disabled={readOnly}
+              placement="top"
+              tip={dayjsTime.format("YYYY-MM-DD HH:mm:ss")}
+            >
+              <time className="font-mono ts-mini text-fg-disabled shrink-0 pb-0.5">
+                {timeText}
+              </time>
+            </Tooltip>
+            {hideIdentity && failed && (
+              <span className="text-danger ts-2xs font-mono flex items-center gap-1 shrink-0">
+                <IconInfo className="stroke-danger w-3 h-3" /> Send Failed
+              </span>
             )}
           </div>
           {reactions && <Reaction mid={mid} reactions={reactions} readOnly={readOnly} />}
