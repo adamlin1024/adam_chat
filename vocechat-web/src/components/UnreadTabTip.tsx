@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { useAppSelector } from "../app/store";
-
 import getUnreadCount from "../routes/chat/utils";
 import { shallowEqual } from "react-redux";
 
@@ -30,7 +30,6 @@ function drawBadge(baseImg: HTMLImageElement | null): string {
       // tainted — skip background
     }
   }
-  // small red dot, top-right corner, minimal overlap with main image
   ctx.fillStyle = "#ff2222";
   ctx.beginPath();
   ctx.arc(27, 5, 5, 0, 2 * Math.PI);
@@ -53,6 +52,9 @@ const UnreadTabTip = () => {
   const channelMids = useAppSelector((store) => store.channelMessage, shallowEqual);
   const messageData = useAppSelector((store) => store.message, shallowEqual);
 
+  const { pathname } = useLocation();
+  const [isTabVisible, setIsTabVisible] = useState(!document.hidden);
+
   const originalHrefRef = useRef("");
   const originalTitleRef = useRef("");
   const faviconImgRef = useRef<HTMLImageElement | null>(null);
@@ -61,7 +63,6 @@ const UnreadTabTip = () => {
     originalHrefRef.current = getFaviconLink().href;
     originalTitleRef.current = document.title;
 
-    // fetch as blob (same-origin) to avoid canvas CORS taint
     fetch("/neko-icon.png")
       .then((r) => r.blob())
       .then((blob) => {
@@ -79,6 +80,16 @@ const UnreadTabTip = () => {
   }, []);
 
   useEffect(() => {
+    const handleVisibility = () => setIsTabVisible(!document.hidden);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
+
+  // Parse which chat the user is currently viewing
+  const activeDMUid = pathname.match(/^\/chat\/dm\/(\d+)/)?.[1];
+  const activeChannelId = pathname.match(/^\/chat\/channel\/(\d+)/)?.[1];
+
+  useEffect(() => {
     if (loginUid === 0) {
       if (originalTitleRef.current) document.title = originalTitleRef.current;
       return;
@@ -87,18 +98,21 @@ const UnreadTabTip = () => {
     totalUnreads = 0;
     Object.entries(DMMap).forEach(([id, mids]) => {
       if (!muteUsers[+id] && userData[+id]) {
+        // Tab visible + currently in this DM → don't count its unreads
+        if (isTabVisible && activeDMUid && +id === +activeDMUid) return;
         const { unreads = 0 } = getUnreadCount({ mids, readIndex: readUsers[+id], messageData, loginUid });
         totalUnreads += unreads;
       }
     });
     Object.entries(channelMids).forEach(([id, mids]) => {
       if (!muteChannels[+id]) {
+        // Tab visible + currently in this channel → don't count its unreads
+        if (isTabVisible && activeChannelId && +id === +activeChannelId) return;
         const { unreads = 0 } = getUnreadCount({ mids, readIndex: readChannels[+id], messageData, loginUid });
         totalUnreads += unreads;
       }
     });
 
-    // favicon: small red dot overlay (no number), restore when no unreads
     if (totalUnreads > 0) {
       const url = drawBadge(faviconImgRef.current);
       if (url) getFaviconLink().href = url;
@@ -106,14 +120,13 @@ const UnreadTabTip = () => {
       getFaviconLink().href = originalHrefRef.current;
     }
 
-    // title: [N] prefix persists until messages are actually read (totalUnreads → 0)
     const baseTitle = originalTitleRef.current || document.title;
     if (totalUnreads > 0) {
       document.title = `[${totalUnreads}] ${baseTitle}`;
     } else {
       document.title = baseTitle;
     }
-  }, [userData, DMMap, channelMids, readChannels, messageData, loginUid, readUsers, muteChannels, muteUsers]);
+  }, [userData, DMMap, channelMids, readChannels, messageData, loginUid, readUsers, muteChannels, muteUsers, isTabVisible, pathname]);
 
   return null;
 };
