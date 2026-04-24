@@ -183,7 +183,6 @@ const Send: FC<IProps> = ({
   };
   const insertSticker = (url: string) => {
     sendMarkdown(`![sticker](${url})`);
-    setEmojiOpen(false);
   };
   const toggleMode = () => {
     dispatch(updateInputMode(mode == Modes.text ? Modes.markdown : Modes.text));
