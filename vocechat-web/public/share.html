@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <title>分享到 Nekotalk</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090b">
+  <style>
+    html,body{margin:0;background:#08090b;color:#e7e9ee;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;}
+    .wrap{height:100vh;display:flex;align-items:center;justify-content:center;font-size:14px;opacity:.7;}
+  </style>
+</head>
+<body>
+  <div class="wrap">正在開啟…</div>
+  <script>
+    (function () {
+      var q = location.search || "";
+      location.replace("/#/share" + q);
+    })();
+  </script>
+</body>
+</html>

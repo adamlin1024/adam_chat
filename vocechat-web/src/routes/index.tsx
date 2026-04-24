@@ -36,6 +36,7 @@ const OnboardingPage = lazy(() => import("./onboarding"));
 const SettingChannelPage = lazy(() => import("./settingChannel"));
 const SettingDMPage = lazy(() => import("./settingDM"));
 const GuestLogin = lazy(() => import("./guest"));
+const SharePage = lazy(() => import("./share"));
 
 let toastId: string;
 const PageRoutes = () => {
@@ -168,6 +169,16 @@ const PageRoutes = () => {
           }
         />
 
+        <Route
+          path="/share"
+          element={
+            <LazyIt key="share">
+              <RequireAuth guestMode={guestMode}>
+                <SharePage />
+              </RequireAuth>
+            </LazyIt>
+          }
+        />
         <Route
           key={"main"}
           path="/"

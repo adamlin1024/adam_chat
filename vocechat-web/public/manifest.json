@@ -15,5 +15,14 @@
   "theme_color": "#08090b",
   "background_color": "#08090b",
   "display": "standalone",
-  "orientation": "portrait-primary"
+  "orientation": "portrait-primary",
+  "share_target": {
+    "action": "/share.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
 }

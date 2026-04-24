@@ -1,5 +1,5 @@
-const CACHE_NAME = 'neko-talk-v1';
-const STATIC_ASSETS = ['/', '/index.html'];
+const CACHE_NAME = 'neko-talk-v2';
+const STATIC_ASSETS = ['/', '/index.html', '/share.html'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -48,10 +48,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Navigation: network-first, fallback to cached index.html
+  // Navigation: network-first, fallback to cached shell
   if (request.mode === 'navigate') {
+    const fallback = url.pathname === '/share.html' ? '/share.html' : '/index.html';
     event.respondWith(
-      fetch(request).catch(() => caches.match('/index.html'))
+      fetch(request).catch(() => caches.match(fallback))
     );
   }
 });
