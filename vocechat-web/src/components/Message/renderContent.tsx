@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { ContentTypes } from "@/app/config";
 import { ChatContext } from "@/types/common";
 import { ContentType } from "@/types/message";
+import { getStickerUrl } from "@/utils/sticker";
 import FileMessage from "../FileMessage";
 import LinkifyText from "../LinkifyText";
 import MarkdownRender from "../MarkdownRender";
@@ -54,7 +55,19 @@ const renderContent = ({
       break;
     case ContentTypes.markdown:
       {
-        ctn = <MarkdownRender content={content} />;
+        const stickerUrl = getStickerUrl(content);
+        if (stickerUrl) {
+          ctn = (
+            <img
+              src={stickerUrl}
+              alt="sticker"
+              className="w-[160px] h-[160px] md:w-[180px] md:h-[180px] object-contain select-none pointer-events-none"
+              draggable={false}
+            />
+          );
+        } else {
+          ctn = <MarkdownRender content={content} />;
+        }
       }
       break;
     case ContentTypes.audio:

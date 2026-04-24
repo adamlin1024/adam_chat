@@ -188,11 +188,12 @@ export const authApi = createApi({
       async onQueryStarted(params, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
+        } catch {
+          console.log("logout error");
+        } finally {
           dispatch(resetAuthData());
           await clearCache();
           location.href = "/#/login";
-        } catch {
-          console.log("logout error");
         }
       }
     }),

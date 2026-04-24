@@ -1,4 +1,4 @@
-// @ts-nocheck
+// @ts-nocheck -- legacy route for backend < 0.3.11, no longer rendered on current server versions
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import Masonry from "masonry-layout";

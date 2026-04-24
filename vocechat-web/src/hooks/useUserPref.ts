@@ -5,6 +5,24 @@ import { useAppSelector } from "@/app/store";
 const EVENT_KEY = "user_pref_change";
 const PREFIX = "pref";
 
+const sweptUids = new Set<number>();
+const sweepOrphanPrefs = (currentUid: number) => {
+  if (!currentUid || sweptUids.has(currentUid)) return;
+  sweptUids.add(currentUid);
+  try {
+    const orphans: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k || !k.startsWith(`${PREFIX}:`)) continue;
+      const uidPart = k.split(":")[1];
+      if (uidPart && uidPart !== String(currentUid)) orphans.push(k);
+    }
+    orphans.forEach((k) => localStorage.removeItem(k));
+  } catch {
+    /* quota or disabled — silent */
+  }
+};
+
 /**
  * Abstraction layer for per-user preferences.
  *
@@ -16,6 +34,10 @@ const PREFIX = "pref";
 export function useUserPref<T>(key: string, defaultValue: T): [T, (v: T) => void] {
   const uid = useAppSelector((s) => s.authData.user?.uid ?? 0, shallowEqual);
   const storageKey = `${PREFIX}:${uid}:${key}`;
+
+  useEffect(() => {
+    sweepOrphanPrefs(uid);
+  }, [uid]);
 
   const read = useCallback((): T => {
     try {

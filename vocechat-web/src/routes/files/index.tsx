@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import Tippy from "@tippyjs/react";
@@ -74,7 +73,7 @@ function Files() {
               popperOptions={{ strategy: "fixed" }}
               content={
                 <FilterChannel
-                  select={gid}
+                  select={gid ?? 0}
                   updateFilter={({ gid: g }) => {
                     setGid(g);
                     setChannelMenuVisible(false);

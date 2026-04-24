@@ -21,7 +21,8 @@ import Reply from "./Reply";
 import useInView from "./useInView";
 import { shallowEqual } from "react-redux";
 import NameWithRemark from "../NameWithRemark";
-import { isMobile } from "@/utils";
+import { isMobile, resolveMsgTime } from "@/utils";
+import { isStickerContent } from "@/utils/sticker";
 import { useChatLayout } from "@/hooks/useChatLayout";
 
 interface IProps {
@@ -91,7 +92,7 @@ const Message: FC<IProps> = ({
     expires_in = 0,
     failed = false,
   } = message;
-  const time = (properties as any)?.original_created_at ?? rawTime;
+  const time = resolveMsgTime(message) ?? rawTime;
   const dayjsTime = dayjs(time);
   const _key = properties?.local_id || mid;
   const showExpire = (expires_in ?? 0) > 0;
@@ -99,8 +100,10 @@ const Message: FC<IProps> = ({
   const alignRight = chatLayout === "Right" || (chatLayout === "Alternating" && isSelf);
   // Alternating 模式下自己的訊息：隱藏頭像與名稱（LINE 風格）
   const hideIdentity = chatLayout === "Alternating" && isSelf;
-  // 純文字/markdown 才套泡泡樣式；檔案、圖片、語音、轉傳保留原本卡片
-  const useBubble = content_type === "text/plain" || content_type === "text/markdown";
+  // 純貼圖訊息不使用氣泡（像 LINE 那樣直接浮在對話上）
+  const isSticker = isStickerContent(content, content_type);
+  // 純文字/markdown 才套泡泡樣式；檔案、圖片、語音、轉傳、貼圖保留原本卡片
+  const useBubble = (content_type === "text/plain" || content_type === "text/markdown") && !isSticker;
   const timeText = dayjsTime.format("HH:mm");
   return (
     <div

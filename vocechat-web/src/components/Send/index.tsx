@@ -181,6 +181,10 @@ const Send: FC<IProps> = ({
       properties: { local_id: +new Date() },
     });
   };
+  const insertSticker = (url: string) => {
+    sendMarkdown(`![sticker](${url})`);
+    setEmojiOpen(false);
+  };
   const toggleMode = () => {
     dispatch(updateInputMode(mode == Modes.text ? Modes.markdown : Modes.text));
   };
@@ -293,6 +297,7 @@ const Send: FC<IProps> = ({
             ref={emojiPanelRef}
             options={{ closeOnSelect: false }}
             onSelectEmoji={insertEmoji}
+            onSelectSticker={insertSticker}
           />
         )}
       </div>

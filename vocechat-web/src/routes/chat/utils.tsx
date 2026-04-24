@@ -12,6 +12,7 @@ import LinkifyText from "@/components/LinkifyText";
 import Message from "@/components/Message";
 import Checkbox from "@/components/styled/Checkbox";
 import { isImage, resolveMsgTime } from "@/utils";
+import { isStickerContent } from "@/utils/sticker";
 import i18n from "../../i18n";
 
 export function getUnreadCount({
@@ -51,7 +52,7 @@ export function getUnreadCount({
   // console.log("unreads", final.length, tmps);
   return { unreads: final.length, mentions: tmps };
 }
-export const renderPreviewMessage = (message = null) => {
+export const renderPreviewMessage = (message: any = null) => {
   if (!message) return null;
   const { content_type, content, properties = {} } = message;
   let res = null;
@@ -69,7 +70,11 @@ export const renderPreviewMessage = (message = null) => {
       break;
     case ContentTypes.markdown:
       {
-        res = `[markdown]`;
+        if (isStickerContent(content, content_type)) {
+          res = `[貼圖]`;
+        } else {
+          res = `[markdown]`;
+        }
       }
       break;
     case ContentTypes.archive:

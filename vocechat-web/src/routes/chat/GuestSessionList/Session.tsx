@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { FC, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";

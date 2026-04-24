@@ -4,6 +4,8 @@ import clsx from "clsx";
 
 import { emojiCategoryIcons, emojiSearchIcons } from "./emoji-icons";
 
+const RECENT_ID = "_recent";
+
 type Props = Pick<
   UseEmojiPickerType,
   | "searchValue"
@@ -13,7 +15,9 @@ type Props = Pick<
   | "searchResult"
   | "onSelectEmoji"
   | "emojiLibrary"
->;
+> & {
+  recents?: string[];
+};
 
 export function EmojiTabbedPicker({
   searchValue,
@@ -22,7 +26,8 @@ export function EmojiTabbedPicker({
   isSearching,
   searchResult,
   onSelectEmoji,
-  emojiLibrary
+  emojiLibrary,
+  recents = []
 }: Props) {
   const sections = useMemo(() => {
     const all = emojiLibrary.getGrid().sections();
@@ -39,9 +44,16 @@ export function EmojiTabbedPicker({
     }
   }, [sections, activeCategoryId]);
 
+  const recentEmojis = useMemo<Emoji[]>(() => {
+    return recents
+      .map((id) => emojiLibrary.getEmoji(id))
+      .filter((e): e is Emoji => Boolean(e));
+  }, [recents, emojiLibrary]);
+
   const displayedEmojis = useMemo<Emoji[]>(() => {
     if (isSearching) return searchResult as Emoji[];
     if (!activeCategoryId) return [];
+    if (activeCategoryId === RECENT_ID) return recentEmojis;
     const section = emojiLibrary.getGrid().section(activeCategoryId as any);
     if (!section) return [];
     const ids: string[] = [];
@@ -51,12 +63,35 @@ export function EmojiTabbedPicker({
     return ids
       .map((id) => emojiLibrary.getEmoji(id))
       .filter((e): e is Emoji => Boolean(e));
-  }, [activeCategoryId, isSearching, searchResult, emojiLibrary]);
+  }, [activeCategoryId, isSearching, searchResult, emojiLibrary, recentEmojis]);
+
+  const showingRecent = activeCategoryId === RECENT_ID;
 
   return (
     <div className="flex flex-col w-full h-full">
       {/* Tabs */}
       <div className="flex items-center gap-0.5 px-2 border-b border-border-subtle shrink-0 overflow-x-auto">
+        {/* Recent tab */}
+        <button
+          type="button"
+          tabIndex={-1}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => {
+            if (isSearching) clearSearch();
+            setActiveCategoryId(RECENT_ID);
+          }}
+          className={clsx(
+            "flex-center w-9 h-8 shrink-0 rounded transition-colors",
+            !isSearching && showingRecent
+              ? "text-accent"
+              : "text-fg-subtle hover:text-fg-primary"
+          )}
+          title="最近使用"
+        >
+          <span className="w-5 h-5 [&_svg]:w-full [&_svg]:h-full [&_svg]:fill-current">
+            {emojiCategoryIcons.frequent.outline}
+          </span>
+        </button>
         {sections.map(({ id }) => {
           const active = !isSearching && activeCategoryId === id;
           const iconDef = emojiCategoryIcons[id as keyof typeof emojiCategoryIcons];
@@ -118,7 +153,11 @@ export function EmojiTabbedPicker({
       <div className="flex-1 overflow-y-auto px-2 py-1">
         {displayedEmojis.length === 0 ? (
           <div className="flex-center h-full text-xs text-fg-subtle">
-            {isSearching ? "找不到符合的表情" : ""}
+            {isSearching
+              ? "找不到符合的表情"
+              : showingRecent
+                ? "尚未使用過表情"
+                : ""}
           </div>
         ) : (
           <div className="grid grid-cols-[repeat(auto-fill,minmax(34px,1fr))]">

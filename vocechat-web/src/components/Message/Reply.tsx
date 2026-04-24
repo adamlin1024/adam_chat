@@ -7,6 +7,7 @@ import { MessagePayload } from "@/app/slices/message";
 import { useAppSelector } from "@/app/store";
 import { ChatContext } from "@/types/common";
 import { getFileIcon, isImage } from "@/utils";
+import { getStickerUrl } from "@/utils/sticker";
 import Avatar from "../Avatar";
 import LinkifyText from "../LinkifyText";
 import MarkdownRender from "../MarkdownRender";
@@ -33,11 +34,28 @@ const renderContent = (data: MessagePayload, context: ChatContext, to: number) =
       res = <span className=" text-primary-400 text-sm">[Voice Message]</span>;
       break;
     case ContentTypes.markdown:
-      res = (
-        <div className="max-h-[152px] overflow-hidden dark:text-gray-100">
-          <MarkdownRender content={content as string} />
-        </div>
-      );
+      {
+        const stickerUrl = getStickerUrl(content as string);
+        if (stickerUrl) {
+          res = (
+            <div className="flex items-center gap-1.5">
+              <img
+                src={stickerUrl}
+                alt="sticker"
+                className="w-8 h-8 object-contain"
+                draggable={false}
+              />
+              <span className="text-fg-muted">[貼圖]</span>
+            </div>
+          );
+        } else {
+          res = (
+            <div className="max-h-[152px] overflow-hidden dark:text-gray-100">
+              <MarkdownRender content={content as string} />
+            </div>
+          );
+        }
+      }
       break;
     case ContentTypes.file:
       {

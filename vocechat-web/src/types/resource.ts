@@ -73,6 +73,7 @@ export interface VoceChatFile {
   properties: string;
   created_at: number;
   expired: boolean;
+  thumbnail?: string;
 }
 export type FileType = "Doc" | "PDF" | "Image" | "Audio" | "Video";
 export type FileCreateTime = "Day1" | "Day7" | "Day30" | "Day90" | "Day180";
