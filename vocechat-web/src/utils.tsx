@@ -441,6 +441,15 @@ export const fromNowTime = (ts?: number) => {
   const currTS = +new Date();
   return dayjs(ts > currTS ? currTS : ts).fromNow();
 };
+
+export const resolveMsgTime = (msg?: {
+  created_at?: number;
+  properties?: { original_created_at?: number } | null | unknown;
+}): number | undefined => {
+  if (!msg) return undefined;
+  const p = msg.properties as { original_created_at?: number } | null | undefined;
+  return p?.original_created_at ?? msg.created_at;
+};
 export const playAgoraVideo = (uid: number, videoTrack?: ICameraVideoTrack | null) => {
   if (!videoTrack && !window.VIDEO_TRACK_MAP[uid]) return;
   const playerEle = document.querySelector(`#CAMERA_${uid}`) as HTMLElement;

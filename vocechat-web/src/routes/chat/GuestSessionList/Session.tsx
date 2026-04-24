@@ -5,7 +5,7 @@ import clsx from "clsx";
 
 import { useAppSelector } from "@/app/store";
 import Avatar from "@/components/Avatar";
-import { fromNowTime } from "@/utils";
+import { fromNowTime, resolveMsgTime } from "@/utils";
 import { renderPreviewMessage } from "../../chat/utils";
 import { shallowEqual } from "react-redux";
 
@@ -61,13 +61,13 @@ const Session: FC<IProps> = ({ id, mid }) => {
             <span
               className={clsx(
                 `flex items-center gap-2 font-semibold text-sm text-gray-500 dark:text-white truncate`,
-                previewMsg.created_at ? "max-w-[120px]" : "max-w-[190px]"
+                resolveMsgTime(previewMsg) ? "max-w-[120px]" : "max-w-[190px]"
               )}
             >
               {name}
             </span>
             <span className="text-xs text-gray-600 max-w-[80px] truncate">
-              {fromNowTime(previewMsg.created_at)}
+              {fromNowTime(resolveMsgTime(previewMsg))}
             </span>
           </div>
           <div className="flex items-center justify-between">

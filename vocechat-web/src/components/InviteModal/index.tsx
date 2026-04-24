@@ -56,7 +56,7 @@ const InviteModal: FC<Props> = ({ type = "server", cid, title = "", closeModal }
       <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">
         {t("invite_title", { name: finalTitle })}
       </span>
-      <button onClick={onClose} className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors shrink-0">✕</button>
+      <button onClick={onClose} className="p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors shrink-0">✕</button>
     </div>
   );
 
@@ -95,7 +95,7 @@ const InviteModal: FC<Props> = ({ type = "server", cid, title = "", closeModal }
       <div ref={wrapperRef} className="flex flex-col bg-bg-elevated border border-border rounded-xl max-h-[85vh] md:min-w-[408px] shadow-overlay">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle shrink-0 sticky top-0 bg-bg-elevated z-10">
           <span className="font-semibold text-sm text-fg-primary">{t("invite_title", { name: finalTitle })}</span>
-          <button onClick={closeModal} className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors shrink-0">✕</button>
+          <button onClick={closeModal} className="p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors shrink-0">✕</button>
         </div>
         <div className="flex-1 overflow-y-auto no-scrollbar px-4 pb-4">
           {!channel?.is_public && <AddMembers cid={cid} closeModal={closeModal} />}

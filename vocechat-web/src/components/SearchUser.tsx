@@ -178,7 +178,7 @@ const SearchUser: FC<Props> = ({ closeModal }) => {
             <div className="relative flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
               <div className="w-7" />
               <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">{tMember("search_user", { defaultValue: "搜尋用戶" })}</span>
-              <button onClick={animateClose} className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
+              <button onClick={animateClose} className="p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
             </div>
           </div>
           <div className="flex flex-col gap-3 px-4 py-3 shrink-0">
@@ -198,7 +198,7 @@ const SearchUser: FC<Props> = ({ closeModal }) => {
       <div ref={wrapperRef} className="flex flex-col w-96 bg-bg-elevated border border-border rounded-xl shadow-overlay">
         <div className="flex items-center justify-between px-4 py-3 border-b border-border-subtle shrink-0">
           <span className="font-semibold text-sm text-fg-primary">{tMember("search_user", { defaultValue: "搜尋用戶" })}</span>
-          <button onClick={closeModal} className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
+          <button onClick={closeModal} className="p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
         </div>
         <div className="flex flex-col gap-3 px-4 py-3 shrink-0">
           {typeRow}

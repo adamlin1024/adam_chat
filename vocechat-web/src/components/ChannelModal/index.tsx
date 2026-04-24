@@ -187,7 +187,7 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
             <div className="relative flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
               <div className="w-7" />
               <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">{t("create_channel")}</span>
-              <button onClick={animateClose} className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
+              <button onClick={animateClose} className="p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
             </div>
           </div>
           {/* Content: desc → name → toggle → member picker → buttons */}
@@ -240,7 +240,7 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
         {!is_public && memberPicker}
         {/* Desktop form panel with title */}
         <div className="flex flex-col items-start p-7 gap-5 relative w-full md:min-w-[380px]">
-          <button onClick={closeModal} className="absolute top-4 right-4 p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
+          <button onClick={closeModal} className="absolute top-3 right-3 p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
           <div>
             <h3 className="font-bold text-base tracking-tight text-fg-primary mb-1">{t("create_channel")}</h3>
             <p className="font-mono text-xs text-fg-subtle">{!is_public ? t("create_private_channel_desc") : t("create_channel_desc")}</p>

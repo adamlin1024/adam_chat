@@ -11,7 +11,7 @@ import Divider from "@/components/Divider";
 import LinkifyText from "@/components/LinkifyText";
 import Message from "@/components/Message";
 import Checkbox from "@/components/styled/Checkbox";
-import { isImage } from "@/utils";
+import { isImage, resolveMsgTime } from "@/utils";
 import i18n from "../../i18n";
 
 export function getUnreadCount({
@@ -155,7 +155,8 @@ export const renderMessageFragment = ({
   toggleSelect
 }: Params) => {
   if (!curr) return <div className="w-full h-[1px] invisible"></div>;
-  let { created_at, mid } = curr;
+  let { mid } = curr;
+  const created_at = resolveMsgTime(curr);
   const local_id = curr.properties?.local_id;
   let divider = null;
   let time = dayjs(created_at).format("YYYY/MM/DD");
@@ -163,7 +164,7 @@ export const renderMessageFragment = ({
     // 首条信息
     divider = time;
   } else if (prev) {
-    let { created_at: prev_created_at } = prev;
+    const prev_created_at = resolveMsgTime(prev);
     if (!dayjs(prev_created_at).isSame(created_at, "day")) {
       divider = time;
     }

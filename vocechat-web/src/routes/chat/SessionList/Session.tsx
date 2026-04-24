@@ -13,7 +13,7 @@ import Avatar from "@/components/Avatar";
 import User from "@/components/User";
 import useContextMenu from "@/hooks/useContextMenu";
 import useUploadFile from "@/hooks/useUploadFile";
-import { fromNowTime } from "@/utils";
+import { fromNowTime, resolveMsgTime } from "@/utils";
 import IconLock from "@/assets/icons/lock.svg";
 import IconMute from "@/assets/icons/mute.svg";
 import IconVoicing from "@/assets/icons/voicing.svg";
@@ -172,7 +172,10 @@ const Session: FC<IProps> = ({
     }
   }, [id, mid, type, userData, channelData]);
   if (!data) return null;
-  const previewMsg = messageData[mid] || {};
+  const resolvedMid = mids?.length
+    ? ([...mids].reverse().find((m: number) => messageData[m]) ?? mid)
+    : mid;
+  const previewMsg = messageData[resolvedMid] || messageData[mid] || {};
   const { name, icon, is_public } = data;
   const { unreads = 0, mentions = [] } = getUnreadCount({
     mids,
@@ -269,7 +272,7 @@ const Session: FC<IProps> = ({
                 <i
                   className={clsx(
                     "not-italic font-medium ts-msg text-[#e4e4e7] truncate",
-                    !previewMsg.created_at && "max-w-full"
+                    !resolveMsgTime(previewMsg) && "max-w-full"
                   )}
                 >
                   {type == "dm" ? <NameWithRemark uid={id} showName={false} name={name} /> : name}
@@ -277,7 +280,7 @@ const Session: FC<IProps> = ({
                 {!is_public && <IconLock className="fill-fg-subtle shrink-0" />}
               </span>
               <span className="font-mono ts-mini text-fg-disabled shrink-0">
-                {fromNowTime(previewMsg.created_at)}
+                {fromNowTime(resolveMsgTime(previewMsg))}
               </span>
             </div>
             <div className="flex items-center justify-between mt-px">

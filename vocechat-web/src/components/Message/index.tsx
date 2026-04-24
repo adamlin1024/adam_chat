@@ -80,7 +80,7 @@ const Message: FC<IProps> = ({
   const {
     reply_mid,
     from_uid: fromUid,
-    created_at: time,
+    created_at: rawTime,
     sending = false,
     content,
     thumbnail,
@@ -91,7 +91,7 @@ const Message: FC<IProps> = ({
     expires_in = 0,
     failed = false,
   } = message;
-  
+  const time = (properties as any)?.original_created_at ?? rawTime;
   const dayjsTime = dayjs(time);
   const _key = properties?.local_id || mid;
   const showExpire = (expires_in ?? 0) > 0;

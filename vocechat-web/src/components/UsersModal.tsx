@@ -91,7 +91,7 @@ const UsersModal: FC<Props> = ({ closeModal }) => {
               <span className="absolute inset-x-0 text-center font-semibold text-sm text-fg-primary pointer-events-none">
                 {tMember("send_msg", { defaultValue: "搜尋成員" })}
               </span>
-              <button onClick={animateClose} className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
+              <button onClick={animateClose} className="p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
             </div>
           </div>
           <div className="px-3 py-2.5 border-b border-border-subtle shrink-0">
@@ -134,7 +134,7 @@ const UsersModal: FC<Props> = ({ closeModal }) => {
           <span className="font-semibold text-sm text-fg-primary">
             {tMember("send_msg", { defaultValue: "搜尋成員" })}
           </span>
-          <button onClick={closeModal} className="p-1 rounded text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
+          <button onClick={closeModal} className="p-2 text-xl leading-none text-fg-subtle hover:text-fg-secondary transition-colors">✕</button>
         </div>
         <div className="px-3 py-2 border-b border-border-subtle shrink-0">
           <input

@@ -214,7 +214,7 @@ const Send: FC<IProps> = ({
       {/* PC input */}
       <div
         className={clsx(
-          `send relative w-full px-0 pt-2 pb-3 md:px-3 ${mode} ${
+          `send relative w-full px-0 pt-2 pb-4 md:px-3 md:pb-3 ${mode} ${
             markdownFullscreen ? "fullscreen" : ""
           } ${replying_mid ? "reply" : ""} ${context}`,
           isMarkdownMode && markdownFullscreen && "-mt-9"
@@ -225,8 +225,8 @@ const Send: FC<IProps> = ({
 
         <div
           className={clsx(
-            `flex items-center gap-1 border-t border-border bg-bg-sidebar px-2 py-2 focus-within:bg-bg-canvas transition-colors md:rounded-lg md:border md:focus-within:border-border-strong`,
-            isMarkdownMode && `!rounded-lg md:!border !px-3.5 !py-3 grid grid-cols-[1fr_1fr] grid-rows-[auto_auto] gap-0`
+            `flex items-center gap-2 border-t border-border bg-bg-sidebar px-2.5 py-2.5 transition-colors md:rounded-lg md:border md:px-3`,
+            isMarkdownMode && `!rounded-lg md:!border !px-3.5 !py-3 grid grid-cols-[1fr_1fr] grid-rows-[auto_auto] gap-0 focus-within:bg-bg-canvas md:focus-within:border-border-strong`
           )}
         >
           {mode == Modes.text && (
@@ -237,15 +237,17 @@ const Send: FC<IProps> = ({
                 isMarkdown={false}
                 toggleMode={toggleMode}
               />
-              <MessageInput
-                editorRef={editorRef}
-                members={members}
-                id={`${context}_${id}`}
-                updateMessage={setMsg}
-                sendMessage={handleSendMessage}
-                placeholder={placeholder}
-              />
-              <EmojiInputButton ref={emojiButtonRef} open={emojiOpen} onToggle={toggleEmoji} />
+              <div className="flex-1 flex items-center gap-1 min-w-0 rounded-3xl bg-bg-canvas border border-border focus-within:border-border-strong pl-4 pr-1 py-1 min-h-[40px] transition-colors">
+                <MessageInput
+                  editorRef={editorRef}
+                  members={members}
+                  id={`${context}_${id}`}
+                  updateMessage={setMsg}
+                  sendMessage={handleSendMessage}
+                  placeholder={placeholder}
+                />
+                <EmojiInputButton ref={emojiButtonRef} open={emojiOpen} onToggle={toggleEmoji} />
+              </div>
               <Toolbar
                 ref={toolbarRef}
                 sendMessages={handleSendMessage}
