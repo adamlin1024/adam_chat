@@ -171,7 +171,7 @@ function Files() {
         <div
           className={clsx(
             "flex-1 overflow-y-auto no-scrollbar p-4 pb-[80px] md:pb-4",
-            view === "item" ? "flex flex-col gap-3" : "grid gap-3 grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+            view === "item" ? "flex flex-col gap-3" : "grid gap-x-3 gap-y-1.5 auto-rows-[281px] grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
           )}
         >
           {files.length === 0 && (
