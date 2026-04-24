@@ -415,12 +415,6 @@ export const serverApi = createApi({
         method: "DELETE",
       }),
     }),
-    deleteSingleFile: builder.query<void, string>({
-      query: (file_path) => ({
-        url: `/resource/file?file_path=${encodeURIComponent(file_path)}`,
-        method: "DELETE",
-      }),
-    }),
     getWidgetExtCSS: builder.query<string, void>({
       query: () => ({
         url: "/resource/widget-extra.css",
@@ -540,7 +534,6 @@ export const {
   useGenerateAgoraTokenMutation,
   useLazyGetAgoraUsersByChannelQuery,
   useLazyClearAllFilesQuery,
-  useLazyDeleteSingleFileQuery,
   useLazyClearAllMessagesQuery,
   useLazyGetFilesQuery,
   useGetVocespaceConfigQuery,

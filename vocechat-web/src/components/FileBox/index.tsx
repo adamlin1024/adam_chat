@@ -14,7 +14,6 @@ import {
 } from "./preview";
 import { shallowEqual } from "react-redux";
 import DownloadArea from "../FileMessage/DownloadArea";
-import IconDelete from "@/assets/icons/delete.svg";
 
 interface Data {
   file_type: string;
@@ -70,8 +69,6 @@ interface Props {
   created_at: number;
   from_uid: number;
   content: string;
-  mid?: number;
-  onDelete?: () => void;
   onImageClick?: () => void;
 }
 
@@ -84,7 +81,6 @@ const FileBox: FC<Props> = ({
   created_at,
   from_uid,
   content,
-  onDelete,
   onImageClick,
 }) => {
   const [fetchError, setFetchError] = useState(false);
@@ -146,18 +142,10 @@ const FileBox: FC<Props> = ({
       </div>
       {withPreview && (
         <div
-          className={clsx("relative h-[calc(100%_-_64px)] overflow-hidden", isImage && onImageClick && "cursor-pointer")}
+          className={clsx("h-[calc(100%_-_64px)] overflow-hidden", isImage && onImageClick && "cursor-pointer")}
           onClick={isImage && onImageClick ? onImageClick : undefined}
         >
           {previewContent}
-          {onDelete && (
-            <button
-              className="absolute top-2 right-2 flex-center w-9 h-9 rounded-md bg-black/60 hover:bg-black/80 transition-colors"
-              onClick={(e) => { e.stopPropagation(); onDelete(); }}
-            >
-              <IconDelete className="w-5 h-5" />
-            </button>
-          )}
         </div>
       )}
     </div>

@@ -6,8 +6,7 @@ import BASE_URL from "@/app/config";
 import { useAppSelector } from "@/app/store";
 import FileBox from "@/components/FileBox";
 import FilterChannel from "./Filter/Channel";
-import { useLazyGetFilesQuery, useLazyDeleteSingleFileQuery } from "@/app/services/server";
-import toast from "react-hot-toast";
+import { useLazyGetFilesQuery } from "@/app/services/server";
 import { shallowEqual, useDispatch } from "react-redux";
 import { updateFileListView } from "@/app/slices/ui";
 import ChannelIcon from "@/components/ChannelIcon";
@@ -36,12 +35,10 @@ const typeFilters = [
 function Files() {
   const dispatch = useDispatch();
   const [getFiles, { data }] = useLazyGetFilesQuery();
-  const [deleteSingleFile] = useLazyDeleteSingleFileQuery();
   const [fileType, setFileType] = useState("");
   const [gid, setGid] = useState<number | undefined>(undefined);
   const [channelMenuVisible, setChannelMenuVisible] = useState(false);
   const [typeMenuVisible, setTypeMenuVisible] = useState(false);
-  const [localDeleted, setLocalDeleted] = useState<Set<number>>(new Set());
   const [previewImage, setPreviewImage] = useState<{ url: string; name: string } | null>(null);
   const view = useAppSelector((store) => store.ui.fileListView, shallowEqual);
   const channelMap = useAppSelector((store) => store.channels.byId, shallowEqual);
@@ -55,37 +52,11 @@ function Files() {
 
   if (!data) return null;
 
-  const files = [...data.filter((item) => !item.expired && !localDeleted.has(item.mid))].sort(
+  const files = [...data.filter((item) => !item.expired)].sort(
     (a, b) => b.created_at - a.created_at
   );
 
   const selectedTypeLabel = typeFilters.find((f) => f.type === fileType)?.title ?? "全部";
-
-  const handleDelete = async (mid: number, file_path: string, thumbnail_path?: string) => {
-    setLocalDeleted((prev) => new Set(prev).add(mid));
-    try {
-      const res = await deleteSingleFile(file_path);
-      if (thumbnail_path && thumbnail_path !== file_path) {
-        await deleteSingleFile(thumbnail_path);
-      }
-      if ("error" in res && res.error) {
-        console.error("deleteSingleFile error", res.error);
-        toast.error("刪除失敗，伺服器不支援單檔刪除");
-        setLocalDeleted((prev) => {
-          const next = new Set(prev);
-          next.delete(mid);
-          return next;
-        });
-        return;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    const f: Record<string, unknown> = { page_size: 1000 };
-    if (fileType) f.file_type = fileType;
-    if (gid) f.gid = gid;
-    getFiles(f, false);
-  };
 
   return (
     <div className="h-full flex overflow-hidden bg-bg-canvas md:mt-2 md:mr-6 md:mb-2.5 md:rounded-lg md:border md:border-border-subtle">
@@ -226,8 +197,6 @@ function Files() {
                 from_uid={from_uid}
                 size={size}
                 name={name}
-                mid={mid}
-                onDelete={view === "grid" ? () => handleDelete(mid, content, thumbnail) : undefined}
                 onImageClick={isImage && view === "grid" ? () => setPreviewImage({ url, name }) : undefined}
               />
             );
