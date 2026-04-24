@@ -13,6 +13,7 @@ import BASE_URL, { KEY_DEVICE_ID, KEY_DEVICE_TOKEN, KEY_LOCAL_MAGIC_TOKEN } from
 import { resetAuthData, setAuthData, updateInitialized, updateToken } from "../slices/auth.data";
 import baseQuery from "./base.query";
 import { setReady, updateSSEStatus } from "../slices/ui";
+import { clearCache } from "../cache";
 
 const getDeviceId = () => {
   let d = localStorage.getItem(KEY_DEVICE_ID);
@@ -188,7 +189,7 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
           dispatch(resetAuthData());
-          // 重定向到登录
+          await clearCache();
           location.href = "/#/login";
         } catch {
           console.log("logout error");
