@@ -6,10 +6,13 @@
       name="viewport"
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
     />
-    <meta name="theme-color" content="#08090b" />
+    <!-- 預設 fallback theme-color：JS bootstrap 後會用 src/utils/themeColor.ts 動態覆蓋 -->
+    <meta name="theme-color" content="#f2efe9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#08090b" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="Neko-talk — Your private chat space" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!-- iOS PWA：default 讓 status bar 跟著 theme-color，避免被鎖死黑色 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Neko-talk" />
 
     <!-- Suppress ResizeObserver errors - must be first script -->
