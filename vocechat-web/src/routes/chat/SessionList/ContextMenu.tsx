@@ -70,7 +70,11 @@ const SessionContextMenu: FC<Props> = ({
   }, shallowEqual);
 
   const handleChannelSetting = () => {
-    navigateTo(`/setting/channel/${id}/overview?f=${pathname}`);
+    // 桌機直接跳概況；手機落在 nav list 讓使用者選「概況 / 自動刪除訊息」
+    const target = isMobileViewport()
+      ? `/setting/channel/${id}?f=${pathname}`
+      : `/setting/channel/${id}/overview?f=${pathname}`;
+    navigateTo(target);
   };
 
   const handleReadAll = () => {
@@ -101,7 +105,11 @@ const SessionContextMenu: FC<Props> = ({
     }
   };
   const handleDMSetting = () => {
-    navigateTo(`/setting/dm/${id}/overview?f=${pathname}`);
+    // 桌機直接跳概況；手機落在 nav list 讓使用者選「概況 / 自動刪除訊息」
+    const target = isMobileViewport()
+      ? `/setting/dm/${id}?f=${pathname}`
+      : `/setting/dm/${id}/overview?f=${pathname}`;
+    navigateTo(target);
   };
   const pinTxt = t(pinned ? "unpin_chat" : "pin_chat", { ns: "chat" });
 

@@ -50,7 +50,12 @@ const User: FC<Props> = ({
     navigate(`/chat/dm/${uid}`);
   };
   const handleNavToSetting = () => {
-    navigate(`/setting/dm/${uid}/overview?f=/chat/dm/${uid}`);
+    // 桌機直接跳概況；手機落在 nav list 讓使用者選「概況 / 自動刪除訊息」
+    const isMobile = window.innerWidth < 768;
+    const path = isMobile
+      ? `/setting/dm/${uid}?f=/chat/dm/${uid}`
+      : `/setting/dm/${uid}/overview?f=/chat/dm/${uid}`;
+    navigate(path);
   };
   if (!curr) return null;
   const online = curr.online || curr.uid == loginUid;
