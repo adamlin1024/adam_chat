@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import Tippy from "@tippyjs/react";
 import BASE_URL from "@/app/config";
@@ -51,12 +51,27 @@ function Files() {
   }, [fileType, gid]);
 
   // 拉資料中先不渲染 stale list，避免上次刪檔後仍閃出舊檔造成破圖
-  const files =
+  const rawFiles =
     !data || isFetching
       ? []
       : [...data.filter((item) => !item.expired)].sort(
           (a, b) => b.created_at - a.created_at
         );
+
+  // 同一個 file_path（content）會被多則 message 共用（轉發 / 複製訊息），
+  // 列表預設按 message 列出 → 一張圖顯示 N 次。
+  // 這裡按 thumbnail || content 去重，保留最新那一筆，視覺乾淨。
+  const files = useMemo(() => {
+    const seen = new Map<string, typeof rawFiles[number]>();
+    for (const f of rawFiles) {
+      const key = (f.thumbnail || f.content) as string;
+      const existing = seen.get(key);
+      if (!existing || (f.created_at ?? 0) > (existing.created_at ?? 0)) {
+        seen.set(key, f);
+      }
+    }
+    return Array.from(seen.values());
+  }, [rawFiles]);
 
   const selectedTypeLabel = typeFilters.find((f) => f.type === fileType)?.title ?? "全部";
 
