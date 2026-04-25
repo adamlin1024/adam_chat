@@ -68,7 +68,7 @@ const Login = () => {
 
   useEffect(() => {
     if (tokenLoginError) {
-      toast.error("Login error!");
+      toast.error(t("tip.login_error", { ns: "common" }));
     }
   }, [tokenLoginError]);
   useEffect(() => {
@@ -93,7 +93,7 @@ const Login = () => {
 
           break;
         default:
-          toast.error("Something error!");
+          toast.error(t("tip.something_error", { ns: "common" }));
           break;
       }
     }

@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { useAppSelector } from "@/app/store";
 import GoBackNav from "@/components/GoBackNav";
@@ -18,6 +19,7 @@ type Props = {
   dropFiles?: File[];
 };
 const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
+  const { t } = useTranslation();
   const [favModalVisible, setFavModalVisible] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
   const navigate = useNavigate();
@@ -73,7 +75,7 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
                     </button>
                   </li>
                   <VoiceChat context="dm" id={uid} />
-                  <Tooltip tip="Saved Items" placement="left">
+                  <Tooltip tip={t("favs")} placement="left">
                     <li
                       className="h-9 w-9 flex-center cursor-pointer fav text-fg-subtle hover:text-fg-secondary transition-colors"
                       onClick={() => setFavModalVisible(true)}

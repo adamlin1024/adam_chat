@@ -31,7 +31,7 @@ const RegWithUsername: FC = () => {
     if (loginError && "status" in loginError) {
       switch (loginError.status) {
         case 401:
-          toast.error("Invalided Token");
+          toast.error(t("tip.invalid_token", { ns: "common" }));
           break;
         default:
           break;
@@ -43,7 +43,7 @@ const RegWithUsername: FC = () => {
     if (regError && "status" in regError) {
       switch (regError.status) {
         case 409:
-          toast.error("Something Conflicted!");
+          toast.error(t("tip.something_conflict", { ns: "common" }));
           break;
         default:
           break;

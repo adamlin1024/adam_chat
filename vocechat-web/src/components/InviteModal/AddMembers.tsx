@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, MouseEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import { useAddMembersMutation } from "@/app/services/channel";
 import { useAppSelector } from "@/app/store";
@@ -16,13 +17,14 @@ interface Props {
 }
 
 const AddMembers: FC<Props> = ({ cid = 0, closeModal }) => {
+  const { t } = useTranslation();
   const [addMembers, { isLoading: isAdding, isSuccess }] = useAddMembersMutation();
   const [selects, setSelects] = useState<number[]>([]);
   const channel = useAppSelector((store) => store.channels.byId[cid], shallowEqual);
   const userData = useAppSelector((store) => store.users.byId, shallowEqual);
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Add members successfully!");
+      toast.success(t("tip.add_members_success", { ns: "common" }));
       closeModal();
     }
   }, [isSuccess]);

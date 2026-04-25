@@ -65,7 +65,7 @@ const InviteInMobile = () => {
             {inviteLink}
           </div>
           <StyledButton onClick={copy.bind(null, inviteLink, false)} className="small w-fit">
-            {copied ? "Copied" : `Copy`}
+            {copied ? t("action.copied", { ns: "common" }) : t("action.copy", { ns: "common" })}
           </StyledButton>
         </div>
         {download ? (

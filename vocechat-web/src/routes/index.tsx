@@ -1,5 +1,6 @@
 import { lazy, useEffect } from "react";
 import toast from "react-hot-toast";
+import i18n from "@/i18n";
 import { Provider, shallowEqual } from "react-redux";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
@@ -37,6 +38,7 @@ const SettingChannelPage = lazy(() => import("./settingChannel"));
 const SettingDMPage = lazy(() => import("./settingDM"));
 const GuestLogin = lazy(() => import("./guest"));
 const SharePage = lazy(() => import("./share"));
+const DriveTestPage = lazy(() => import("./drive-test"));
 
 let toastId: string;
 const PageRoutes = () => {
@@ -50,7 +52,7 @@ const PageRoutes = () => {
   // 掉线检测
   useEffect(() => {
     if (!online) {
-      toastId = toast.error("Network Offline!", { duration: Infinity });
+      toastId = toast.error(i18n.t("tip.network_offline", { ns: "common" }) as string, { duration: Infinity });
     } else if (toastId) {
       toast.dismiss(toastId);
     }
@@ -58,6 +60,14 @@ const PageRoutes = () => {
   return (
     <HashRouter>
       <Routes>
+        <Route
+          path="/drive-test"
+          element={
+            <LazyIt key="drive-test">
+              <DriveTestPage />
+            </LazyIt>
+          }
+        />
         <Route
           path="/guest_login"
           element={

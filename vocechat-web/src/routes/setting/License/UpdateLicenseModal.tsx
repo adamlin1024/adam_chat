@@ -23,7 +23,7 @@ const UpdateLicenseModal: FC<Props> = ({ closeModal, updateLicense, updating, up
   const handleRenew = async () => {
     const updateSuccess = await updateLicense(value);
     if (typeof updateSuccess == "boolean" && !updateSuccess) {
-      toast.error("Check License Invalid!");
+      toast.error(t("tip.check_license_invalid", { ns: "common" }));
     }
   };
   const handleLicenseUpdate = (evt: ChangeEvent<HTMLTextAreaElement>) => {

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import i18n from "@/i18n";
 
 import BASE_URL, { FILE_SLICE_SIZE } from "@/app/config";
 import { usePrepareUploadFileMutation, useUploadFileMutation } from "@/app/services/message";
@@ -181,7 +182,7 @@ const useUploadFile = (props?: IProps) => {
 
   const addStageFile = (filesData: UploadFileData[]) => {
     if (replying) {
-      toast.error("Only text is supported when replying a message");
+      toast.error(i18n.t("tip.reply_text_only", { ns: "common" }) as string);
       return;
     }
 

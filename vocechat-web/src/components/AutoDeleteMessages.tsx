@@ -63,7 +63,7 @@ const AutoDeleteMessages = ({ id, type = "channel" }: Props) => {
   }, [isSuccess]);
   useEffect(() => {
     if (clearSuccess) {
-      toast.success("Cleared!");
+      toast.success(ct("tip.cleared"));
     }
   }, [clearSuccess]);
   const handleClear = () => {

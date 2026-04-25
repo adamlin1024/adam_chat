@@ -85,7 +85,7 @@ const VoiceChat = ({ id, context = "channel" }: Props) => {
   };
   const handleInIframe = () => {
     // todo
-    toast.error("Voice is not supported in iframe");
+    toast.error(t("tip.voice_iframe_unsupported", { ns: "common" }));
   };
   if (loginUid == 0) return null;
   const visible = visibleAside == "voice";

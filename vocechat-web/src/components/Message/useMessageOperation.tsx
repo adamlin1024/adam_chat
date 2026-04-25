@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 import { ContentTypes } from "@/app/config";
 import { useAppSelector } from "@/app/store";
@@ -19,6 +20,7 @@ interface Params {
 }
 
 export default function useMessageOperation({ mid, context, contextId, selectedText = "" }: Params) {
+  const { t } = useTranslation();
   const { copy } = useCopy();
   const message = useAppSelector((store) => store.message[mid], shallowEqual);
   const loginUser = useAppSelector((store) => store.authData.user, shallowEqual);
@@ -70,7 +72,7 @@ export default function useMessageOperation({ mid, context, contextId, selectedT
   }, [mid, forwardModalVisible, content_type]);
   useEffect(() => {
     if (isUnpinSuccess) {
-      toast.success("Unpin Message Successfully!");
+      toast.success(t("tip.unpin_success", { ns: "common" }));
     }
   }, [isUnpinSuccess]);
   const enablePin = context == "channel" && canPin;

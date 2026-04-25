@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import dayjs from "dayjs";
+import i18n from "@/i18n";
 
 import { getLocalAuthData } from "@/utils";
 import BASE_URL, { tokenHeader, IS_OFFICIAL_DEMO } from "../config";
@@ -118,7 +119,7 @@ const baseQueryWithTokenCheck = async (args: any, api: any, extraOptions: any) =
         }
         break;
       case 400:
-        toast.error("Bad Request");
+        toast.error(i18n.t("tip.bad_request", { ns: "common" }) as string);
         break;
       case 401:
         {
@@ -137,7 +138,7 @@ const baseQueryWithTokenCheck = async (args: any, api: any, extraOptions: any) =
         {
           const whiteList403 = ["sendMsg", "login", "searchUser", "updateContactStatus"];
           if (!whiteList403.includes(api.endpoint)) {
-            toast.error("Request Not Allowed");
+            toast.error(i18n.t("tip.request_not_allowed", { ns: "common" }) as string);
           }
         }
 
@@ -145,18 +146,18 @@ const baseQueryWithTokenCheck = async (args: any, api: any, extraOptions: any) =
       case 404:
         {
           if (!whiteList404.includes(api.endpoint)) {
-            toast.error("Request Not Found");
+            toast.error(i18n.t("tip.request_not_found", { ns: "common" }) as string);
           }
         }
         break;
       case 413:
         {
-          toast.error("File size too large");
+          toast.error(i18n.t("tip.file_too_large", { ns: "common" }) as string);
         }
         break;
       case 415:
         {
-          toast.error("Unsupported Media Type");
+          toast.error(i18n.t("tip.unsupported_media", { ns: "common" }) as string);
         }
         break;
       case 451:

@@ -75,10 +75,10 @@ export default function LoginPage() {
       switch ((error as FetchBaseQueryError).status) {
         case 401:
         case 404:
-          toast.error("Username or Password incorrect");
+          toast.error(t("tip.username_or_password_incorrect", { ns: "common" }));
           break;
         case 403:
-          toast.error("Login method does not supported");
+          toast.error(t("tip.login_method_unsupported", { ns: "common" }));
           break;
         case 410:
           toast.error(
@@ -89,7 +89,7 @@ export default function LoginPage() {
         case "PARSING_ERROR":
           break;
         default:
-          toast.error("Something Error");
+          toast.error(t("tip.something_error", { ns: "common" }));
           break;
       }
       return;

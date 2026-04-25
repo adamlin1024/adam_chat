@@ -4,6 +4,7 @@ import { hideAll } from "tippy.js";
 
 import { useReactMessageMutation } from "@/app/services/message";
 import { useAppSelector } from "@/app/store";
+import { useTranslation } from "react-i18next";
 import IconAddEmoji from "@/assets/icons/add.emoji.svg";
 import ReactionItem, { Emojis, ReactionMap } from "../ReactionItem";
 import Tooltip from "../Tooltip";
@@ -52,6 +53,7 @@ type Props = {
   };
 };
 const Reaction: FC<Props> = ({ mid, reactions = null, readOnly = false }) => {
+  const { t } = useTranslation();
   const [reactWithEmoji] = useReactMessageMutation();
   const currUid = useAppSelector((store) => store.authData.user?.uid, shallowEqual);
   const handleReact = (emoji: string) => {
@@ -93,7 +95,7 @@ const Reaction: FC<Props> = ({ mid, reactions = null, readOnly = false }) => {
         ) : null;
       })}
       {!readOnly && (
-        <Tooltip placement="top" tip="Add Reaction">
+        <Tooltip placement="top" tip={t("action.add_reaction")}>
           <Tippy
             interactive
             placement="right-start"

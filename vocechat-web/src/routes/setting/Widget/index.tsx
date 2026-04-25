@@ -91,7 +91,7 @@ export default function Widget() {
             onClick={copyLink}
             className="ghost small border_less absolute right-1 top-1/2 -translate-y-1/2 dark:!text-accent"
           >
-            {copied ? "Copied" : ct("action.copy")}
+            {copied ? ct("action.copied") : ct("action.copy")}
           </Button>
         </div>
       </div>

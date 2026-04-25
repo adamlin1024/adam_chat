@@ -46,10 +46,10 @@ export default function ConfigSMTP() {
   };
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Send Test Email Successfully");
+      toast.success(t("tip.test_email_success", { ns: "common" }));
     }
     if (isError) {
-      toast.error("Send Test Email Fail");
+      toast.error(t("tip.test_email_failed", { ns: "common" }));
     }
   }, [isSuccess, isError]);
 

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useSendLoginMagicLinkMutation } from "@/app/services/auth";
@@ -7,6 +8,7 @@ import SentTip from "./SentTip";
 import SelectLanguage from "../../components/Language";
 
 export default function SendMagicLinkPage() {
+  const { t } = useTranslation();
   const { email = "" } = useParams();
   const [sendMagicLink, { isSuccess, isLoading, error }] = useSendLoginMagicLinkMutation();
   const navigateTo = useNavigate();
@@ -18,7 +20,7 @@ export default function SendMagicLinkPage() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Send Email Successfully!");
+      toast.success(t("tip.send_email_success", { ns: "common" }));
     }
   }, [isSuccess]);
 
@@ -29,13 +31,13 @@ export default function SendMagicLinkPage() {
           toast.error(error.data);
           break;
         case 401:
-          toast.error("Username or Password Incorrect");
+          toast.error(t("tip.username_or_password_incorrect", { ns: "common" }));
           break;
         case 404:
-          toast.error("Account not exist");
+          toast.error(t("tip.account_not_exist", { ns: "common" }));
           break;
         default:
-          toast.error("Something Error");
+          toast.error(t("tip.something_error", { ns: "common" }));
           break;
       }
       return;

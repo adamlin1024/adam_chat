@@ -61,7 +61,7 @@ export function ConfigVocespace() {
     const res = await updateConfig(submitValues as any);
 
     if (res.error) {
-      toast.error(`Auto Deploy Failed: ${res.error}`);
+      toast.error(t("tip.deploy_failed", { ns: "common", err: String(res.error) }));
     } else {
       let { data } = res;
 

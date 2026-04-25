@@ -28,7 +28,7 @@ export default function InviteLink() {
           onClick={copyLink}
           className="ghost small border_less !px-2 md:hover:!text-accent-hover"
         >
-          {linkCopied ? "Copied" : ct("action.copy")}
+          {linkCopied ? ct("action.copied") : ct("action.copy")}
         </StyledButton>
       </div>
       <StyledButton className="w-32 h-11 mt-6" onClick={nextStep}>

@@ -36,7 +36,7 @@ const GoogleLoginInner: FC<Props> = ({ type = "login", loaded, loadError }) => {
           );
           break;
         default:
-          toast.error("Something Error");
+          toast.error(ct("tip.something_error"));
           break;
       }
     }

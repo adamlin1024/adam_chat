@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import i18n from "@/i18n";
 
 import { useSendChannelMsgMutation } from "@/app/services/channel";
 import { useReplyMessageMutation } from "@/app/services/message";
@@ -95,7 +96,7 @@ const useSendMessage = (props?: Props) => {
   };
   const setReplying = (mid: number) => {
     if (stageFiles.length !== 0) {
-      toast.error("Only text is supported when replying a message");
+      toast.error(i18n.t("tip.reply_text_only", { ns: "common" }) as string);
       return;
     }
     dispatch(addReplyingMessage({ mid, key: `${context}_${to}` }));

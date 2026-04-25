@@ -14,7 +14,7 @@ import IconSelect from "@/assets/icons/select.svg";
 import IconEdit from "@/assets/icons/edit.svg";
 import IconPin from "@/assets/icons/pin.svg";
 import IconDelete from "@/assets/icons/delete.svg";
-import IconBookmark from "@/assets/icons/bookmark.add.svg";
+import IconBookmark from "@/assets/icons/bookmark.svg";
 import IconBookmarked from "@/assets/icons/bookmark.svg";
 import IconReact from "@/assets/icons/reaction.svg";
 import { useAppSelector } from "@/app/store";
@@ -103,7 +103,7 @@ const Message: FC<IProps> = ({
   // 訊息動作（給桌機右鍵 ContextMenu 與手機長按 ActionSheet 共用）
   const op = useMessageOperation({ mid, contextId, context, selectedText });
   const { setReplying } = useSendMessage({ context, to: contextId });
-  const { addFavorite, isFavorited } = useFavMessage({
+  const { addFavorite, isFavorited, getFavoriteId, removeFavorite } = useFavMessage({
     cid: context == "channel" ? contextId : null,
   });
   const handleReply = () => { if (contextId) setReplying(mid); };
@@ -123,11 +123,17 @@ const Message: FC<IProps> = ({
       sel.addRange(range);
     }, 50);
   };
-  const handleAddFav = async () => {
-    if (isFavorited(mid)) { toast.success(t("tip.fav_already")); return; }
+  const handleToggleFav = async () => {
+    const favId = getFavoriteId(mid);
+    if (favId) {
+      removeFavorite(favId);
+      toast.success(t("tip.fav_removed"));
+      return;
+    }
     const ok = await addFavorite(mid);
     toast[ok ? "success" : "error"](ok ? t("tip.fav_added") : t("tip.fav_failed"));
   };
+  const faved = isFavorited(mid);
 
   const menuItems: MenuItem[] = [
     op.canEdit && { title: t("action.edit_msg"), icon: <IconEdit className="icon" />, handler: toggleEditMessage },
@@ -153,7 +159,11 @@ const Message: FC<IProps> = ({
     op.canCopy && { title: t("action.copy"), icon: <IconCopy className="w-6 h-6 fill-current" />, handler: op.copyContent },
     op.canCopy && { title: t("action.select_text", { ns: "common", defaultValue: "選取文字" }), icon: <IconSelect className="w-6 h-6 fill-current" />, handler: handleNativeSelect },
     op.canReply && { title: t("action.reply"), icon: <IconReply className="w-6 h-6 fill-current" />, handler: handleReply },
-    { title: t("action.add_to_fav"), icon: <IconBookmark className="w-6 h-6 fill-current" />, handler: handleAddFav },
+    {
+      title: faved ? t("action.remove_from_fav") : t("action.add_to_fav"),
+      icon: <IconBookmark className={clsx("w-6 h-6 fill-current", faved && "text-accent")} />,
+      handler: handleToggleFav,
+    },
     { title: t("action.add_reaction"), icon: <IconReact className="w-6 h-6 fill-current" />, handler: () => setSheetView("reactions"), keepOpen: true },
     { title: t("action.forward"), icon: <IconForward className="w-6 h-6 fill-current" />, handler: op.toggleForwardModal },
     { title: t("action.select"), icon: <IconSelect className="w-6 h-6 fill-current" />, handler: handleSelect },

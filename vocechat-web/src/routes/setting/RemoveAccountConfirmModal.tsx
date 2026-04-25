@@ -22,7 +22,7 @@ const RemoveConfirmModal: FC<Props> = ({ closeModal }) => {
     } catch (error) {
       console.error(error);
       
-      toast.error("Remove Account Failed!");
+      toast.error(t("tip.account_remove_failed", { ns: "common" }));
     }
   };
   useEffect(() => {

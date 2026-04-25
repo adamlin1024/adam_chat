@@ -42,7 +42,7 @@ const ProfileBasicEditModal: FC<Props> = ({ closeModal }) => {
   const handleCompare = () => {
     const { newPassword, confirmPassword } = input;
     if (newPassword !== confirmPassword) {
-      toast.error("Not same with new password");
+      toast.error(t("tip.password_not_match_new", { ns: "common" }));
     }
   };
   useEffect(() => {

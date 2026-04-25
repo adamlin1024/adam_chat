@@ -21,7 +21,7 @@ const LeaveConfirmModal: FC<Props> = ({ id, closeModal, handleNextStep }) => {
 
   useEffect(() => {
     if (leaveSuccess) {
-      toast.success("Leave channel successfully!");
+      toast.success(t("tip.leave_channel_success", { ns: "common" }));
       closeModal();
       navigateTo("/chat");
     }

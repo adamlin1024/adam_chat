@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { Orbit } from "@uiball/loaders";
 import clsx from "clsx";
 
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const NameEdit = ({ uid }: Props) => {
+  const { t } = useTranslation();
   const formRef = useRef<HTMLFormElement>(null);
   const [editable, setEditable] = useState(false);
   const [name, setName] = useState("");
@@ -44,7 +46,7 @@ const NameEdit = ({ uid }: Props) => {
       if ("error" in resp) {
         switch (resp.error.status) {
           case 409:
-            toast.error("Conflict with existed username");
+            toast.error(t("tip.bot_name_conflict", { ns: "common" }));
             break;
           default:
             break;

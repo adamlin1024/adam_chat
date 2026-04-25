@@ -55,7 +55,7 @@ const LicensePriceListModal: FC<Props> = ({ closeModal }) => {
   const handleRenew = async () => {
     const hostPrefixed = `https://${host}`;
     if (!linkify.test(hostPrefixed)) {
-      toast.error("Invalid Host");
+      toast.error(t("tip.invalid_host", { ns: "common" }));
       return;
     }
     if (new URL(hostPrefixed).port !== "" || host.endsWith(":443")) {
@@ -85,7 +85,7 @@ const LicensePriceListModal: FC<Props> = ({ closeModal }) => {
       success_url: `${location.origin}/#/cb/payment_success`,
     });
     if ("error" in resp) {
-      toast.error("Payment link initialized failed!");
+      toast.error(t("tip.payment_init_failed", { ns: "common" }));
       return;
     }
     console.log("aaaa", resp.data);

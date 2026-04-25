@@ -18,7 +18,7 @@ const UpdatePassword = ({ uid, onClose }: Props) => {
   const { updatePassword } = useUserOperation({ uid });
   const handleUpdate = () => {
     if (pwd.length < 6) {
-      toast.error("Min length is 6");
+      toast.error(t("tip.min_length_6", { ns: "common" }));
       return;
     }
     updatePassword(pwd);

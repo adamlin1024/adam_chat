@@ -42,6 +42,16 @@ export default function useFavMessage({
     return mids.findIndex((i) => i == mid) > -1;
   };
 
+  // 從 mid 反查 favorite ID（用來呼叫 removeFavorite 取消收藏）
+  const getFavoriteId = (mid: number): string | null => {
+    for (const f of favorites) {
+      if (f?.messages?.length === 1 && f.messages[0].from_mid === mid) {
+        return f.id;
+      }
+    }
+    return null;
+  };
+
   useEffect(() => {
     let filtereds: Favorite[] = [];
     filtereds = cid
@@ -62,6 +72,7 @@ export default function useFavMessage({
 
   return {
     isFavorited,
+    getFavoriteId,
     addFavorite,
     removeFavorite,
     favorites

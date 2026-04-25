@@ -44,7 +44,7 @@ const TransferOwnerModal: FC<Props> = ({ id, closeModal, withLeave = true }) => 
 
   useEffect(() => {
     if (transferSuccess && leaveSuccess) {
-      toast.success("Leave channel successfully!");
+      toast.success(t("tip.leave_channel_success", { ns: "common" }));
       closeModal();
       navigateTo("/chat");
     }

@@ -33,7 +33,7 @@ const AdminAccount: FC<Props> = ({ serverName }) => {
   // Display error
   useEffect(() => {
     if (signUpError) {
-      toast.error(`Failed to sign up`);
+      toast.error(t("tip.signup_failed", { ns: "common" }));
     }
   }, [signUpError]);
   useEffect(() => {
@@ -47,7 +47,7 @@ const AdminAccount: FC<Props> = ({ serverName }) => {
   }, [signUpOk]);
   useEffect(() => {
     if (loginError) {
-      toast.error(`Login failed`);
+      toast.error(t("tip.login_failed", { ns: "common" }));
     }
   }, [loginError]);
 

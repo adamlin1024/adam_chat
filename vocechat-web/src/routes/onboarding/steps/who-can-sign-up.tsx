@@ -28,7 +28,7 @@ export default function SignUpSetting() {
   // Display error
   useEffect(() => {
     if (error === undefined) return;
-    toast.error(`Failed to update sign up rule: ${error.data}`);
+    toast.error(t("tip.update_signup_rule_failed", { ns: "common", err: error.data }));
   }, [error]);
 
   // Increment `step` when updating has completed

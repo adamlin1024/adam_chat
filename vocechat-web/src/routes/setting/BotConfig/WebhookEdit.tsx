@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { Orbit } from "@uiball/loaders";
 import clsx from "clsx";
 
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const WebhookEdit = ({ uid }: Props) => {
+  const { t } = useTranslation();
   const formRef = useRef<HTMLFormElement>(null);
   const [editable, setEditable] = useState(false);
   const [url, setUrl] = useState("");
@@ -44,7 +46,7 @@ const WebhookEdit = ({ uid }: Props) => {
       if ("error" in resp) {
         switch (resp.error.status) {
           case 406:
-            toast.error("Not Valid URL!");
+            toast.error(t("tip.url_invalid", { ns: "common" }));
             break;
 
           default:

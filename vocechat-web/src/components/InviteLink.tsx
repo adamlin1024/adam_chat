@@ -80,7 +80,7 @@ const InviteLink: FC<Props> = ({ context = "members", cid }) => {
             onClick={copyLink}
             className="ghost small border_less absolute right-1 top-1/2 -translate-y-1/2"
           >
-            {linkCopied ? "Copied" : t("action.copy", { ns: "common" })}
+            {linkCopied ? t("action.copied", { ns: "common" }) : t("action.copy", { ns: "common" })}
           </Button>
         </div>
         <span className="text-xs text-fg-primary flex gap-2">

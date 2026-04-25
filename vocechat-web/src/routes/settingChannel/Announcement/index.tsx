@@ -52,7 +52,7 @@ export default function Announcement({ id = 0 }) {
 
   useEffect(() => {
     if (deleteSuccess) {
-      toast.success("Announcement deleted");
+      toast.success(t("tip.announcement_deleted", { ns: "common" }));
       setContent("");
       setShowDeleteConfirm(false);
       refetch();
@@ -61,11 +61,11 @@ export default function Announcement({ id = 0 }) {
 
   const handleSave = () => {
     if (!content.trim()) {
-      toast.error("Announcement content cannot be empty");
+      toast.error(t("tip.announcement_empty", { ns: "common" }));
       return;
     }
     if (content.length > 5000) {
-      toast.error("Announcement content cannot exceed 5000 characters");
+      toast.error(t("tip.announcement_too_long", { ns: "common" }));
       return;
     }
     createOrUpdate({ gid: id, content: content.trim() });

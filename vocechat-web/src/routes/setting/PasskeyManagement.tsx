@@ -34,7 +34,7 @@ export default function PasskeyManagement() {
     }
 
     if (!user?.name) {
-      toast.error("User information not available");
+      toast.error(t("tip.user_info_unavailable", { ns: "common" }));
       return;
     }
 

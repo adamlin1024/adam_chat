@@ -88,7 +88,7 @@ export default function Register() {
     evt.preventDefault();
     const { name, email, password, confirmPassword } = input;
     if (password !== confirmPassword) {
-      toast.error("Not Same Password!");
+      toast.error(t("tip.password_mismatch", { ns: "common" }));
       return;
     }
     const { data: canReg } = await checkEmail(email);
@@ -108,7 +108,7 @@ export default function Register() {
         });
       }
     } else {
-      toast.error("Email already registered!");
+      toast.error(t("tip.email_registered", { ns: "common" }));
     }
     // sendMagicLink(email);
   };
@@ -116,7 +116,7 @@ export default function Register() {
   const handleCompare = () => {
     const { password, confirmPassword } = input;
     if (password !== confirmPassword) {
-      toast.error("Not Same Password!");
+      toast.error(t("tip.password_mismatch", { ns: "common" }));
     }
   };
 

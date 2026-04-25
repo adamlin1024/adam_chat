@@ -3,10 +3,12 @@ import StyledButton from "@/components/styled/Button";
 import StyledTextarea from "@/components/styled/Textarea";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 type Props = {};
 
 const ExtCSS = ({}: Props) => {
+  const { t } = useTranslation();
   const [updateWidgetCss, { isLoading, isSuccess }] = useUpdateWidgetExtCSSMutation();
   const { data = "", isLoading: loadingCss } = useGetWidgetExtCSSQuery();
   const [code, setCode] = useState(data);
@@ -18,7 +20,7 @@ const ExtCSS = ({}: Props) => {
   };
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Updated!");
+      toast.success(t("tip.updated", { ns: "common" }));
     }
   }, [isSuccess]);
 

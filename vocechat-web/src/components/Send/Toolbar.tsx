@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 import ExitFullscreenIcon from "@/assets/icons/fullscreen.exit.svg";
 import FullscreenIcon from "@/assets/icons/fullscreen.svg";
@@ -21,19 +22,20 @@ const Toolbar = forwardRef<HTMLDivElement, Props>(({
   fullscreen,
   mode,
 }, ref) => {
+  const { t } = useTranslation();
   const isMarkdown = mode == "markdown";
   return (
     <div ref={ref} className="flex items-center gap-1 shrink-0 ml-1">
       {isMarkdown &&
         (fullscreen ? (
-          <Tooltip placement="top" tip="Exit Fullscreen">
+          <Tooltip placement="top" tip={t("action.exit_fullscreen")}>
             <ExitFullscreenIcon
               onClick={toggleMarkdownFullscreen}
               className="w-4 h-4 cursor-pointer fill-fg-subtle hover:fill-fg-secondary transition-colors"
             />
           </Tooltip>
         ) : (
-          <Tooltip placement="top" tip="Fullscreen">
+          <Tooltip placement="top" tip={t("action.fullscreen")}>
             <FullscreenIcon
               onClick={toggleMarkdownFullscreen}
               className="w-4 h-4 cursor-pointer fill-fg-subtle hover:fill-fg-secondary transition-colors"

@@ -20,7 +20,7 @@ const InviteByEmail: FC<Props> = ({ cid }) => {
   const { enableSMTP } = useInviteLink(cid);
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Email Sent!");
+      toast.success(t("tip.email_sent", { ns: "common" }));
     }
   }, [isSuccess]);
 

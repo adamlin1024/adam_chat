@@ -10,7 +10,7 @@ import { updateSelectMessages } from "@/app/slices/ui";
 import { ChatContext } from "@/types/common";
 import useFavMessage from "@/hooks/useFavMessage";
 import useSendMessage from "@/hooks/useSendMessage";
-import IconBookmark from "@/assets/icons/bookmark.add.svg";
+import IconBookmark from "@/assets/icons/bookmark.svg";
 import IconDelete from "@/assets/icons/delete.svg";
 import IconEdit from "@/assets/icons/edit.svg";
 import IconForward from "@/assets/icons/forward.svg";
@@ -54,7 +54,7 @@ const Commands: FC<Props> = ({
     ForwardModal
   } = useMessageOperation({ mid, context, contextId });
   const { setReplying } = useSendMessage({ context, to: contextId });
-  const { addFavorite, isFavorited } = useFavMessage({
+  const { addFavorite, isFavorited, getFavoriteId, removeFavorite } = useFavMessage({
     cid: context == "channel" ? contextId : null
   });
   const dispatch = useDispatch();
@@ -78,20 +78,22 @@ const Commands: FC<Props> = ({
     hideAll();
     unPin(mid);
   };
-  const handleAddFav = async () => {
+  const handleToggleFav = async () => {
     hideAll();
-    const faved = isFavorited(mid);
-    if (faved) {
-      toast.success("Favorited!");
+    const favId = getFavoriteId(mid);
+    if (favId) {
+      removeFavorite(favId);
+      toast.success(t("tip.fav_removed"));
       return;
     }
     const added = await addFavorite(mid);
     if (added) {
-      toast.success("Added Favorites!");
+      toast.success(t("tip.fav_added"));
     } else {
-      toast.error("Added Favorites Failed!");
+      toast.error(t("tip.fav_failed"));
     }
   };
+  const faved = isFavorited(mid);
   const cmdClass = `flex h-9 w-9 cursor-pointer items-center justify-center rounded-sm border border-border bg-bg-app hover:border-border-strong hover:text-fg-primary text-fg-subtle transition-colors`;
   return (
     <>
@@ -132,9 +134,9 @@ const Commands: FC<Props> = ({
             </Tooltip>
           </li>
         )}
-        <li className={cmdClass} onClick={handleAddFav}>
-          <Tooltip placement="top" tip={t("action.add_to_fav")}>
-            <IconBookmark className="w-4.5 h-4.5 fill-fg-subtle" />
+        <li className={cmdClass} onClick={handleToggleFav}>
+          <Tooltip placement="top" tip={faved ? t("action.remove_from_fav") : t("action.add_to_fav")}>
+            <IconBookmark className={clsx("w-4.5 h-4.5", faved ? "fill-accent" : "fill-fg-subtle")} />
           </Tooltip>
         </li>
         <Tippy
