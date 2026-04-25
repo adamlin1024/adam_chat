@@ -251,15 +251,15 @@
       padding-top: env(safe-area-inset-top, 0px);
       box-sizing: border-box;
     }
-    /* iOS safari — use --app-height set by visualViewport JS below */
+    /* AB test step 6：body 高度從 visualViewport-tracked --app-height 改成 100dvh */
     @supports (-webkit-touch-callout: none) {
       body {
         position: fixed;
         width: 100%;
-        height: var(--app-height, 100svh);
+        height: 100dvh;
       }
       .h-screen {
-        height: var(--app-height, 100svh) !important;
+        height: 100dvh !important;
         overflow: auto;
       }
     }
