@@ -17,7 +17,11 @@ import {
   saveDriveState,
   type DriveSavedFile
 } from "@/utils/google-drive/state";
-import { getStoredToken, type PickedFolder } from "@/utils/google-drive";
+import {
+  deleteDriveFile,
+  getStoredToken,
+  type PickedFolder
+} from "@/utils/google-drive";
 
 const FOLDER_PREF_KEY = "drive_default_folder";
 const BROADCAST_CHANNEL = "adam-chat-drive";
@@ -146,11 +150,30 @@ export function useDriveSavedState() {
     [folder?.id, drive.savedFiles, dispatch, persistTo]
   );
 
+  /**
+   * 移除一筆儲存紀錄。
+   * 預設同時刪除 Drive 上的實體檔案（deleteFile=true）。
+   * 若只想清掉紀錄不動 Drive，傳 deleteFile=false。
+   */
   const unmarkSaved = useCallback(
-    async (fileKey: string) => {
+    async (fileKey: string, opts: { deleteFile?: boolean } = {}) => {
+      const deleteFile = opts.deleteFile ?? true;
       if (!folder?.id) return;
-      if (!drive.savedFiles[fileKey]) return;
       const prevInfo = drive.savedFiles[fileKey];
+      if (!prevInfo) return;
+
+      // 1. 先刪 Drive 上的實體檔（失敗中斷 — 因為使用者預期是「真的刪掉」）
+      if (deleteFile) {
+        try {
+          await deleteDriveFile(prevInfo.driveFileId);
+        } catch (e: any) {
+          // 404（檔案在 Drive 已被使用者手動刪掉）視為成功，繼續清紀錄
+          const msg = String(e?.message ?? e);
+          if (!/\b404\b/.test(msg)) throw e;
+        }
+      }
+
+      // 2. 再清掉本地紀錄 + 同步到 Drive 狀態檔
       dispatch(removeDriveSavedFile(fileKey));
       channel?.postMessage({ type: "unsaved", fileKey } as BroadcastMsg);
       const nextMap = { ...drive.savedFiles };
@@ -158,7 +181,7 @@ export function useDriveSavedState() {
       try {
         await persistTo(folder.id, nextMap);
       } catch (e) {
-        // 失敗回滾
+        // 狀態檔回寫失敗 — 紀錄回滾，但 Drive 檔案已刪
         dispatch(addDriveSavedFile({ fileKey, info: prevInfo }));
         channel?.postMessage({
           type: "saved",

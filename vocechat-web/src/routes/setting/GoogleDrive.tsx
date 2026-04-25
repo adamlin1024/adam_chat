@@ -69,13 +69,19 @@ export default function GoogleDriveSetting() {
     toast.success("已清除本機 token");
   };
 
-  const onUnmark = async (key: string) => {
+  const onUnmark = async (key: string, fileName: string) => {
+    if (
+      !window.confirm(
+        `刪除「${fileName}」？\n\n這會同時刪除 Drive 上的檔案，無法還原。`
+      )
+    )
+      return;
     setBusy(true);
     try {
       await unmarkSaved(key);
-      toast.success("已從紀錄中移除");
+      toast.success("已刪除檔案與紀錄");
     } catch (e: any) {
-      toast.error(`移除失敗：${e.message ?? e}`);
+      toast.error(`刪除失敗：${e.message ?? e}`);
     } finally {
       setBusy(false);
     }
@@ -225,10 +231,10 @@ export default function GoogleDriveSetting() {
                     )}
                     <button
                       className="px-2 py-1 rounded text-fg-muted hover:text-danger hover:bg-bg-hover transition-colors disabled:opacity-40"
-                      onClick={() => onUnmark(key)}
+                      onClick={() => onUnmark(key, info.fileName)}
                       disabled={busy}
                     >
-                      移除
+                      刪除
                     </button>
                   </div>
                 </li>

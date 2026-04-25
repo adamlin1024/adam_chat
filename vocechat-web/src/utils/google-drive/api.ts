@@ -22,10 +22,16 @@ export async function driveFetch<T = any>(
     const text = await res.text();
     throw new Error(`Drive API ${res.status}: ${text}`);
   }
-  // Some endpoints return text/plain when alt=media for JSON files
+  // 204 No Content（DELETE 成功時）→ 回傳 null
+  if (res.status === 204) return null as unknown as T;
   const ct = res.headers.get("content-type") || "";
   if (ct.includes("application/json")) {
     return (await res.json()) as T;
   }
   return (await res.text()) as unknown as T;
+}
+
+/** 刪除 Drive 上指定的檔案（必須是本 App 上傳的，drive.file scope 限制） */
+export async function deleteDriveFile(fileId: string): Promise<void> {
+  await driveFetch(`/drive/v3/files/${fileId}`, { method: "DELETE" });
 }

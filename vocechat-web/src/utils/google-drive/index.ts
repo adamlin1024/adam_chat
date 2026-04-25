@@ -1,4 +1,5 @@
 export { isDriveConfigured } from "./config";
+export { deleteDriveFile } from "./api";
 export {
   requestAccessToken,
   getStoredToken,
