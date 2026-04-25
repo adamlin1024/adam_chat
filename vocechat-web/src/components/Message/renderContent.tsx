@@ -61,7 +61,7 @@ const renderContent = ({
             <img
               src={stickerUrl}
               alt="sticker"
-              className="w-[150px] h-[150px] md:w-[170px] md:h-[170px] object-contain select-none pointer-events-none"
+              className="w-[170px] h-[170px] object-contain select-none pointer-events-none"
               draggable={false}
             />
           );

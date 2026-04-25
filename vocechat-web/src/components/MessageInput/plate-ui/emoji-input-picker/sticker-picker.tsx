@@ -99,8 +99,9 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
         tabIndex={-1}
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => handleTap(pack, id)}
+        style={{ width: "clamp(64px, 23%, 116px)" }}
         className={clsx(
-          "flex-center w-[96px] h-[96px] shrink-0 rounded transition-colors p-1",
+          "flex-center aspect-square shrink-0 rounded transition-colors p-1",
           isPreview
             ? "bg-bg-surface ring-1 ring-accent/60"
             : "hover:bg-bg-surface"
@@ -110,7 +111,7 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
           src={thumbUrl}
           alt=""
           loading="lazy"
-          className="max-w-full max-h-full object-contain"
+          className="w-full h-full object-contain"
         />
       </button>
     );
