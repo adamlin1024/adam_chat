@@ -1,6 +1,31 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
+/** 貼圖縮圖 + 載入時顯示 spinner，避免清快取後看到一格格慢慢補圖 */
+function StickerThumb({ src }: { src: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    <div className="relative w-full h-full">
+      {!loaded && (
+        <div className="absolute inset-0 flex-center">
+          <span className="block w-4 h-4 rounded-full border-2 border-fg-subtle/40 border-t-fg-subtle animate-spin" />
+        </div>
+      )}
+      <img
+        src={src}
+        alt=""
+        loading="lazy"
+        onLoad={() => setLoaded(true)}
+        onError={() => setLoaded(true)}
+        className={clsx(
+          "w-full h-full object-contain transition-opacity duration-200",
+          loaded ? "opacity-100" : "opacity-0"
+        )}
+      />
+    </div>
+  );
+}
+
 export type StickerPack = {
   id: string;
   name: string;
@@ -111,12 +136,7 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
             : "hover:bg-bg-surface"
         )}
       >
-        <img
-          src={thumbUrl}
-          alt=""
-          loading="lazy"
-          className="w-full h-full object-contain"
-        />
+        <StickerThumb src={thumbUrl} />
       </button>
     );
   };
