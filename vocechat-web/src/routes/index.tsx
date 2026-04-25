@@ -19,6 +19,7 @@ import InviteInMobile from "./reg/InviteInMobile";
 import usePrefetchData from "@/hooks/usePrefetchData";
 
 import HomePage from "./home";
+import UpdateBanner from "@/components/UpdateBanner";
 
 const ChatPage = lazy(() => import("./chat"));
 const UsersPage = lazy(() => import("./users"));
@@ -58,6 +59,7 @@ const PageRoutes = () => {
   }, [online]);
   return (
     <HashRouter>
+      <UpdateBanner />
       <Routes>
         <Route
           path="/guest_login"

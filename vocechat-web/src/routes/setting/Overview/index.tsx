@@ -24,6 +24,7 @@ import WebClientAutoUpdate from "./WebClientAutoUpdate";
 import DMEnable from "./DMEnable";
 import AddFriendEnable from "./AddFriendEnable";
 import SearchUserEnable from "./SearchUserEnable";
+import ForceUpdate from "./ForceUpdate";
 
 export default function Overview() {
   const { t } = useTranslation("setting");
@@ -74,6 +75,8 @@ export default function Overview() {
       {/* 新消息声音 */}
       <MessageSound />
       {isAdmin && <OnlyAdminCreateGroup />}
+      {/* 一般使用者也可手動觸發前端強制更新（清快取 + 重整） */}
+      <ForceUpdate />
     </div>
   );
 }

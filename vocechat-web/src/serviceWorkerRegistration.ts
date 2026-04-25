@@ -1,14 +1,7 @@
-// This optional code is used to register a service worker.
-// register() is not called by default.
-
-// This lets the app load faster on subsequent visits in production, and gives
-// it offline capabilities. However, it also means that developers (and users)
-// will only see deployed updates on subsequent visits to a page, after all the
-// existing tabs open on the page have been closed, since previously cached
-// resources are updated in the background.
-
-// To learn more about the benefits of this model and instructions on how to
-// opt-in, read https://cra.link/PWA
+// Service Worker registration with explicit update flow:
+// - 偵測到新版本 → 透過 'app-update-ready' window event 通知 UI
+// - 使用者點下橫幅後 applyUpdate() 把 SW skip waiting，然後 controllerchange 觸發 reload
+// - 不再自動 skipWaiting（避免使用者操作中無預警重整）
 
 interface Config {
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
@@ -17,99 +10,134 @@ interface Config {
 
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
-    // [::1] is the IPv6 localhost address.
     window.location.hostname === "[::1]" ||
-    // 127.0.0.0/8 are considered localhost for IPv4.
     window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
 
-export function register(config: Config) {
-  if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
-    // Skip SW on localhost — it causes reload loops and isn't needed for local testing.
-    if (isLocalhost) return;
+const UPDATE_EVENT = "app-update-ready";
 
-    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
-    if (publicUrl.origin !== window.location.origin) {
-      return;
-    }
+let pendingRegistration: ServiceWorkerRegistration | null = null;
+let controllerChangeWired = false;
+let updateCheckInterval: ReturnType<typeof setInterval> | null = null;
 
-    window.addEventListener("load", () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-      registerValidSW(swUrl, config);
-    });
-  }
+/** 設置 controllerchange listener：等使用者觸發 SKIP_WAITING 後，這裡會 reload 整頁 */
+function wireControllerChange() {
+  if (controllerChangeWired) return;
+  controllerChangeWired = true;
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
+
+function notifyUpdateReady(registration: ServiceWorkerRegistration) {
+  pendingRegistration = registration;
+  window.dispatchEvent(new CustomEvent(UPDATE_EVENT, { detail: registration }));
+}
+
+export function register(config: Config = {}) {
+  if (process.env.NODE_ENV !== "production") return;
+  if (!("serviceWorker" in navigator)) return;
+  if (isLocalhost) return;
+
+  const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
+  if (publicUrl.origin !== window.location.origin) return;
+
+  window.addEventListener("load", () => {
+    const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+    registerValidSW(swUrl, config);
+  });
 }
 
 function registerValidSW(swUrl: string, config: Config) {
   if (!navigator.serviceWorker) return;
+  wireControllerChange();
 
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      // If a new SW is already waiting, activate it immediately.
-      if (registration.waiting) {
-        registration.waiting.postMessage({ type: "SKIP_WAITING" });
-        return;
+      // 如果一開啟就已經有 waiting SW，立即提示
+      if (registration.waiting && navigator.serviceWorker.controller) {
+        notifyUpdateReady(registration);
+        config.onUpdate?.(registration);
       }
 
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
-        if (installingWorker == null) return;
+        if (!installingWorker) return;
         installingWorker.onstatechange = () => {
           if (installingWorker.state === "installed") {
             if (navigator.serviceWorker.controller) {
-              // New SW ready — activate it, controllerchange will handle the reload.
-              installingWorker.postMessage({ type: "SKIP_WAITING" });
-            } else if (config && config.onSuccess) {
-              config.onSuccess(registration);
+              // 已經有舊 SW 在跑，新 SW 進入 waiting → 通知 UI
+              notifyUpdateReady(registration);
+              config.onUpdate?.(registration);
+            } else {
+              // 第一次安裝
+              config.onSuccess?.(registration);
             }
           }
         };
       };
 
+      // 啟動時主動檢一次
       registration.update().catch(() => {});
+
+      // 每小時自動檢查一次
+      if (updateCheckInterval) clearInterval(updateCheckInterval);
+      updateCheckInterval = setInterval(
+        () => registration.update().catch(() => {}),
+        60 * 60 * 1000
+      );
+
+      // 視窗重新獲得焦點時也檢查
+      window.addEventListener("focus", () => {
+        registration.update().catch(() => {});
+      });
     })
     .catch((error) => {
-      console.error("Error during service worker registration:", error);
+      console.error("[SW] Registration failed:", error);
     });
 }
 
-function checkValidServiceWorker(swUrl: string, config: Config) {
-  // Check if the service worker can be found. If it can't reload the page.
-  fetch(swUrl, {
-    headers: { "Service-Worker": "script" }
-  })
-    .then((response) => {
-      // Ensure service worker exists, and that we really are getting a JS file.
-      const contentType = response.headers.get("content-type");
-      if (
-        response.status === 404 ||
-        (contentType != null && contentType.indexOf("javascript") === -1)
-      ) {
-        // No service worker found. Probably a different app. Reload the page.
-        navigator.serviceWorker.ready.then((registration) => {
-          registration.unregister().then(() => {
-            window.location.reload();
-          });
-        });
-      } else {
-        // Service worker found. Proceed as normal.
-        registerValidSW(swUrl, config);
-      }
-    })
-    .catch(() => {
-      console.log("No internet connection found. App is running in offline mode.");
-    });
+/** 套用 pending 的更新（SKIP_WAITING + controllerchange 會觸發 reload） */
+export function applyUpdate() {
+  const reg = pendingRegistration;
+  if (!reg?.waiting) {
+    // 沒有 pending 也直接 reload，至少能重新拉 HTML
+    window.location.reload();
+    return;
+  }
+  reg.waiting.postMessage({ type: "SKIP_WAITING" });
+}
+
+/**
+ * 強制清除所有 cache + 註銷 SW + 重新載入。
+ * 給使用者「卡舊版」時當 escape hatch 用。
+ */
+export async function forceClearAndReload() {
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration();
+    if (reg) await reg.unregister();
+  } catch {
+    /* ignore */
+  }
+  try {
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    }
+  } catch {
+    /* ignore */
+  }
+  window.location.reload();
 }
 
 export function unregister() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.ready
-      .then((registration) => {
-        registration.unregister();
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+      .then((registration) => registration.unregister())
+      .catch((error) => console.error(error.message));
   }
 }
