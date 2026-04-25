@@ -49,32 +49,28 @@
 
 文件 A 區有 5 條無條件觸發規則（含 Trigger 5「新增元件必須加進 C 元件表 + 用 token 色」）、B 區規則參考、**C 區元件表**、D 區回歸清單。**新元件落地的同一個 commit 就要把 C 表更新好，否則視同未完成。**
 
-### i18n 一致性規則（強制）
+### 語系一致性規則
 
-任何動到 UI 檔（`.tsx` / `.ts` / `.jsx`）時，必須**自掃寫死的非中文字串**（包括 className 內的 placeholder、children 文字、`toast.success/error`、`title`、`alt`、`aria-label`、inline JSX 文字節點等）。
+**核心原則**：使用者目前是什麼語系，畫面上就只該看到那個語系的文字（除非該位置明確設計為雙語並列）。中文語系不該出現英文寫死字串、英文語系不該出現中文寫死字串。
 
-**自掃步驟**：
-1. 看到寫死英文 / 簡中字串 → 改成 `t("key", { ns: "..." })`
-2. 加 key 到 `vocechat-web/public/locales/zh-TW/{ns}.json`（繁中）
-3. 同時加到 `vocechat-web/public/locales/en/{ns}.json`（英文 fallback）
-4. 其他語系（jp / fr / de 等）會自動 fallback 到 en，不必每個語系都補
+**觸發條件（觀察型，不是主動全掃）**：
+在實作 / 閱讀 / 改動 UI 檔的過程中，若**看到**寫死的非當前語系字串（典型形式：`toast.success("Copied!")`、`placeholder="Edit Message"`、`<span>Replying to ...`、簡中如「逐条转发」等），需：
+1. **先停下來回報使用者**，列出位置 + 違規字串 + 建議修法（不要直接動手改）
+2. **等使用者指示**才修正
+3. 修正方式：抽成 `t("key", { ns: "..." })` + 在對應語系檔補 key（zh-TW + en，其他語系會 fallback 到 en）
 
-**locale 檔分類原則**：
-- `common.json`：通用 action / placeholder / tip（複製、轉傳、收藏成功等 toast）
-- `chat.json`：聊天相關（訊息、頻道、回覆、編輯、貼圖、語音等）
-- `setting.json` / `auth.json` / `member.json` / `file.json` / `widget.json` / `welcome.json` / `fav.json`：對應領域
+**locale 檔位置與分類**：
+- 路徑：`vocechat-web/public/locales/{lang}/{ns}.json`，主要語系是 `zh-TW` 與 `en`
+- 分類原則：
+  - `common.json` — 通用 action / placeholder / tip（複製、轉傳、收藏成功等）
+  - `chat.json` — 聊天相關（訊息、頻道、回覆、編輯、貼圖、語音等）
+  - `setting.json` / `auth.json` / `member.json` / `file.json` / `widget.json` / `welcome.json` / `fav.json` — 對應領域
+- 加新 key 必須兩邊（zh-TW 與 en）同時補；其他語系自動 fallback 到 en。
 
-**違規典型**：
-- `toast.success("Copied!")` ❌ → `toast.success(t("tip.copied"))` ✅
-- `placeholder="Edit Message"` ❌ → `placeholder={t("edit_msg_placeholder", { ns: "chat" })}` ✅
-- `<span>Replying to {name}</span>` ❌ → 用 `<Trans>` 配 `<0>{{name}}</0>` 帶粗體插值 ✅
-
-**唯一例外**（不需 i18n）：
+**例外**（保留原樣，無需修正）：
 - 商品名 / 版本號 / 程式碼 snippet（如 `localStorage.theme`）
-- 明確設計為**雙語並列**的元素（要在註解或 PR 描述標明）
-- 第三方 API 回傳的英文錯誤訊息（顯示時可保留）
-
-**動到任何 UI 檔時自掃英文 = Trigger 1 同等強度的規則**：發現 = 當下順手改、不寫 TODO、不分批。
+- 明確設計為雙語並列的位置（要在註解標明）
+- 第三方 API 回傳的英文錯誤訊息
 
 ### SVG 上色規則
 - stroke-based SVG（如 `arrow.left.svg`）：父層用 `stroke-X` token，**禁止用 `fill-`**
