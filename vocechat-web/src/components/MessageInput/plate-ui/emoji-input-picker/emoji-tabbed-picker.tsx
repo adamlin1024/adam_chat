@@ -72,7 +72,7 @@ export function EmojiTabbedPicker({
   return (
     <div className="flex flex-col w-full h-full">
       {/* Tabs */}
-      <div className="flex items-center gap-0.5 px-2 border-b border-border-subtle shrink-0 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-0.5 px-2 py-1 shrink-0 overflow-x-auto no-scrollbar">
         {modeToggle}
         {/* Recent tab */}
         <button

@@ -40,15 +40,9 @@
 
 ## UI 慣例
 
-### 色彩系統（強制）
+### 色彩系統
 
-**唯一資料來源**：`UI_style/COLOR_SYSTEM.md`
-
-- **token 入口**：`vocechat-web/src/assets/index.css` 的 `.dark` / `.light` 區塊。改色只改這裡。
-- **元件層**：只能用 token（`bg-bg-app`、`text-fg-primary`、`border-border`、`bg-accent`、`text-accent-on`、`bg-bg-hover`、`bg-online/15`、`text-danger` 等）。
-- **禁用清單**：`text-white` / `text-black` / `bg-white` / `bg-black`、`text-zinc-N` / `bg-zinc-N`、其他 Tailwind 預設調色盤（teal / red / green / yellow / blue / primary 等）、`bg-[#xxx]` 寫死 hex、inline style 寫 hex、`dark:` 前綴覆寫（token 已自動切換）。
-- **唯一例外**：`bg-danger-bg text-white`（紅底白字兩主題皆可讀）、插畫類 SVG 內的固定資產色。
-- **改色 SOP**：拿到新色票 preview → 對照 token 名稱 → 改 `index.css` 的 `.dark` / `.light` hex → 驗證。**不需動任何元件檔。**
+**動 UI / 改色 / 動色票前必讀**：`UI_style/COLOR_SYSTEM.md`（token 對照、禁用清單、變數格式、回歸驗證清單一次到位）。
 
 ### SVG 上色規則
 - stroke-based SVG（如 `arrow.left.svg`）：用 `stroke-` 或 `dark:stroke-white`，**不可用 `fill-`**

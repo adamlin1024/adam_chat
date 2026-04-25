@@ -36,7 +36,7 @@ const NewMessageBottomTip = ({ context, id, scrollToBottom }: Props) => {
 
   const style =
     unreads > 0
-      ? { background: "var(--c-accent)", color: "var(--c-accent-on)" }
+      ? { background: "rgb(var(--c-accent))", color: "rgb(var(--c-accent-on))" }
       : { background: "var(--c-accent-bg)", border: "1px solid var(--c-accent-border)" };
 
   return (

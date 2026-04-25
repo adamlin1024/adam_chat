@@ -4,73 +4,78 @@
 
 :root { --msg-scale: 1; }
 
-/* ── 設計系統色票（深色 / 淺色 雙主題）── */
+/* ── 設計系統色票（深色 / 淺色 雙主題）──
+ * 基礎色用「空格分隔 RGB 三元組」格式，搭配 tailwind.config 的
+ * `rgb(var(--c-x) / <alpha-value>)` 包裝，讓 `bg-accent/20`、`bg-online/15`
+ * 等 Tailwind alpha 修飾子能正常運作。
+ * 預先疊好 alpha 的 token（overlay、accent-bg、accent-border）保持完整 rgba 字串。
+ */
 .dark {
-  --c-bg-app:      #08090b;
-  --c-bg-sidebar:  #0c0d10;
-  --c-bg-canvas:   #0a0b0e;
-  --c-bg-surface:  #141519;
-  --c-bg-elevated: #0c0d10;
+  --c-bg-app:      8 9 11;        /* #08090b */
+  --c-bg-sidebar:  12 13 16;      /* #0c0d10 */
+  --c-bg-canvas:   10 11 14;      /* #0a0b0e */
+  --c-bg-surface:  20 21 25;      /* #141519 */
+  --c-bg-elevated: 12 13 16;      /* #0c0d10 */
+  --c-bg-hover:    15 16 20;      /* #0f1014 */
   --c-bg-overlay:  rgba(0, 0, 0, 0.7);
-  --c-bg-hover:    #0f1014;
 
-  --c-border-subtle:  #18191d;
-  --c-border-default: #27272a;
-  --c-border-strong:  #3f3f46;
+  --c-border-subtle:  24 25 29;   /* #18191d */
+  --c-border-default: 39 39 42;   /* #27272a */
+  --c-border-strong:  63 63 70;   /* #3f3f46 */
 
-  --c-fg-primary:   #f4f4f5;
-  --c-fg-body:      #d4d4d8;
-  --c-fg-secondary: #a1a1aa;
-  --c-fg-muted:     #71717a;
-  --c-fg-subtle:    #52525b;
-  --c-fg-disabled:  #3f3f46;
+  --c-fg-primary:   244 244 245;  /* #f4f4f5 */
+  --c-fg-body:      212 212 216;  /* #d4d4d8 */
+  --c-fg-secondary: 161 161 170;  /* #a1a1aa */
+  --c-fg-muted:     113 113 122;  /* #71717a */
+  --c-fg-subtle:    82 82 91;     /* #52525b */
+  --c-fg-disabled:  63 63 70;     /* #3f3f46 */
 
-  --c-accent:         #5eead4;
-  --c-accent-hover:   #2dd4bf;
-  --c-accent-pressed: #14b8a6;
-  --c-accent-on:      #042f2e;
+  --c-accent:         94 234 212; /* #5eead4 */
+  --c-accent-hover:   45 212 191; /* #2dd4bf */
+  --c-accent-pressed: 20 184 166; /* #14b8a6 */
+  --c-accent-on:      4 47 46;    /* #042f2e */
   --c-accent-bg:      rgba(94, 234, 212, 0.08);
   --c-accent-border:  rgba(94, 234, 212, 0.19);
 
-  --c-online:  #4ade80;
-  --c-idle:    #fbbf24;
-  --c-offline: #52525b;
-  --c-danger:    #f87171;
-  --c-danger-bg: #ef4444;
+  --c-online:    74 222 128;      /* #4ade80 */
+  --c-idle:      251 191 36;      /* #fbbf24 */
+  --c-offline:   82 82 91;        /* #52525b */
+  --c-danger:    248 113 113;     /* #f87171 */
+  --c-danger-bg: 239 68 68;       /* #ef4444 */
 }
 
 .light {
-  --c-bg-app:      #f2efe9;
-  --c-bg-sidebar:  #f7f5f1;
-  --c-bg-canvas:   #f5f2ec;
-  --c-bg-surface:  #e6e2db;
-  --c-bg-elevated: #f7f5f1;
+  --c-bg-app:      242 239 233;   /* #f2efe9 */
+  --c-bg-sidebar:  247 245 241;   /* #f7f5f1 */
+  --c-bg-canvas:   245 242 236;   /* #f5f2ec */
+  --c-bg-surface:  230 226 219;   /* #e6e2db */
+  --c-bg-elevated: 247 245 241;   /* #f7f5f1 */
+  --c-bg-hover:    237 233 227;   /* #ede9e3 */
   --c-bg-overlay:  rgba(0, 0, 0, 0.4);
-  --c-bg-hover:    #ede9e3;
 
-  --c-border-subtle:  #dbd7d0;
-  --c-border-default: #ccc8c1;
-  --c-border-strong:  #9e9a93;
+  --c-border-subtle:  219 215 208; /* #dbd7d0 */
+  --c-border-default: 204 200 193; /* #ccc8c1 */
+  --c-border-strong:  158 154 147; /* #9e9a93 */
 
-  --c-fg-primary:   #1c1a17;
-  --c-fg-body:      #3d3a35;
-  --c-fg-secondary: #6b6865;
-  --c-fg-muted:     #888480;
-  --c-fg-subtle:    #a09c96;
-  --c-fg-disabled:  #9e9a93;
+  --c-fg-primary:   28 26 23;     /* #1c1a17 */
+  --c-fg-body:      61 58 53;     /* #3d3a35 */
+  --c-fg-secondary: 107 104 101;  /* #6b6865 */
+  --c-fg-muted:     136 132 128;  /* #888480 */
+  --c-fg-subtle:    160 156 150;  /* #a09c96 */
+  --c-fg-disabled:  158 154 147;  /* #9e9a93 */
 
-  --c-accent:         #0d9488;
-  --c-accent-hover:   #0f766e;
-  --c-accent-pressed: #0e6b63;
-  --c-accent-on:      #ffffff;
+  --c-accent:         13 148 136; /* #0d9488 */
+  --c-accent-hover:   15 118 110; /* #0f766e */
+  --c-accent-pressed: 14 107 99;  /* #0e6b63 */
+  --c-accent-on:      255 255 255;/* #ffffff */
   --c-accent-bg:      rgba(13, 148, 136, 0.08);
   --c-accent-border:  rgba(13, 148, 136, 0.19);
 
-  --c-online:  #4ade80;
-  --c-idle:    #fbbf24;
-  --c-offline: #a09c96;
-  --c-danger:    #f87171;
-  --c-danger-bg: #ef4444;
+  --c-online:    74 222 128;      /* #4ade80 */
+  --c-idle:      251 191 36;      /* #fbbf24 */
+  --c-offline:   160 156 150;     /* #a09c96 */
+  --c-danger:    248 113 113;     /* #f87171 */
+  --c-danger-bg: 239 68 68;       /* #ef4444 */
 }
 
 @layer utilities {
@@ -142,7 +147,7 @@
     transform: scale(0);
     transform-origin: bottom left;
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 10px 10px var(--c-accent);
+    box-shadow: inset 10px 10px rgb(var(--c-accent));
   }
   .checkbox:checked::before {
     transform: scale(1);
@@ -160,7 +165,7 @@
   .md-editor .toastui-editor-defaultUI {
     border-bottom: none;
     border-radius: 0;
-    border-top: 1px solid var(--c-border-default);
+    border-top: 1px solid rgb(var(--c-border-default));
     border-left: none;
     border-right: none;
   }
@@ -235,7 +240,7 @@
     font-weight: 400;
     font-size: 14px;
     line-height: 20px;
-    color: var(--c-fg-secondary);
+    color: rgb(var(--c-fg-secondary));
   }
   .setting-container .tip {
     display: flex;
@@ -246,7 +251,7 @@
     font-weight: 600;
     font-size: 14px;
     line-height: 20px;
-    color: var(--c-accent);
+    color: rgb(var(--c-accent));
   }
   /* context menu */
   .context-menu {
@@ -254,8 +259,8 @@
     flex-direction: column;
     gap: 2px;
     padding: 4px;
-    background-color: var(--c-bg-elevated);
-    border: 1px solid var(--c-border-default);
+    background-color: rgb(var(--c-bg-elevated));
+    border: 1px solid rgb(var(--c-border-default));
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     border-radius: 8px;
     min-width: 200px;
@@ -273,7 +278,7 @@
     font-weight: 500;
     font-size: 14px;
     line-height: 1.5;
-    color: var(--c-fg-secondary);
+    color: rgb(var(--c-fg-secondary));
     transition: background-color 200ms, color 200ms;
   }
   .context-menu .item .icon {
@@ -284,11 +289,11 @@
     justify-content: space-between;
   }
   .context-menu .item:hover {
-    background-color: var(--c-bg-surface);
-    color: var(--c-fg-primary);
+    background-color: rgb(var(--c-bg-surface));
+    color: rgb(var(--c-fg-primary));
   }
   .context-menu .item:hover svg {
-    fill: var(--c-fg-primary);
+    fill: rgb(var(--c-fg-primary));
   }
   .context-menu .item.bottom_line {
     margin-bottom: 9px;
@@ -303,17 +308,17 @@
     box-sizing: border-box;
     width: calc(88%);
     height: 1px;
-    background-color: var(--c-border-default);
+    background-color: rgb(var(--c-border-default));
   }
   .context-menu .item.danger {
-    color: var(--c-danger);
+    color: rgb(var(--c-danger));
   }
   .context-menu .item.danger:hover {
-    background-color: var(--c-danger-bg);
+    background-color: rgb(var(--c-danger-bg));
     color: #fff;
   }
   .context-menu .item[data-disabled="true"] {
-    color: var(--c-fg-disabled);
+    color: rgb(var(--c-fg-disabled));
     cursor: not-allowed;
   }
   /* text fill transparent */
@@ -325,7 +330,7 @@
 }
 /* 全局設定滾動條 */
 ::-webkit-scrollbar-thumb {
-  background: var(--c-border-default);
+  background: rgb(var(--c-border-default));
   border-radius: 4px;
 }
 ::-webkit-scrollbar-corner {
@@ -337,7 +342,7 @@
   height: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--c-border-strong);
+  background: rgb(var(--c-border-strong));
 }
 /* markdown overrides */
 #MARKDOWN_CONTAINER .toastui-editor-contents {
@@ -415,7 +420,7 @@
   align-items: flex-start;
 }
 .send.markdown {
-  background-color: var(--c-bg-elevated) !important;
+  background-color: rgb(var(--c-bg-elevated)) !important;
 }
 
 /* remove focus border */
@@ -453,7 +458,7 @@ input[type="number"]::-webkit-outer-spin-button {
   line-height: 18px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--c-fg-secondary);
+  color: rgb(var(--c-fg-secondary));
   content: attr(data-group-title);
   position: absolute;
   left: 8px;

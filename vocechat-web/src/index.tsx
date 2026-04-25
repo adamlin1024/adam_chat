@@ -52,7 +52,7 @@ document.addEventListener("visibilitychange", () => {
     if (!document.getElementById("ios-snap-cover")) {
       const cover = document.createElement("div");
       cover.id = "ios-snap-cover";
-      cover.style.cssText = "position:fixed;inset:0;background:var(--c-bg-app);z-index:99998;pointer-events:none;";
+      cover.style.cssText = "position:fixed;inset:0;background:rgb(var(--c-bg-app));z-index:99998;pointer-events:none;";
       document.body.appendChild(cover);
     }
   } else {
@@ -75,9 +75,9 @@ root.render(
     <Toaster
       toastOptions={{
         style: {
-          background: "var(--c-bg-elevated)",
-          color: "var(--c-fg-body)",
-          border: "1px solid var(--c-border-default)",
+          background: "rgb(var(--c-bg-elevated))",
+          color: "rgb(var(--c-fg-body))",
+          border: "1px solid rgb(var(--c-border-default))",
           fontSize: "12.5px",
           fontFamily: "Inter, -apple-system, sans-serif",
         }

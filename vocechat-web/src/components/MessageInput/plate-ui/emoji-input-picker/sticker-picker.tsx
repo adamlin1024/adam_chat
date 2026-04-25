@@ -100,9 +100,9 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => handleTap(pack, id)}
         className={clsx(
-          "flex-center aspect-square rounded transition-colors p-1",
+          "flex-center w-[96px] h-[96px] shrink-0 rounded transition-colors p-1",
           isPreview
-            ? "bg-accent/15 ring-2 ring-accent"
+            ? "bg-bg-surface ring-1 ring-accent/60"
             : "hover:bg-bg-surface"
         )}
       >
@@ -119,7 +119,7 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
   return (
     <div className="flex flex-col w-full h-full">
       {/* Pack tabs */}
-      <div className="flex items-center gap-0.5 px-2 border-b border-border-subtle shrink-0 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-0.5 px-2 py-1 shrink-0 overflow-x-auto no-scrollbar">
         {modeToggle}
         {/* Recent tab */}
         <button
@@ -170,12 +170,12 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
               尚未使用過貼圖
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-1">
+            <div className="flex flex-wrap gap-1">
               {validRecents.map((r) => renderTile(r.pack, r.id))}
             </div>
           )
         ) : activePack ? (
-          <div className="grid grid-cols-4 gap-1">
+          <div className="flex flex-wrap gap-1">
             {activePack.stickers.map((s) => renderTile(activePack.id, s.id))}
           </div>
         ) : null}

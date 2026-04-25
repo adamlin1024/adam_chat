@@ -47,7 +47,7 @@ module.exports = {
       boxShadow: {
         overlay:          "0 20px 50px rgba(0, 0, 0, 0.5)",
         dropdown:         "0 8px 24px rgba(0, 0, 0, 0.4)",
-        "inset-hairline": "inset 0 0 0 1px var(--c-border-default)",
+        "inset-hairline": "inset 0 0 0 1px rgb(var(--c-border-default))",
       },
       transitionDuration: {
         fast: "120ms",
@@ -55,43 +55,45 @@ module.exports = {
       },
       colors: {
         // ── 新設計系統（Linear 風格）──────────────
-        // hex 由 src/assets/index.css 中的 .dark / .light 定義
+        // 色票來自 src/assets/index.css 中的 .dark / .light（RGB 三元組格式）
+        // 包裝成 rgb(var() / <alpha-value>) 以支援 Tailwind 的 alpha 修飾子（如 bg-accent/20）
+        // overlay / accent.bg / accent.border 已預先疊好 alpha，直接用 var()
         bg: {
-          app:      "var(--c-bg-app)",
-          sidebar:  "var(--c-bg-sidebar)",
-          canvas:   "var(--c-bg-canvas)",
-          surface:  "var(--c-bg-surface)",
-          elevated: "var(--c-bg-elevated)",
+          app:      "rgb(var(--c-bg-app) / <alpha-value>)",
+          sidebar:  "rgb(var(--c-bg-sidebar) / <alpha-value>)",
+          canvas:   "rgb(var(--c-bg-canvas) / <alpha-value>)",
+          surface:  "rgb(var(--c-bg-surface) / <alpha-value>)",
+          elevated: "rgb(var(--c-bg-elevated) / <alpha-value>)",
+          hover:    "rgb(var(--c-bg-hover) / <alpha-value>)",
           overlay:  "var(--c-bg-overlay)",
-          hover:    "var(--c-bg-hover)",
         },
         border: {
-          subtle:  "var(--c-border-subtle)",
-          DEFAULT: "var(--c-border-default)",
-          strong:  "var(--c-border-strong)",
+          subtle:  "rgb(var(--c-border-subtle) / <alpha-value>)",
+          DEFAULT: "rgb(var(--c-border-default) / <alpha-value>)",
+          strong:  "rgb(var(--c-border-strong) / <alpha-value>)",
         },
         fg: {
-          primary:   "var(--c-fg-primary)",
-          body:      "var(--c-fg-body)",
-          secondary: "var(--c-fg-secondary)",
-          muted:     "var(--c-fg-muted)",
-          subtle:    "var(--c-fg-subtle)",
-          disabled:  "var(--c-fg-disabled)",
+          primary:   "rgb(var(--c-fg-primary) / <alpha-value>)",
+          body:      "rgb(var(--c-fg-body) / <alpha-value>)",
+          secondary: "rgb(var(--c-fg-secondary) / <alpha-value>)",
+          muted:     "rgb(var(--c-fg-muted) / <alpha-value>)",
+          subtle:    "rgb(var(--c-fg-subtle) / <alpha-value>)",
+          disabled:  "rgb(var(--c-fg-disabled) / <alpha-value>)",
         },
         accent: {
-          DEFAULT: "var(--c-accent)",
-          hover:   "var(--c-accent-hover)",
-          pressed: "var(--c-accent-pressed)",
-          on:      "var(--c-accent-on)",
+          DEFAULT: "rgb(var(--c-accent) / <alpha-value>)",
+          hover:   "rgb(var(--c-accent-hover) / <alpha-value>)",
+          pressed: "rgb(var(--c-accent-pressed) / <alpha-value>)",
+          on:      "rgb(var(--c-accent-on) / <alpha-value>)",
           bg:      "var(--c-accent-bg)",
           border:  "var(--c-accent-border)",
         },
-        online:  "var(--c-online)",
-        idle:    "var(--c-idle)",
-        offline: "var(--c-offline)",
+        online:  "rgb(var(--c-online) / <alpha-value>)",
+        idle:    "rgb(var(--c-idle) / <alpha-value>)",
+        offline: "rgb(var(--c-offline) / <alpha-value>)",
         danger: {
-          DEFAULT: "var(--c-danger)",
-          bg:      "var(--c-danger-bg)",
+          DEFAULT: "rgb(var(--c-danger) / <alpha-value>)",
+          bg:      "rgb(var(--c-danger-bg) / <alpha-value>)",
         },
         // ── 舊有 primary（保留相容）────────────────
         primary: {

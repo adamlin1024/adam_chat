@@ -189,7 +189,7 @@ export function ConfigVocespace() {
       <ConfigTip title={t("desc")} desc={`${t("sub_desc")}`} />
       <div className="inputs">
         <div className="input row">
-          <Label style={{ color: "var(--c-fg-primary)", display: "flex", flexWrap: "wrap" }}>
+          <Label style={{ color: "rgb(var(--c-fg-primary))", display: "flex", flexWrap: "wrap" }}>
             <Label style={{ display: "inline", width: "100%" }}>Enable</Label>
             {/* <HowToTip link="https://doc.vocespace.com/zh/doc/guide/overview" text={t("how_to")} /> */}
             <div
@@ -248,7 +248,7 @@ export function ConfigVocespace() {
                 server_type === "nas" ? "nas.mp4" : "vps.mp4"
               }`}
               controls
-              style={{ width: "100%", borderRadius: 8, backgroundColor: "var(--c-bg-surface)" }}
+              style={{ width: "100%", borderRadius: 8, backgroundColor: "rgb(var(--c-bg-surface))" }}
             ></video>
           </div>
 

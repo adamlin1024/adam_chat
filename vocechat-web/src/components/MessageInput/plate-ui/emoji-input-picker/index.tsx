@@ -167,14 +167,17 @@ export const EmojiInputPanel = forwardRef<HTMLDivElement, PanelProps>(
             tabIndex={-1}
             onMouseDown={(e) => e.preventDefault()}
             onClick={handlePreviewClick}
-            className="fixed left-0 right-0 z-30 flex items-center justify-center bg-bg-overlay cursor-pointer"
-            style={{ bottom: "calc(35vh + 100px)", height: "18vh", top: "auto" }}
+            className="absolute left-0 right-0 md:left-3 md:right-3 md:rounded-lg z-30 flex items-center justify-center bg-black/40 cursor-pointer"
+            style={{
+              bottom: "100%",
+              height: "clamp(140px, 16vh, 160px)",
+            }}
             title="點擊送出"
           >
             <img
               src={preview.url}
               alt="sticker preview"
-              className="h-[85%] w-auto max-w-[55%] object-contain pointer-events-none select-none drop-shadow-lg"
+              className="w-auto h-auto max-w-[240px] max-h-[90%] object-contain pointer-events-none select-none drop-shadow-lg"
               draggable={false}
             />
             <button
@@ -195,7 +198,7 @@ export const EmojiInputPanel = forwardRef<HTMLDivElement, PanelProps>(
           </div>
         )}
         <div
-          className="relative w-full border-t border-border-subtle bg-bg-elevated overflow-hidden flex flex-col"
+          className="relative w-full bg-bg-elevated overflow-hidden flex flex-col"
           style={{ height: "35vh" }}
         >
           {/* Active panel */}
