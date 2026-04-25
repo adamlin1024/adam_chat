@@ -441,10 +441,9 @@ import 為 React 元件的 SVG（`import X from "./x.svg"`）：
 | `components/BlankPlaceholder.tsx` SVG 插畫色 | `#FFDB5D` 等 | 屬於插畫資產色，不入主題系統 |
 | `routes/setting/Widget/index.tsx` 內嵌 HTML snippet | `#1fe1f9` 等 | 給使用者複製的程式碼字串，非實際 UI |
 | `routes/setting/config/Vocespace.tsx` 部分 inline style | `#fff` 等 | 第三方整合畫面 |
-| `service-worker.ts` `theme_color` | `#08090b` | PWA manifest 單值，系統限制無法雙主題；只在 PWA 安裝瞬間使用 |
-| `index.html` `meta[name=theme-color]` | media-scoped fallback | bootstrap 後由 `utils/themeColor.ts::startThemeColorSync()` 接管，runtime 從 `--c-bg-app` 讀，不再硬編碼 |
-| `manifest.json` `theme_color` | `#08090b` | PWA 安裝瞬間 splash 色（單值，系統限制） |
-| `index.html` 內 `--c-splash-bg` / `--c-splash-dot` | hex 寫死 | 主 CSS bundle 載入前 splash screen 用的 fallback；bundle 載入後 `body` 改走 `--c-bg-app` token |
+| `service-worker.ts` `theme_color` | `#08090b` | PWA manifest，系統 chrome 限制不隨主題切換 |
+| `index.html` `meta[name=theme-color]` | media-scoped fallback | bootstrap 後由 `utils/themeColor.ts::applyThemeColor()` 動態覆蓋 |
+| `manifest.json` `theme_color` | `#08090b` | PWA 安裝瞬間 splash 色，後續以 meta tag 為準 |
 | `assets/icons/*.svg` 多數寫死 `fill="#xxx"` | hex 預設色 | 父層 `fill-current` 覆蓋；不影響主題切換 |
 
 ---
@@ -457,14 +456,4 @@ import 為 React 元件的 SVG（`import X from "./x.svg"`）：
 - **2026-04-25（文件重構）**：文件結構重整為 A/B/C/D/E/F 四區，新增 C「元件表」按 UI 表面分類列出所有已 token 化元件，避免下次漏改。
 - **2026-04-25（新增 Trigger 5）**：明文規定**新增 UI 元件 / 頁面**時必須同 commit 更新 C 元件表 + 走 token 系統。例外：純臨時頁面（OAuth redirect 等）。CLAUDE.md 觸發詞同步更新。
 - **2026-04-25（更名 + 新增 Trigger 6）**：檔案從 `COLOR_SYSTEM.md` 改名為 `DESIGN_SYSTEM.md`（範疇從色彩擴大到完整設計系統）。新增 Trigger 6「優先複用既有元件」：新建畫面前先掃 C 表找最近既有元件複用，避免重新發明 Modal / Sheet / Picker 等通用外殼造成體感不一致。CLAUDE.md 同步更新引用名稱。
-- **2026-04-25（status bar 顏色跟主題切換 — 初版）**：抽出 `utils/themeColor.ts` 用 JS 動態覆蓋 `meta[theme-color]`，搭配 `apple-mobile-web-app-status-bar-style=default`。**此版有 bug**：iOS PWA 不會重讀 meta，session 內切換主題狀態列不變。且 `THEME_BAR_COLORS` 常數跟 `--c-bg-app` 值重複是技術債。
-
-- **2026-04-26（status bar 改走 token 系統，消除技術債）**：根因是初版用命令式 JS 同步取代宣告式 token cascade，跟 Design System 整體模型不一致。改成全宣告式：
-  - `apple-mobile-web-app-status-bar-style` 改 `black-translucent` → 狀態列透明覆蓋層
-  - `body` 加 `padding-top: env(safe-area-inset-top)` + `box-sizing: border-box`，讓狀態列區域顯示 body 背景色
-  - `assets/index.css` 加 `body { background-color: rgb(var(--c-bg-app)) }`，body 直接走 token
-  - 結果：切換 `.dark`/`.light` → `--c-bg-app` 換值 → body bg 變 → 透明狀態列就跟著變，**不靠 meta[theme-color]**
-
-  其餘瀏覽器（Safari / Android）的 `meta[theme-color]` 仍由 `utils/themeColor.ts::startThemeColorSync()` 維護，但改成 runtime 從 `--c-bg-app` 讀計算值（不再硬編碼），並用 `MutationObserver` 監聽 `html.class` 自動 sync，不必每個 call site 手動呼叫。`THEME_BAR_COLORS` 常數刪除。
-
-  **以後動 `--c-bg-app` 不需要任何同步動作**——所有相關層自動連動。
+- **2026-04-25（status bar 顏色跟主題切換）**：抽出 `utils/themeColor.ts` 統一控制 `meta[name=theme-color]`。先前手機 PWA / Safari 上方狀態列鎖死深色 `#08090b`（`index.html` 寫死 + JS 主題切換沒同步），淺色模式下顯得突兀。修正後：bootstrap 與 `DarkMode.tsx` 切換主題時都呼叫 `applyThemeColor(isDark)`；系統色彩偏好變動（auto 模式）也跟著切。`apple-mobile-web-app-status-bar-style` 從 `black` 改為 `default` 讓 iOS PWA 跟著 theme-color。**動到 `--c-bg-app` 時記得同步 `THEME_BAR_COLORS` 常數**。

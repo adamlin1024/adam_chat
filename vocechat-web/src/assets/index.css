@@ -10,19 +10,6 @@
  * 等 Tailwind alpha 修飾子能正常運作。
  * 預先疊好 alpha 的 token（overlay、accent-bg、accent-border）保持完整 rgba 字串。
  */
-/*
- * 主 CSS bundle 載入後讓 body 走 Design System 的 --c-bg-app token，
- * 蓋掉 index.html 裡 splash 期間用的 --c-splash-bg fallback。
- *
- * 這條的副作用是 iOS PWA 狀態列（apple-mobile-web-app-status-bar-style=
- * black-translucent + body padding-top: env(safe-area-inset-top)）會看穿到
- * body 背景，跟著 .dark / .light 切換 → 狀態列顏色就跟著 token 系統連動，
- * 不再需要靠 meta[theme-color] 動態更新（iOS PWA 不會重讀那個）。
- */
-body {
-  background-color: rgb(var(--c-bg-app));
-}
-
 .dark {
   --c-bg-app:      8 9 11;        /* #08090b */
   --c-bg-sidebar:  12 13 16;      /* #0c0d10 */

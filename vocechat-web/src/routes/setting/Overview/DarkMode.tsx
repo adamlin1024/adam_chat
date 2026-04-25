@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import SettingBlock from "@/components/SettingBlock";
 import Radio from "../../../components/styled/Radio";
 import { Theme } from "../../../types/common";
+import { applyThemeColor } from "@/utils/themeColor";
 
 // type Props = {}
 
@@ -13,16 +14,19 @@ const DarkMode = () => {
   const handleThemeToggle = (v: Theme) => {
     setTheme(v);
     localStorage.theme = v;
-    // 只改 html.class —— meta[theme-color] 由 startThemeColorSync 的
-    // MutationObserver 自動 sync（在 src/index.tsx 啟動），不必這裡手動呼叫。
+    // reset
     document.documentElement.classList.remove("dark");
     document.documentElement.classList.remove("light");
+    let isDark: boolean;
     if (v !== "auto") {
+      isDark = v === "dark";
       document.documentElement.classList.add(v);
     } else {
-      const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       document.documentElement.classList.add(isDark ? "dark" : "light");
     }
+    // 同步狀態列顏色
+    applyThemeColor(isDark);
   };
   return (
     <SettingBlock title={t("overview.theme.title")} desc={t("overview.theme.desc")}>

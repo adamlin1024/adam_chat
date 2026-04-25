@@ -21,7 +21,6 @@ import Menu from "./Menu";
 import MobileNavs from "./MobileNavs";
 import User from "./User";
 import StreamStatus from "@/components/StreamStatus";
-import ViewportDebug from "@/components/ViewportDebug";
 
 function HomePage() {
   const { t } = useTranslation();
@@ -57,7 +56,6 @@ function HomePage() {
   const userNav = userPath || "/users";
   return (
     <>
-      <ViewportDebug />
       <StreamStatus />
       {roleChanged && <ReLoginModal />}
       {!guest && <UnreadTabTip />}
