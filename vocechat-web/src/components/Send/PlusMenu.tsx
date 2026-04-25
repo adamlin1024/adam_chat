@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useRef, useState } from "react";
+import { ChangeEvent, FC, useState, useId } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import clsx from "clsx";
 
@@ -17,12 +17,27 @@ type Props = {
   toggleMode: () => void;
 };
 
+// visually-hidden 樣式（不用 display:none，否則 iOS 對 hidden file input 觸發
+// picker 時可能降級行為）
+const VISUALLY_HIDDEN: React.CSSProperties = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: 0,
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0,0,0,0)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
+
 const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
   const [open, setOpen] = useState(false);
   const { addStageFile } = useUploadFile({ context, id: to });
-  const cameraRef = useRef<HTMLInputElement>(null);
-  const photoRef = useRef<HTMLInputElement>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const reactId = useId();
+  const cameraId = `plusmenu-camera-${reactId}`;
+  const photoId = `plusmenu-photo-${reactId}`;
+  const fileId = `plusmenu-file-${reactId}`;
 
   const handleUpload = (evt: ChangeEvent<HTMLInputElement>) => {
     if (!evt.target.files) return;
@@ -37,31 +52,31 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
     setOpen(false);
   };
 
-  const openPicker = (ref: React.RefObject<HTMLInputElement>) => {
-    ref.current?.click();
-  };
+  // 用 <label htmlFor=...> 包住 menu item — iOS 會把 label 點擊直接關聯到
+  // file input，比 JS .click() 觸發更穩，user gesture chain 不會斷，
+  // PHPicker 比較容易直接開（不降級到 source sheet）。
+  type Item =
+    | { key: string; label: string; icon: React.ReactNode; htmlFor: string; active?: boolean }
+    | { key: string; label: string; icon: React.ReactNode; onClick: () => void; active?: boolean };
 
-  const items = [
+  const items: Item[] = [
     {
       key: "camera",
       label: "拍照 / 錄影",
       icon: <IconCamera className="w-5 h-5 fill-current" />,
-      onClick: () => openPicker(cameraRef),
-      active: false,
+      htmlFor: cameraId,
     },
     {
       key: "photo",
       label: "相片",
       icon: <IconImage className="w-5 h-5 fill-current" />,
-      onClick: () => openPicker(photoRef),
-      active: false,
+      htmlFor: photoId,
     },
     {
       key: "file",
       label: "檔案",
       icon: <IconFile className="w-5 h-5 fill-current" />,
-      onClick: () => openPicker(fileRef),
-      active: false,
+      htmlFor: fileId,
     },
     {
       key: "markdown",
@@ -96,22 +111,31 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
             className="z-[100] rounded-lg overflow-hidden shadow-xl bg-bg-elevated border border-border-subtle min-w-[160px]"
           >
             <ul className="flex flex-col py-1">
-              {items.map(({ key, label, icon, onClick, active }) => (
-                <li key={key}>
-                  <button
-                    onClick={onClick}
-                    className={clsx(
-                      "w-full flex items-center gap-3 px-3 py-2.5 ts-meta font-medium transition-colors",
-                      active
-                        ? "text-accent bg-bg-surface"
-                        : "text-fg-secondary hover:bg-bg-surface"
+              {items.map((item) => {
+                const cls = clsx(
+                  "w-full flex items-center gap-3 px-3 py-2.5 ts-meta font-medium transition-colors cursor-pointer",
+                  item.active
+                    ? "text-accent bg-bg-surface"
+                    : "text-fg-secondary hover:bg-bg-surface"
+                );
+                return (
+                  <li key={item.key}>
+                    {"htmlFor" in item ? (
+                      // label 直接關聯 hidden file input，點 label 等於點 input，
+                      // user gesture chain 不斷
+                      <label htmlFor={item.htmlFor} className={cls}>
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </label>
+                    ) : (
+                      <button onClick={item.onClick} className={cls}>
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </button>
                     )}
-                  >
-                    {icon}
-                    <span>{label}</span>
-                  </button>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </Popover.Content>
         </Popover.Portal>
@@ -124,35 +148,34 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
         capture 則維持只在「拍照 / 錄影」用，明確強制相機。
       */}
       <input
-        ref={cameraRef}
+        id={cameraId}
         type="file"
-        className="hidden"
+        style={VISUALLY_HIDDEN}
         accept="image/jpeg,image/png,image/heic,image/heif,video/mp4,video/quicktime"
         capture="environment"
         onChange={handleUpload}
       />
       {/*
-        相片：用最標準的 PHPicker invocation pattern（image/* + multiple，
-        不夾雜 video、不列具體 MIME）。理論上 iOS 14+ Safari 會走 PHPicker
-        直接開圖庫。但 iOS PWA（WKWebView）整合受限，仍可能跳原生 source sheet——
-        這是 web 端硬限制，需 native 才能 100% 直達。
+        相片：用最標準的 PHPicker invocation pattern（image/* + multiple）。
+        iOS 14+ Safari 會走 PHPicker 直接開圖庫；PWA (WKWebView) 整合受限，
+        但搭配 <label> 觸發（不靠 JS .click()）user gesture chain 較完整，
+        較有機會直接走 PHPicker。
       */}
       <input
-        ref={photoRef}
+        id={photoId}
         type="file"
-        className="hidden"
+        style={VISUALLY_HIDDEN}
         accept="image/*"
         multiple
         onChange={handleUpload}
       />
       {/*
         檔案：明確排除照片相關 MIME，讓 iOS 只走檔案 picker（不跳圖庫選項）。
-        document / archive / 常見辦公文件都列上；若需要其他類型再補。
       */}
       <input
-        ref={fileRef}
+        id={fileId}
         type="file"
-        className="hidden"
+        style={VISUALLY_HIDDEN}
         accept="application/pdf,application/zip,application/x-zip-compressed,application/x-rar-compressed,application/x-7z-compressed,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/csv,text/markdown,application/json,application/xml,audio/mpeg,audio/wav,audio/mp4,audio/aac"
         multiple
         onChange={handleUpload}
