@@ -11,8 +11,13 @@
     <meta name="theme-color" content="#08090b" media="(prefers-color-scheme: dark)" />
     <meta name="description" content="Neko-talk — Your private chat space" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <!-- iOS PWA：default 讓 status bar 跟著 theme-color，避免被鎖死黑色 -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <!--
+      iOS PWA：black-translucent 讓狀態列變透明覆蓋層，背景色看穿到 body。
+      搭配 body padding-top: env(safe-area-inset-top) 把 bg-app 補進狀態列區域，
+      切換主題時 body 背景色變、狀態列顏色就跟著變。
+      （default 模式下狀態列背景是 PWA 啟動時凍結的 theme-color，JS 動態更新不會重讀）
+    -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Neko-talk" />
 
     <!-- Suppress ResizeObserver errors - must be first script -->
@@ -246,6 +251,16 @@
       overflow: hidden;
       width: 100%;
       height: 100%;
+      /*
+        搭配 apple-mobile-web-app-status-bar-style=black-translucent：狀態列透明，
+        body padding-top 把 body 背景色補到狀態列區域。
+        body 背景：splash 期間是 var(--c-splash-bg)（fallback），CSS bundle 載入後
+        被 assets/index.css 的 `body { background-color: rgb(var(--c-bg-app)); }` 蓋掉，
+        改走 Design System 的 --c-bg-app token，跟著 .dark / .light 切換 → 狀態列
+        顏色就跟著 token 系統連動，不是例外處理。
+      */
+      padding-top: env(safe-area-inset-top, 0px);
+      box-sizing: border-box;
     }
     /* iOS safari — use --app-height set by visualViewport JS below */
     @supports (-webkit-touch-callout: none) {

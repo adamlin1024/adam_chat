@@ -52,12 +52,15 @@ export default function usePreload() {
   ] = useLazyGetServerVersionQuery();
   const [getSystemCommon] = useLazyGetSystemCommonQuery();
   useEffect(() => {
+    // 跟著 loginUid 重跑：登出 → 清 IndexedDB → 重登後 uid 變動會重新 initCache
+    // 為新 uid 建 localforage instance，rehydrate 從乾淨狀態填 redux，APIs 重抓。
+    // 這樣登入後 UI 立刻有資料，不必靠硬導頁（location.replace）強制 reload。
     initCache();
     rehydrate();
     getServerVersion();
     const timer = setTimeout(() => setTimedOut(true), PRELOAD_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, []);
+  }, [loginUid]);
   // 在 guest 的时候 预取 channel 数据
   useEffect(() => {
     if (isGuest && channelIds.length > 0 && !preloadChannelMsgs) {
@@ -71,7 +74,10 @@ export default function usePreload() {
     }
   }, [channelIds, channelMessageData, isGuest]);
   useEffect(() => {
-    if (rehydrated) {
+    // 加 loginUid 進 deps：登入後（uid 從 0 → 真值）這邊重跑，重抓 users / favorites
+    // / systemCommon。這配合上方 initCache+rehydrate 的 [loginUid] deps 一起，達到
+    // 「登入完整重新預載」的效果，UI 立刻有資料。
+    if (rehydrated && loginUid) {
       getUsers().then(() => {
         if (!isGuest) {
           getContacts();
@@ -80,7 +86,7 @@ export default function usePreload() {
       getFavorites();
       getSystemCommon();
     }
-  }, [rehydrated, isGuest]);
+  }, [rehydrated, isGuest, loginUid]);
   const tokenAlmostExpire = dayjs().isAfter(new Date(expireTime - 20 * 1000));
   const canStreaming = !!loginUid && rehydrated && !!token && !tokenAlmostExpire && !ready;
 
