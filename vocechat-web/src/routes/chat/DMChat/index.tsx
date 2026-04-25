@@ -1,8 +1,10 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/app/store";
+import { updateSelectMessages } from "@/app/slices/ui";
 import GoBackNav from "@/components/GoBackNav";
 import Tooltip from "@/components/Tooltip";
 import MessageSearch from "@/components/MessageSearch";
@@ -23,6 +25,7 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
   const [favModalVisible, setFavModalVisible] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const feedRef = useRef<VirtualMessageFeedHandle>(null);
   const currUser = useAppSelector((store) => store.users.byId[uid], shallowEqual);
 
@@ -31,6 +34,13 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
       navigate("/chat");
     }
   }, [currUser]);
+
+  // 離開 DM 時清掉選取狀態，避免下次進來看到殘留 bar
+  useEffect(() => {
+    return () => {
+      if (uid) dispatch(updateSelectMessages({ context: "dm", id: uid, operation: "reset" }));
+    };
+  }, [uid]);
 
   const handleLocate = (mid: number) => {
     feedRef.current?.scrollToMessage(mid);
