@@ -42,7 +42,7 @@
 
 ### 色彩系統
 
-**動 UI / 改色 / 動色票前必讀**：`UI_style/COLOR_SYSTEM.md`（token 對照、禁用清單、變數格式、回歸驗證清單一次到位）。
+**任何修改涉及顏色、樣式、Tailwind className、CSS 變數、視覺呈現時 —— 即使只動一行 —— 必讀**：`UI_style/COLOR_SYSTEM.md`（首段是 AI 自動觸發規則 + token 對照、禁用清單、變數格式、回歸驗證清單）。
 
 ### SVG 上色規則
 - stroke-based SVG（如 `arrow.left.svg`）：用 `stroke-` 或 `dark:stroke-white`，**不可用 `fill-`**

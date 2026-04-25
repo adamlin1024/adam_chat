@@ -2,6 +2,25 @@
 
 > **單一資料來源**：所有顏色皆來自 token 系統。日後改色 = 改 `vocechat-web/src/assets/index.css` 的 CSS 變數，**不該動元件**。
 
+## AI 自動觸發規則（無條件執行，不需使用者提醒）
+
+### Trigger 1：動到任何 `.tsx` / `.ts` / `.css` UI 檔
+改完該檔前必做：在該檔自掃禁用清單（`text-white` / `text-black` / `bg-white` / `bg-black`、Tailwind 預設調色盤 `zinc/gray/slate/stone/neutral/red/orange/amber/yellow/lime/green/emerald/teal/cyan/sky/blue/indigo/primary` 等、`bg-[#xxx]` 寫死 hex、`dark:` 前綴覆寫、手寫 `var(--c-x)` 漏包 `rgb()`）。
+有違規 → **當下順手改成 token**，不要留待下一輪、不要寫 TODO、不要分批。
+
+### Trigger 2：動到 `vocechat-web/src/assets/index.css` 的 `.dark` / `.light` 區塊，或動到 `vocechat-web/tailwind.config.js`
+→ 必須在本檔末段「變更歷史」加一筆，記錄改了什麼、為什麼。
+→ 改色票時 hex 要先轉 RGB 三元組（例如 `#5eead4` → `94 234 212`）。
+→ 不可把變數寫成 hex 字串（`--c-accent: #5eead4;` ❌）—— 會讓所有 alpha 修飾子（`bg-accent/20` 等）失效。
+
+### Trigger 3：發現任何元件用了非 token 的色（無論你是不是來改色的）
+→ **當下順手 token 化**，不要分批處理、不要 TODO、不要等使用者要求。
+→ 例外：本檔末段「已知例外」列出的幾項可保留。
+
+### Trigger 4：批次 UI 改動結束、要回報前
+→ 對照本檔末段「回歸驗證清單」的 8 個位置看是否仍正常。
+→ 若有可疑處，先跟使用者說「這幾個位置請你看一下」，不要直接收尾。
+
 ## 系統檔案位置
 
 | 角色 | 路徑 |
