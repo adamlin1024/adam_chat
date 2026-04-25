@@ -35,7 +35,7 @@ const Session: FC<IProps> = ({ id, mid }) => {
   const { name, icon } = data;
 
   return (
-    <li className="session">
+    <li className="session no-native-touch">
       <NavLink
         className={({ isActive: linkActive }) =>
           clsx(

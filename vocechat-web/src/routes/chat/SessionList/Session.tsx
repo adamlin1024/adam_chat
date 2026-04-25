@@ -193,7 +193,7 @@ const Session: FC<IProps> = ({
   console.log("unreads", unreads, isCurrentPath);
 
   return (
-    <li className={clsx("session relative overflow-hidden")}
+    <li className={clsx("session relative overflow-hidden no-native-touch")}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}

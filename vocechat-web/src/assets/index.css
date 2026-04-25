@@ -131,11 +131,17 @@
   }
 
   /*
-   * 訊息氣泡：手機上完全擋掉 iOS / Android 原生長按選單（拷貝 / 查詢 / 翻譯 / 搜尋網頁）。
+   * 通用：手機上完全擋掉 iOS / Android 原生長按選單
+   * （拷貝 / 查詢 / 翻譯 / 搜尋網頁 / 連結預覽 / 分享… 等 native callout）。
    * 套用到所有子元素（連結 / 圖片 / span 等都不會跳原生 callout）。
    * 桌機 (md:) 維持正常選字 / 點連結行為。
-   * 進入 native-select 模式時改套 .msg-allow-native-select 釋放選字。
+   * 凡是有自訂長按選單的容器（訊息氣泡、Session row、User 卡片等）都該套用。
+   * 內部如需釋放選字（如進入 native-select 模式），用 .allow-native-select 覆蓋。
+   *
+   * 舊別名 msg-no-native-touch / msg-allow-native-select 保留以避免破壞既有引用。
    */
+  .no-native-touch,
+  .no-native-touch *,
   .msg-no-native-touch,
   .msg-no-native-touch * {
     -webkit-touch-callout: none !important;
@@ -143,6 +149,8 @@
     user-select: none !important;
   }
   @media (min-width: 768px) {
+    .no-native-touch,
+    .no-native-touch *,
     .msg-no-native-touch,
     .msg-no-native-touch * {
       -webkit-touch-callout: default !important;
@@ -150,6 +158,8 @@
       user-select: text !important;
     }
   }
+  .allow-native-select,
+  .allow-native-select *,
   .msg-allow-native-select,
   .msg-allow-native-select * {
     -webkit-touch-callout: default !important;

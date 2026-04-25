@@ -30,7 +30,10 @@ const WrapWithSubmenu = ({
   return (
     <Tippy
       interactive
-      placement="auto-start"
+      // 子選單固定走右側展開；空間不夠時 Popper 會自動 flip 到 left-start，
+      // 不會選到 top/bottom 造成跟主選單垂直重疊。
+      placement="right-start"
+      offset={[0, 4]}
       trigger="mouseenter focus"
       popperOptions={{ strategy: "fixed" }}
       content={
@@ -64,9 +67,9 @@ const WrapWithSubmenu = ({
                 }}
               >
                 {icon}
-                {title}
+                <span className="flex-1">{title}</span>
                 {checked && (
-                  <IconChecked className="group-hover:fill-fg-body absolute right-2 top-2" />
+                  <IconChecked className="group-hover:fill-fg-body shrink-0 w-3.5 h-3.5 fill-fg-secondary" />
                 )}
               </li>
             );
@@ -114,8 +117,8 @@ const ContextMenu: FC<Props> = ({ items = [], hideMenu = null }) => {
                   }}
                 >
                   {icon}
-                  {title}
-                  <IconArrow className="group-hover:fill-fg-body absolute right-2 top-2" />
+                  <span className="flex-1">{title}</span>
+                  <IconArrow className="group-hover:fill-fg-body shrink-0 w-3.5 h-3.5 fill-fg-subtle" />
                 </li>
               }
             ></WrapWithSubmenu>
