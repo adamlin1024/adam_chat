@@ -55,6 +55,7 @@
 
   "file": "file",
   "image": "image",
+  "sticker": "sticker",
   "forward": "forward",
   "voice_message": "voice message",
   "voice": "Voice Chat",
@@ -77,5 +78,17 @@
   "remark_clear": "Reset friend nickname",
   "remark_intro": "Find a friend faster with a personal nickname. It will only be visible to you in your direct messages.",
   "remark_placeholder": "Set Nickname",
-  "placeholder_generating": "Generating"
+  "placeholder_generating": "Generating",
+
+  "replying_to": "Replying to <0>{{name}}</0>",
+  "select_msgs": "Select messages",
+  "selected_count": "{{count}} selected",
+  "forward_to": "Forward to",
+  "forward_one_by_one": "Forward one by one",
+  "send_count": "Send ({{count}})",
+  "edit_msg_placeholder": "Edit Message",
+  "esc_hint": "esc",
+  "enter_hint": "enter",
+  "save": "save",
+  "saving": "saving"
 }

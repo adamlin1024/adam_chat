@@ -212,8 +212,16 @@ cover.style.cssText = "background:rgb(var(--c-bg-app));"
 | 訊息內容渲染 | inherits | `components/Message/renderContent.tsx` |
 | 自訂日期分隔 | `text-fg-subtle` | `routes/chat/Layout/VirtualMessageFeed/CustomHeader.tsx` |
 | 主訊息列表容器 | inherits | `routes/chat/Layout/VirtualMessageFeed/index.tsx` |
+| 訊息長按 action panel（手機，LINE 風格） | `bg-bg-elevated`、`border-border`、`text-fg-body`、`text-fg-secondary`、`shadow-overlay`；hover/active：`bg-bg-hover`；danger 用 `text-danger` | `components/Message/MessageActionSheet.tsx`（含 action grid 與 reaction view 兩個 view）；觸發在 `components/Message/index.tsx` 用 `useLongPress` |
+| 訊息桌機 hover bar（hidden md:flex） | `bg-bg-app`、`border-border`、`text-fg-subtle`、`fill-fg-subtle`、`shadow-dropdown` | `components/Message/Commands.tsx` |
+| 訊息桌機右鍵選單 | 走全域 `.context-menu` | `components/Message/ContextMenu.tsx`（純殼，items 由父層傳入） |
+| 訊息收藏標記 | `fill-accent`（小 bookmark icon 在時間旁） | `components/Message/index.tsx`（讀 `useFavMessage().isFavorited(mid)`） |
+| 多選操作底部 bar（手機 LINE 風格） | `bg-bg-elevated`、`border-border-subtle`、`text-fg-secondary`、`fill-fg-body`、`bg-bg-hover`（active）、`text-danger` / `fill-danger`（刪除） | `routes/chat/Layout/Operations.tsx`（多選模式下顯示） |
+| 訊息編輯（手機，輸入區接管） | `bg-bg-sidebar`、`bg-bg-canvas`、`border-border`、`text-fg-primary`、`bg-accent text-accent-on`（✓ 確認）、`text-fg-subtle`（✗ 取消）、`bg-bg-hover` | `components/Send/Editing.tsx`；redux 狀態見 `app/slices/message.ts` `editing` |
 
-**坑**：`bg-accent/20` 是 alpha 修飾子 → 必須變數為 RGB triplet 才會渲染（先前事件源頭）。
+**坑**：
+- `bg-accent/20` 是 alpha 修飾子 → 必須變數為 RGB triplet 才會渲染（先前事件源頭）
+- Action panel 文字大小用 `ts-mini`（連動 `--msg-scale`，使用者設定大/中/小會跟著縮放）—— 不要寫 `text-[11px]` 等固定 px
 
 ### C.4 訊息輸入區
 

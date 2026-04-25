@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { useKey } from "rooks";
 
 import { updateSelectMessages } from "@/app/slices/ui";
@@ -20,12 +21,15 @@ type Props = {
   id: number;
 };
 const Operations: FC<Props> = ({ context, id }) => {
+  const { t } = useTranslation();
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const { canDelete } = useDeleteMessage();
   const { addFavorite } = useFavMessage({});
   const mids = useAppSelector((store) => store.ui.selectMessages[`${context}_${id}`], shallowEqual);
   const [forwardModalVisible, setForwardModalVisible] = useState(false);
   const dispatch = useAppDispatch();
+
+  const count = mids?.length ?? 0;
 
   const handleClose = () => {
     dispatch(updateSelectMessages({ context, id, operation: "reset" }));
@@ -35,9 +39,9 @@ const Operations: FC<Props> = ({ context, id }) => {
     const added = await addFavorite(mids);
     if (added) {
       dispatch(updateSelectMessages({ context, id, operation: "reset" }));
-      toast.success("Messages Saved!");
+      toast.success(t("tip.msgs_saved", { ns: "common" }));
     } else {
-      toast.error("Operation Failed!");
+      toast.error(t("tip.operation_failed", { ns: "common" }));
     }
   };
 
@@ -45,7 +49,7 @@ const Operations: FC<Props> = ({ context, id }) => {
     setDeleteModalVisible((prev) => !prev);
     if (isSuccess) {
       dispatch(updateSelectMessages({ context, id, operation: "reset" }));
-      toast.success("Messages Deleted!");
+      toast.success(t("tip.msgs_deleted", { ns: "common" }));
     }
   };
 
@@ -57,28 +61,53 @@ const Operations: FC<Props> = ({ context, id }) => {
     dispatch(updateSelectMessages({ context, id, operation: "reset" }));
   });
   const canDel = canDelete(mids);
+  const disabled = count === 0;
 
-  const optClass = `p-2 bg-bg-elevated rounded md:hover:bg-bg-app`;
   return (
     <>
-      <div className="relative p-4 flex-center gap-8 shadow-md">
-        <button className={optClass} onClick={toggleForwardModal}>
-          <IconForward />
-        </button>
-        <button className={optClass} onClick={handleFav}>
-          <IconBookmark />
-        </button>
-        <button
-          className={`${optClass} disabled:opacity-50 disabled:cursor-not-allowed`}
-          disabled={!canDel}
-          onClick={toggleDeleteModal.bind(null, false)}
-        >
-          <IconDelete />
-        </button>
-        <IconClose
-          className="cursor-pointer absolute right-5 top-1/2 -translate-y-1/2"
-          onClick={handleClose}
-        />
+      <div className="relative w-full bg-bg-elevated border-t border-border-subtle pb-safe">
+        <div className="flex items-center justify-between px-3 py-2.5">
+          <button
+            type="button"
+            onClick={handleClose}
+            className="ts-meta text-fg-secondary px-2 py-1 hover:text-fg-primary transition-colors"
+          >
+            {t("action.cancel", { ns: "common" })}
+          </button>
+          <span className="ts-meta text-fg-primary font-semibold">
+            {count > 0 ? t("selected_count", { ns: "chat", count, defaultValue: `已選 ${count} 則` }) : t("select_msgs", { ns: "chat", defaultValue: "選擇訊息" })}
+          </span>
+          <span className="w-12" />
+        </div>
+        <div className="grid grid-cols-3 gap-1 px-3 pb-2">
+          <button
+            type="button"
+            onClick={toggleForwardModal}
+            disabled={disabled}
+            className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
+          >
+            <IconForward className="w-6 h-6 fill-fg-body" />
+            <span className="ts-mini text-fg-secondary">{t("action.forward", { ns: "common" })}</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleFav}
+            disabled={disabled}
+            className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
+          >
+            <IconBookmark className="w-6 h-6 fill-fg-body" />
+            <span className="ts-mini text-fg-secondary">{t("action.add_to_fav", { ns: "common" })}</span>
+          </button>
+          <button
+            type="button"
+            onClick={toggleDeleteModal.bind(null, false)}
+            disabled={disabled || !canDel}
+            className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
+          >
+            <IconDelete className="w-6 h-6 fill-danger" />
+            <span className="ts-mini text-danger">{t("action.remove", { ns: "common" })}</span>
+          </button>
+        </div>
       </div>
       {forwardModalVisible && <ForwardModal mids={mids} closeModal={toggleForwardModal} />}
       {deleteModalVisible && (

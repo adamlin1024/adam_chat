@@ -1,16 +1,37 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import Tippy from "@tippyjs/react";
+import { hideAll } from "tippy.js";
 import clsx from "clsx";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import IconAdmin from "@/assets/icons/owner.svg";
+import IconCopy from "@/assets/icons/copy.svg";
+import IconReply from "@/assets/icons/reply.svg";
+import IconForward from "@/assets/icons/forward.svg";
+import IconSelect from "@/assets/icons/select.svg";
+import IconEdit from "@/assets/icons/edit.svg";
+import IconPin from "@/assets/icons/pin.svg";
+import IconDelete from "@/assets/icons/delete.svg";
+import IconBookmark from "@/assets/icons/bookmark.add.svg";
+import IconBookmarked from "@/assets/icons/bookmark.svg";
+import IconReact from "@/assets/icons/reaction.svg";
 import { useAppSelector } from "@/app/store";
 import { ChatContext } from "@/types/common";
 import useContextMenu from "@/hooks/useContextMenu";
+import useLongPress from "@/hooks/useLongPress";
 import usePinMessage from "@/hooks/usePinMessage";
+import useSendMessage from "@/hooks/useSendMessage";
+import useFavMessage from "@/hooks/useFavMessage";
+import { useReactMessageMutation } from "@/app/services/message";
+import { updateSelectMessages } from "@/app/slices/ui";
+import { addEditingMessage } from "@/app/slices/message";
 import IconInfo from "@/assets/icons/info.svg";
 import Avatar from "../Avatar";
 import Profile from "../Profile";
 import Tooltip from "../Tooltip";
+import { Item as MenuItem } from "../ContextMenu";
 import Commands from "./Commands";
 import ContextMenu from "./ContextMenu";
 import EditMessage from "./EditMessage";
@@ -19,6 +40,8 @@ import Reaction from "./Reaction";
 import renderContent from "./renderContent";
 import Reply from "./Reply";
 import useInView from "./useInView";
+import useMessageOperation from "./useMessageOperation";
+import MessageActionPanel, { SheetItem } from "./MessageActionSheet";
 import { shallowEqual } from "react-redux";
 import NameWithRemark from "../NameWithRemark";
 import { isMobile, resolveMsgTime } from "@/utils";
@@ -41,11 +64,16 @@ const Message: FC<IProps> = ({
   updateReadIndex,
   read = true,
 }) => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
   const { visible: contextMenuVisible, handleContextMenuEvent, hideContextMenu } = useContextMenu();
   const inViewRef = useInView<HTMLDivElement>();
   const [edit, setEdit] = useState(false);
+  const [sheetVisible, setSheetVisible] = useState(false);
+  const [selectedText, setSelectedText] = useState("");
+  const [nativeSelectMode, setNativeSelectMode] = useState(false);
+  const bubbleRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef(null);
-  const selectedTextRef = useRef<string>("");
   const { getPinInfo } = usePinMessage(context == "channel" ? contextId : 0);
   const message = useAppSelector((store) => store.message[mid], shallowEqual);
   const { mode: chatLayout } = useChatLayout();
@@ -62,8 +90,93 @@ const Message: FC<IProps> = ({
   );
 
   const toggleEditMessage = () => {
-    setEdit((prev) => !prev);
+    // 手機：開啟下方輸入區的編輯模式（氣泡保持不動）
+    // 桌機：氣泡內就地變成編輯框（既有行為）
+    if (isMobile()) {
+      dispatch(addEditingMessage({ key: `${context}_${contextId}`, mid }));
+    } else {
+      setEdit((prev) => !prev);
+    }
   };
+
+  // 訊息動作（給桌機右鍵 ContextMenu 與手機長按 ActionSheet 共用）
+  const op = useMessageOperation({ mid, contextId, context, selectedText });
+  const { setReplying } = useSendMessage({ context, to: contextId });
+  const { addFavorite, isFavorited } = useFavMessage({
+    cid: context == "channel" ? contextId : null,
+  });
+  const handleReply = () => { if (contextId) setReplying(mid); };
+  const handleSelect = () => dispatch(updateSelectMessages({ context, id: contextId, data: mid }));
+  // 「選取文字」：交還給瀏覽器原生選取行為
+  const handleNativeSelect = () => {
+    setNativeSelectMode(true);
+    // 等下一個 tick，CSS 把 select-text 套上去之後再選文字
+    setTimeout(() => {
+      const el = bubbleRef.current;
+      if (!el) return;
+      const sel = window.getSelection();
+      if (!sel) return;
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }, 50);
+  };
+  const [reactMessage] = useReactMessageMutation();
+  const handleReact = (emoji: string) => reactMessage({ mid, action: emoji });
+  const handleAddFav = async () => {
+    if (isFavorited(mid)) { toast.success(t("tip.fav_already")); return; }
+    const ok = await addFavorite(mid);
+    toast[ok ? "success" : "error"](ok ? t("tip.fav_added") : t("tip.fav_failed"));
+  };
+
+  const menuItems: MenuItem[] = [
+    op.canEdit && { title: t("action.edit_msg"), icon: <IconEdit className="icon" />, handler: toggleEditMessage },
+    op.canReply && { title: t("action.reply"), icon: <IconReply className="icon" />, handler: handleReply },
+    op.canCopy && { title: t("action.copy"), icon: <IconCopy className="icon" />, handler: op.copyContent },
+    op.canPin && {
+      title: op.pinned ? t("action.unpin") : t("action.pin"),
+      icon: <IconPin className="icon" />,
+      handler: op.pinned ? () => op.unPin(mid) : op.togglePinModal,
+    },
+    { title: t("action.forward"), icon: <IconForward className="icon" />, handler: op.toggleForwardModal },
+    { title: t("action.select"), icon: <IconSelect className="icon" />, handler: handleSelect },
+    op.canDelete && {
+      title: t("action.remove"),
+      danger: true,
+      icon: <IconDelete className="icon" />,
+      handler: op.toggleDeleteModal,
+    },
+  ].filter((v) => typeof v !== "boolean" && "title" in (v ?? {})) as MenuItem[];
+
+  // 手機 sheet 用 grid 排，icon 比較大、加收藏與反應
+  const sheetItems: SheetItem[] = [
+    op.canCopy && { title: t("action.copy"), icon: <IconCopy className="w-6 h-6 fill-current" />, handler: op.copyContent },
+    op.canCopy && { title: t("action.select_text", { ns: "common", defaultValue: "選取文字" }), icon: <IconSelect className="w-6 h-6 fill-current" />, handler: handleNativeSelect },
+    op.canReply && { title: t("action.reply"), icon: <IconReply className="w-6 h-6 fill-current" />, handler: handleReply },
+    { title: t("action.add_to_fav"), icon: <IconBookmark className="w-6 h-6 fill-current" />, handler: handleAddFav },
+    { title: t("action.add_reaction"), icon: <IconReact className="w-6 h-6 fill-current" />, handler: () => {}, isReact: true },
+    { title: t("action.forward"), icon: <IconForward className="w-6 h-6 fill-current" />, handler: op.toggleForwardModal },
+    { title: t("action.select"), icon: <IconSelect className="w-6 h-6 fill-current" />, handler: handleSelect },
+    op.canEdit && { title: t("action.edit_msg"), icon: <IconEdit className="w-6 h-6 fill-current" />, handler: toggleEditMessage },
+    op.canPin && {
+      title: op.pinned ? t("action.unpin") : t("action.pin"),
+      icon: <IconPin className="w-6 h-6 fill-current" />,
+      handler: op.pinned ? () => op.unPin(mid) : op.togglePinModal,
+    },
+    op.canDelete && {
+      title: t("action.remove"),
+      danger: true,
+      icon: <IconDelete className="w-6 h-6 fill-current" />,
+      handler: op.toggleDeleteModal,
+    },
+  ].filter((v) => typeof v !== "boolean" && "title" in (v ?? {})) as SheetItem[];
+
+  const longPressHandlers = useLongPress(() => {
+    if (readOnly || failed) return;
+    hideAll();           // 關掉其他訊息已開的 panel，確保只有一個
+    setSheetVisible(true);
+  });
 
   useEffect(() => {
     if (!read) {
@@ -77,6 +190,27 @@ const Message: FC<IProps> = ({
       }
     }
   }, [mid, read]);
+
+  // 原生選取模式：點氣泡外面 → 關閉並清除選取
+  useEffect(() => {
+    if (!nativeSelectMode) return;
+    const handler = (e: Event) => {
+      const target = e.target as Node;
+      if (bubbleRef.current?.contains(target)) return;
+      setNativeSelectMode(false);
+      window.getSelection()?.removeAllRanges();
+    };
+    // 延遲一個 tick 避免立刻被自己觸發
+    const id = window.setTimeout(() => {
+      document.addEventListener("mousedown", handler);
+      document.addEventListener("touchstart", handler, { passive: true });
+    }, 0);
+    return () => {
+      window.clearTimeout(id);
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [nativeSelectMode]);
   if (!message) return <div className="w-full h-[1px] invisible"></div>;
   const {
     reply_mid,
@@ -109,11 +243,13 @@ const Message: FC<IProps> = ({
     <div
       key={_key}
       onContextMenu={readOnly ? undefined : (evt) => {
-        // 在右键点击时保存选中的文本（手机端禁用该功能，因为长按必定会选中）
-        if (!isMobile()) {
-          const selection = window.getSelection();
-          selectedTextRef.current = selection?.toString().trim() || "";
+        // 手機長按改用浮在氣泡上的 action panel；不開桌機右鍵選單（避免長按非氣泡區也跳）
+        if (isMobile()) {
+          evt.preventDefault();
+          return;
         }
+        const selection = window.getSelection();
+        setSelectedText(selection?.toString().trim() || "");
         handleContextMenuEvent(evt);
       }}
       data-msg-mid={mid}
@@ -150,13 +286,10 @@ const Message: FC<IProps> = ({
         </Tippy>
       )}
       <ContextMenu
-        editMessage={toggleEditMessage}
-        context={context}
-        contextId={contextId}
         mid={mid}
         visible={contextMenuVisible && !failed}
         hide={hideContextMenu}
-        selectedText={selectedTextRef.current}
+        items={menuItems}
       >
         <div
           className={clsx(
@@ -202,9 +335,30 @@ const Message: FC<IProps> = ({
               alignRight && "flex-row-reverse"
             )}
           >
+            <Tippy
+              visible={sheetVisible}
+              interactive
+              placement="top"
+              appendTo={() => document.body}
+              popperOptions={{ strategy: "fixed" }}
+              onClickOutside={() => setSheetVisible(false)}
+              content={
+                <MessageActionPanel
+                  items={sheetItems}
+                  hide={() => setSheetVisible(false)}
+                  onReact={handleReact}
+                />
+              }
+            >
             <div
+              ref={bubbleRef}
+              {...(nativeSelectMode ? {} : longPressHandlers)}
               className={clsx(
-                "vc-msg select-text ts-msg text-fg-body wb whitespace-pre-wrap min-w-0",
+                // 手機 select-none 阻止 iOS 長按系統選字 menu；桌機 md:select-text 維持選字
+                "vc-msg ts-msg text-fg-body wb whitespace-pre-wrap min-w-0",
+                nativeSelectMode
+                  ? "select-text [-webkit-user-select:text] [-webkit-touch-callout:default]"
+                  : "select-none md:select-text [-webkit-touch-callout:none] md:[-webkit-touch-callout:default]",
                 useBubble && [
                   "px-3 py-2 rounded-2xl break-words",
                   alignRight
@@ -236,6 +390,7 @@ const Message: FC<IProps> = ({
                 })
               )}
             </div>
+            </Tippy>
             <Tooltip
               delay={200}
               disabled={readOnly}
@@ -246,6 +401,12 @@ const Message: FC<IProps> = ({
                 {timeText}
               </time>
             </Tooltip>
+            {isFavorited(mid) && (
+              <IconBookmarked
+                className="w-3 h-3 fill-accent shrink-0 mb-0.5"
+                title={t("action.add_to_fav", { ns: "common" }) as string}
+              />
+            )}
             {hideIdentity && failed && (
               <span className="text-danger ts-2xs font-mono flex items-center gap-1 shrink-0">
                 <IconInfo className="stroke-danger w-3 h-3" /> Send Failed
@@ -275,6 +436,10 @@ const Message: FC<IProps> = ({
           toggleEditMessage={toggleEditMessage}
         />
       )}
+      {/* 由 useMessageOperation 提供的 modals（搬到此處統一渲染，不再放在 ContextMenu 內） */}
+      {op.PinModal}
+      {op.ForwardModal}
+      {op.DeleteModal}
     </div>
   );
 };

@@ -29,10 +29,14 @@ export interface State {
   replying: {
     [key: string | number]: number;
   };
+  editing: {
+    [key: string | number]: number;
+  };
 }
 
 const initialState: State = {
-  replying: {}
+  replying: {},
+  editing: {}
 };
 
 const messageSlice = createSlice({
@@ -80,6 +84,16 @@ const messageSlice = createSlice({
       if (state.replying[key]) {
         delete state.replying[key];
       }
+    },
+    addEditingMessage(state, action: PayloadAction<{ key: string | number; mid: number }>) {
+      const { key, mid } = action.payload;
+      state.editing[key] = mid;
+    },
+    removeEditingMessage(state, action: PayloadAction<string | number>) {
+      const key = action.payload;
+      if (state.editing[key]) {
+        delete state.editing[key];
+      }
     }
   }
 });
@@ -91,7 +105,9 @@ export const {
   addMessage,
   removeMessage,
   addReplyingMessage,
-  removeReplyingMessage
+  removeReplyingMessage,
+  addEditingMessage,
+  removeEditingMessage
 } = messageSlice.actions;
 
 export default messageSlice.reducer;

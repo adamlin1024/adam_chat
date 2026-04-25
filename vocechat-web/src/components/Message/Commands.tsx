@@ -98,7 +98,8 @@ const Commands: FC<Props> = ({
       <ul
         ref={cmdsRef}
         className={clsx(
-          `bg-bg-app border border-border rounded-md z-[999] absolute top-0 -translate-y-1/2 flex items-center gap-0.5 p-0.5 shadow-dropdown invisible group-hover:visible`,
+          // 桌機 hover bar，手機改用長按 action sheet → 整個容器在手機隱藏
+          `hidden md:flex bg-bg-app border border-border rounded-md z-[999] absolute top-0 -translate-y-1/2 items-center gap-0.5 p-0.5 shadow-dropdown invisible group-hover:visible`,
           tippyVisible && "!visible",
           isSelf ? "left-2.5" : "right-2.5"
         )}

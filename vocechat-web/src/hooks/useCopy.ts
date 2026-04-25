@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { copyImageToClipboard } from "copy-image-clipboard";
 
 const useCopy = (config: { enableToast: boolean } | void) => {
   const { enableToast = true } = config || {};
+  const { t } = useTranslation();
 
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     if (copied && enableToast) {
-      toast.success("Copied!");
+      toast.success(t("tip.copied"));
     }
   }, [copied]);
 

@@ -65,7 +65,7 @@ const ForwardModal: FC<IProps> = ({ mids, closeModal }) => {
         channels: selectedChannels
       });
     }
-    toast.success("Forward Message Successfully");
+    toast.success(t("tip.forward_success", { ns: "common" }));
     closeModal();
   };
   const removeSelected = (id: number, from = "user") => {
@@ -85,106 +85,111 @@ const ForwardModal: FC<IProps> = ({ mids, closeModal }) => {
     (selectedChannels.length == 0 && selectedMembers.length == 0) || forwarding;
   return (
     <Modal>
-      <div className="flex max-h-[514px] min-h-[400px] bg-bg-app drop-shadow rounded-lg overflow-hidden">
-        <div className="w-[271px] shadow-[inset_-1px_0px_0px_rgba(0,_0,_0,_0.1)] overflow-y-scroll bg-inherit">
-          <div className="sticky top-0 bg-inherit z-[90] p-4 w-[calc(100%_-_1px)]">
+      <div className="flex flex-col md:flex-row w-[calc(100vw-2rem)] max-w-[820px] h-[80vh] max-h-[600px] bg-bg-elevated drop-shadow rounded-lg overflow-hidden border border-border-subtle">
+        {/* 左：搜尋 + 對象列表 */}
+        <div className="flex flex-col flex-1 md:w-[280px] md:flex-none md:border-r md:border-border-subtle min-h-0">
+          <div className="px-3 pt-3 pb-2 border-b border-border-subtle">
             <input
-              className="px-2 py-2.5 text-sm text-fg-primary bg-bg-app/10 rounded-lg w-full"
+              className="w-full px-3 py-2 ts-meta text-fg-primary bg-bg-surface border border-border focus:border-border-strong outline-none rounded-md transition-colors placeholder:text-fg-disabled"
               value={input}
               onChange={handleSearchChange}
-              placeholder={t("placeholder.search_user_or_channel")}
+              placeholder={t("placeholder.search_user_or_channel", { ns: "common" })}
             />
           </div>
-          <ul className="flex flex-col pb-5">
-            {channels &&
-              channels.map((c) => {
-                const { gid } = c;
-                const checked = selectedChannels.includes(gid);
-                return (
-                  <li
-                    key={gid}
-                    data-type="channel"
-                    data-id={gid}
-                    className="cursor-pointer flex items-center px-4 rounded md:hover:bg-bg-surface/10"
-                    onClick={toggleCheck}
-                  >
-                    <StyledCheckbox readOnly checked={checked} name="cb" id="cb" />
-                    <Channel id={gid} interactive={false} />
-                  </li>
-                );
-              })}
-            {users &&
-              users.map((u) => {
-                const { uid } = u;
-                const checked = selectedMembers.includes(uid);
-                return (
-                  <li
-                    key={uid}
-                    data-id={uid}
-                    data-type="user"
-                    className="cursor-pointer flex items-center px-4 rounded md:hover:bg-bg-surface/10"
-                    onClick={toggleCheck}
-                  >
-                    <StyledCheckbox readOnly checked={checked} name="cb" id="cb" />
-                    <User uid={uid} interactive={false} />
-                  </li>
-                );
-              })}
+          <ul className="flex-1 overflow-y-auto py-1">
+            {channels?.map((c) => {
+              const { gid } = c;
+              const checked = selectedChannels.includes(gid);
+              return (
+                <li
+                  key={gid}
+                  data-type="channel"
+                  data-id={gid}
+                  className="cursor-pointer flex items-center gap-2 px-3 py-1.5 hover:bg-bg-hover transition-colors"
+                  onClick={toggleCheck}
+                >
+                  <StyledCheckbox readOnly checked={checked} name="cb" id="cb" />
+                  <Channel id={gid} interactive={false} />
+                </li>
+              );
+            })}
+            {users?.map((u) => {
+              const { uid } = u;
+              const checked = selectedMembers.includes(uid);
+              return (
+                <li
+                  key={uid}
+                  data-id={uid}
+                  data-type="user"
+                  className="cursor-pointer flex items-center gap-2 px-3 py-1.5 hover:bg-bg-hover transition-colors"
+                  onClick={toggleCheck}
+                >
+                  <StyledCheckbox readOnly checked={checked} name="cb" id="cb" />
+                  <User uid={uid} interactive={false} />
+                </li>
+              );
+            })}
           </ul>
         </div>
-        <div className={`flex flex-col items-start p-4 box-border`}>
-          <h3 className="font-semibold text-sm text-fg-disabled mb-4">Send To {selectedCount}</h3>
-          <ul className="w-full h-[260px] py-2.5 overflow-y-scroll">
-            {selectedChannels.map((cid) => {
-              return (
-                <li key={cid} className="relative">
-                  <Channel key={cid} id={cid} interactive={false} />
-                  <CloseIcon
-                    className="cursor-pointer absolute right-1 top-1/2 -translate-y-1/2"
-                    onClick={removeSelected.bind(null, cid, "channel")}
-                  />
-                </li>
-              );
-            })}
-            {selectedMembers.map((uid) => {
-              return (
-                <li key={uid} className="relative">
-                  <User key={uid} uid={uid} interactive={false} />
-                  <CloseIcon
-                    className="cursor-pointer absolute right-1 top-1/2 -translate-y-1/2"
-                    onClick={removeSelected.bind(null, uid, "user")}
-                  />
-                </li>
-              );
-            })}
-          </ul>
-          <div className="rounded-lg p-2 max-h-[200px] overflow-auto bg-bg-elevated w-[280px] mb-1">
-            {mids.map((mid) => (
-              <Reply key={mid} mid={mid} interactive={false} />
-            ))}
+
+        {/* 右：已選對象 + 訊息預覽 + 操作 */}
+        <div className="flex flex-col flex-1 min-h-0 md:w-[320px] md:flex-none">
+          <div className="px-3 pt-3 pb-2 border-b border-border-subtle">
+            <h3 className="ts-meta font-semibold text-fg-primary">
+              {t("forward_to", { ns: "chat" })}
+              {selectedCount > 0 && (
+                <span className="ml-1 text-fg-secondary">（{selectedCount}）</span>
+              )}
+            </h3>
           </div>
-          <label className="flex items-center gap-2 mb-2 text-sm text-fg-body cursor-pointer">
-            <StyledCheckbox
-              checked={forwardOneByOne}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setForwardOneByOne(e.target.checked)}
-              name="forwardType"
-              id="forwardType"
+          <ul className="flex-1 overflow-y-auto py-1 min-h-[80px]">
+            {selectedChannels.map((cid) => (
+              <li key={cid} className="relative px-3 py-1">
+                <Channel id={cid} interactive={false} />
+                <CloseIcon
+                  className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 fill-fg-secondary"
+                  onClick={removeSelected.bind(null, cid, "channel")}
+                />
+              </li>
+            ))}
+            {selectedMembers.map((uid) => (
+              <li key={uid} className="relative px-3 py-1">
+                <User uid={uid} interactive={false} />
+                <CloseIcon
+                  className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 fill-fg-secondary"
+                  onClick={removeSelected.bind(null, uid, "user")}
+                />
+              </li>
+            ))}
+          </ul>
+          <div className="px-3 pt-2 pb-3 border-t border-border-subtle flex flex-col gap-2">
+            <div className="rounded-md p-2 max-h-[120px] overflow-auto bg-bg-surface border border-border-subtle">
+              {mids.map((mid) => (
+                <Reply key={mid} mid={mid} interactive={false} />
+              ))}
+            </div>
+            <label className="flex items-center gap-2 ts-meta text-fg-body cursor-pointer">
+              <StyledCheckbox
+                checked={forwardOneByOne}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setForwardOneByOne(e.target.checked)}
+                name="forwardType"
+                id="forwardType"
+              />
+              <span>{t("forward_one_by_one", { ns: "chat" })}</span>
+            </label>
+            <Input
+              placeholder={t("placeholder.leave_message", { ns: "common" })}
+              value={appendText}
+              onChange={updateAppendText}
             />
-            <span>逐条转发</span>
-          </label>
-          <Input
-            className="mb-8"
-            placeholder={t("placeholder.leave_message")}
-            value={appendText}
-            onChange={updateAppendText}
-          ></Input>
-          <div className="w-full flex items-center justify-end gap-4">
-            <Button onClick={closeModal} className="normal cancel">
-              {t("action.cancel")}
-            </Button>
-            <Button className="normal" disabled={sendButtonDisabled} onClick={handleForward}>
-              Send To {selectedCount == 0 ? null : `(${selectedCount})`}
-            </Button>
+            <div className="w-full flex items-center justify-end gap-3 pt-1">
+              <Button onClick={closeModal} className="normal cancel">
+                {t("action.cancel", { ns: "common" })}
+              </Button>
+              <Button className="normal" disabled={sendButtonDisabled} onClick={handleForward}>
+                {t("send_count", { ns: "chat", count: selectedCount })}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

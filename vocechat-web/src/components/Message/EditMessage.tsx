@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, KeyboardEvent, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useKey } from "rooks";
+import { useTranslation } from "react-i18next";
 
 import { ContentTypes } from "@/app/config";
 import { useEditMessageMutation } from "@/app/services/message";
@@ -12,6 +13,7 @@ type Props = {
   cancelEdit: () => void;
 };
 const EditMessage: FC<Props> = ({ mid, cancelEdit }) => {
+  const { t } = useTranslation();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const msg = useAppSelector((store) => store.message[mid], shallowEqual);
   const [shift, setShift] = useState(false);
@@ -77,20 +79,21 @@ const EditMessage: FC<Props> = ({ mid, cancelEdit }) => {
           onChange={handleMsgChange}
           disabled={isEditing}
           value={currMsg}
-          placeholder={`Edit Message`}
+          placeholder={t("edit_msg_placeholder", { ns: "chat" })}
         />
       </div>
-      <div className="flex items-center p-1 gap-4 text-xs">
+      {/* esc/enter hint 桌機獨有；手機鍵盤無此鍵且編輯改在訊息輸入區進行 */}
+      <div className="hidden md:flex items-center p-1 gap-4 text-xs">
         <span>
-          esc to{" "}
+          {t("esc_hint", { ns: "chat" })}{" "}
           <button className="text-accent cursor-pointer px-1" onClick={cancelEdit}>
-            cancel
+            {t("action.cancel", { ns: "common" })}
           </button>
         </span>
         <span>
-          enter to{" "}
+          {t("enter_hint", { ns: "chat" })}{" "}
           <button className="text-accent cursor-pointer px-1" onClick={handleSave}>
-            {isEditing ? "saving" : `save`}
+            {isEditing ? t("saving", { ns: "chat" }) : t("save", { ns: "chat" })}
           </button>
         </span>
       </div>

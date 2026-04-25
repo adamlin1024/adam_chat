@@ -13,6 +13,7 @@ import useSendMessage from "@/hooks/useSendMessage";
 import useUploadFile from "@/hooks/useUploadFile";
 import useUserOperation from "@/hooks/useUserOperation";
 import Replying from "./Replying";
+import Editing from "./Editing";
 import Toolbar from "./Toolbar";
 import PlusMenu from "./PlusMenu";
 import UploadFileList from "./UploadFileList";
@@ -66,6 +67,10 @@ const Send: FC<IProps> = ({
   const from_uid = useAppSelector((store) => store.authData.user?.uid, shallowEqual);
   const replying_mid = useAppSelector(
     (store) => store.message.replying[`${context}_${id}`],
+    shallowEqual
+  );
+  const editing_mid = useAppSelector(
+    (store) => store.message.editing?.[`${context}_${id}`],
     shallowEqual
   );
   const mode = useAppSelector((store) => store.ui.inputMode, shallowEqual);
@@ -212,6 +217,15 @@ const Send: FC<IProps> = ({
       </div>
     );
   }
+  // 編輯模式（手機觸發）：取代正常輸入區，氣泡保持不動
+  if (editing_mid) {
+    return (
+      <div className="send relative w-full px-0 pt-2 pb-4 md:px-3 md:pb-3">
+        <Editing context={context} id={id} mid={editing_mid} />
+      </div>
+    );
+  }
+
   return (
     <>
       {/* PC input */}
