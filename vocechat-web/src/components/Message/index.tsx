@@ -370,7 +370,15 @@ const Message: FC<IProps> = ({
               placement="top"
               appendTo={() => document.body}
               popperOptions={{ strategy: "fixed" }}
-              onClickOutside={closeSheet}
+              // Tippy reference 是 bubble，但 longPress 已上移到整列 row。
+              // 預設 onClickOutside 會把 row 上非 bubble 的點擊也算 outside（時間 / 空白），
+              // 導致長按非氣泡開啟 panel 後合成的 click 立刻把它關掉。
+              // 改成只有當 click 不在「整列 row」與「panel 本身」內才關。
+              onClickOutside={(_, evt) => {
+                const target = evt?.target as Node | null;
+                if (target && inViewRef.current?.contains(target)) return;
+                closeSheet();
+              }}
               content={
                 sheetView === "reactions" ? (
                   <ReactionPicker mid={mid} hidePicker={closeSheet} />
