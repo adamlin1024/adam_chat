@@ -90,6 +90,8 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
 
   const renderTile = (pack: string, id: string) => {
     const url = `/stickers/${pack}/${id}.png`;
+    // _key.png 是靜態縮圖：靜態包 = main 同尺寸；動態包 = APNG 第一幀靜態化（避免 picker 一起跑動畫）
+    // 由 scripts/regenerate-sticker-keys.mjs 產生，安裝新貼圖時 add-sticker.mjs 會自動重產
     const thumbUrl = `/stickers/${pack}/${id}_key.png`;
     const isPreview = previewUrl === url;
     return (

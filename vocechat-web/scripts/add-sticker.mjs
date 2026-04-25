@@ -10,6 +10,7 @@ import path from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { execSync, execFileSync } from "node:child_process";
+import sharp from "sharp";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -168,7 +169,7 @@ function scan() {
   process.stdout.write(JSON.stringify(candidates, null, 2) + "\n");
 }
 
-function install(sourcePath, packId) {
+async function install(sourcePath, packId) {
   if (!packId || !/^[a-z0-9_-]+$/i.test(packId)) {
     console.error("packId 必須為英數字、底線或連字號");
     process.exit(1);
@@ -229,6 +230,22 @@ function install(sourcePath, packId) {
       }
     }
 
+    // 3. 重產 _key.png：從 main 取第一幀（APNG 也適用）作為靜態縮圖，與 main 同解析度
+    //    避免 LINE 原檔 _key 解析度過低（動態包 75×70）造成 picker 上採樣模糊
+    let keysRegenerated = 0;
+    for (const entry of fs.readdirSync(destDir)) {
+      if (!entry.endsWith(".png") || entry.includes("_key") || entry.startsWith("tab_")) continue;
+      const main = path.join(destDir, entry);
+      const key = path.join(destDir, entry.replace(".png", "_key.png"));
+      try {
+        const buf = await sharp(main, { pages: 1 }).png({ compressionLevel: 9 }).toBuffer();
+        fs.writeFileSync(key, buf);
+        keysRegenerated++;
+      } catch {
+        /* 個別失敗保留 LINE 原檔 _key */
+      }
+    }
+
     const stickers = (meta.stickers || []).map((s) => ({
       id: String(s.id),
       w: s.width,
@@ -264,6 +281,7 @@ function install(sourcePath, packId) {
           stickerCount: stickers.length,
           filesCopied,
           animatedCount,
+          keysRegenerated,
           overwriting,
           destDir: path.relative(PROJECT_ROOT, destDir).replace(/\\/g, "/"),
           hasAnimation: !!meta.hasAnimation,
@@ -291,7 +309,7 @@ if (cmd === "scan") {
     console.error("用法：add-sticker.mjs install <source-path> <pack-id>");
     process.exit(1);
   }
-  install(sourcePath, packId);
+  install(sourcePath, packId).catch((e) => { console.error(e); process.exit(1); });
 } else {
   console.error("用法：");
   console.error("  node add-sticker.mjs scan");

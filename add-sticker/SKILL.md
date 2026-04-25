@@ -50,10 +50,11 @@ node vocechat-web/scripts/add-sticker.mjs install "<source-path>" <pack-id>
 - ZIP → 解壓到暫存資料夾後處理，處理完自動清暫存
 - 資料夾 → 直接讀取（不搬移、不刪除）
 - 複製所有圖檔到 `vocechat-web/public/stickers/<pack-id>/`
-- **若 ZIP 內含 `animation/` 子資料夾**：以 `animation/{id}.png`（APNG）覆蓋根目錄的靜態 `{id}.png`，`_key.png` 縮圖保留靜態版本
+- **若 ZIP 內含 `animation/` 子資料夾**：以 `animation/{id}.png`（APNG）覆蓋根目錄的靜態 `{id}.png`
+- **重產 `_key.png`**：用 sharp 從 main 取第一幀（APNG 也適用）做高解析度靜態縮圖，覆蓋 LINE 原檔的 _key（避免動態包原檔 75×70 在 picker 上糊）
 - 更新 `vocechat-web/public/stickers/packs.json`（若 ID 已存在則覆蓋該筆）
 
-輸出 JSON：`{ status, packId, name, stickerCount, filesCopied, animatedCount, overwriting, destDir, hasAnimation, hasSound }`。`animatedCount > 0` 表示裝到動態版本。
+輸出 JSON：`{ status, packId, name, stickerCount, filesCopied, animatedCount, keysRegenerated, overwriting, destDir, hasAnimation, hasSound }`。`animatedCount > 0` 表示裝到動態版本。
 
 ### Step 5：回報
 
