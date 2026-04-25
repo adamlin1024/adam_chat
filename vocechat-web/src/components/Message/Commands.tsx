@@ -116,6 +116,8 @@ const Commands: FC<Props> = ({
           interactive
           placement="top-start"
           trigger="click"
+          // 渲染到 body，避免被下方訊息 hover bg 蓋住（DOM 順序問題）
+          appendTo={() => document.body}
           content={<ReactionPicker mid={mid} hidePicker={hideAll} />}
         >
           <li className={cmdClass}>
@@ -149,6 +151,7 @@ const Commands: FC<Props> = ({
           interactive
           placement="top-start"
           trigger="click"
+          appendTo={() => document.body}
           content={
             <ContextMenu
               items={
