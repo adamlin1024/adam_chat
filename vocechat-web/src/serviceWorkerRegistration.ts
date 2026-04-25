@@ -56,7 +56,9 @@ function registerValidSW(swUrl: string, config: Config) {
   wireControllerChange();
 
   navigator.serviceWorker
-    .register(swUrl)
+    // updateViaCache: "none" 強制每次 update() 都繞過 HTTP cache 直接 fetch 最新 sw.js
+    // 否則瀏覽器 HTTP cache 可能餵舊版 sw.js，導致「立即更新後又馬上偵測到新版 → 跳橫幅」
+    .register(swUrl, { updateViaCache: "none" })
     .then((registration) => {
       // 如果一開啟就已經有 waiting SW，立即提示
       if (registration.waiting && navigator.serviceWorker.controller) {
@@ -113,24 +115,40 @@ export function applyUpdate() {
 }
 
 /**
- * 強制清除所有 cache + 註銷 SW + 重新載入。
- * 給使用者「卡舊版」時當 escape hatch 用。
+ * 強制更新 + 重新載入。
+ *
+ * 設計目標：拿到 server 上的最新版本，但**不清掉**使用者的本機 storage
+ * （登入 token、Google Drive 授權、IndexedDB 訊息快取等）。
+ *
+ * 流程：
+ *  1. 強制 SW 檢查 server 上的最新 service-worker.js（updateViaCache=none 已生效）
+ *  2. 若有新 SW 在 waiting → 直接 SKIP_WAITING，controllerchange listener 會 reload
+ *  3. 若沒有新 SW → 直接 location.reload() 拉最新 HTML
+ *
+ * 不再做：
+ *  - registration.unregister()    （會讓下次註冊重新走「初次安裝」路徑，誤觸 onUpdate 橫幅）
+ *  - caches.delete()               （副作用大；新 SW activate 時 Workbox 會自動清舊 precache）
+ *  - 任何動到 localStorage / IndexedDB 的事
  */
 export async function forceClearAndReload() {
   try {
     const reg = await navigator.serviceWorker?.getRegistration();
-    if (reg) await reg.unregister();
-  } catch {
-    /* ignore */
-  }
-  try {
-    if ("caches" in window) {
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => caches.delete(k)));
+    if (reg) {
+      try {
+        await reg.update();
+      } catch {
+        /* ignore network blip */
+      }
+      if (reg.waiting) {
+        // 已有新 SW 在 waiting，套用後 controllerchange listener 會 reload
+        reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        return;
+      }
     }
   } catch {
     /* ignore */
   }
+  // 沒有新 SW（或不支援 SW）→ 普通 reload
   window.location.reload();
 }
 

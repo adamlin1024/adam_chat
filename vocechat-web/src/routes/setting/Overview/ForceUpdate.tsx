@@ -7,12 +7,6 @@ const ForceUpdate = () => {
   const [busy, setBusy] = useState(false);
 
   const onClick = async () => {
-    if (
-      !window.confirm(
-        "強制清除快取並重新載入？這會註銷 Service Worker、清空所有暫存檔案，等同於清除瀏覽器資料後重新開啟 App。"
-      )
-    )
-      return;
     setBusy(true);
     await forceClearAndReload();
     // 上面會 reload，這行通常不會執行到
@@ -20,8 +14,8 @@ const ForceUpdate = () => {
 
   return (
     <SettingBlock
-      title="強制更新 App"
-      desc="當畫面看起來卡在舊版時，按這裡會清掉快取與 Service Worker 並重整。"
+      title="立即更新 App"
+      desc="當畫面看起來卡在舊版時，按這裡會去 server 拉最新版本並重整。不會清掉登入、Google Drive 授權、訊息快取等資料。"
       toggler={
         <button
           type="button"
