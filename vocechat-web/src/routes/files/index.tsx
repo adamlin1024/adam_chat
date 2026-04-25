@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import Tippy from "@tippyjs/react";
 import BASE_URL from "@/app/config";
@@ -65,7 +65,7 @@ function Files() {
   // 同一個 file_path（content）會被多則 message 共用（轉發 / 複製訊息），
   // 列表預設按 message 列出 → 一張圖顯示 N 次。
   // 這裡按 thumbnail || content 去重，保留最新那一筆，視覺乾淨。
-  const files = useMemo(() => {
+  const dedupedFiles = useMemo(() => {
     const seen = new Map<string, typeof rawFiles[number]>();
     for (const f of rawFiles) {
       const key = (f.thumbnail || f.content) as string;
@@ -76,6 +76,41 @@ function Files() {
     }
     return Array.from(seen.values());
   }, [rawFiles]);
+
+  // 並行 HEAD 驗證每個檔案 URL，過濾掉伺服器已 404 的「殭屍訊息紀錄」。
+  // 為什麼放在這層 batch 做、不寫進 FileBox：
+  //  - 集中處理，避免每張卡片各自先冒出來、再 async 隱藏（畫面跳動）
+  //  - in-memory state，不再用 localStorage（不會跨清除動作累積、跨裝置不同步）
+  //  - 全部驗證完才把結果灌進 files state → 渲染當下就是「全乾淨」狀態
+  const [files, setFiles] = useState<typeof dedupedFiles>([]);
+  const [validating, setValidating] = useState(false);
+  useEffect(() => {
+    if (dedupedFiles.length === 0) {
+      setFiles([]);
+      return;
+    }
+    let cancelled = false;
+    setValidating(true);
+    Promise.all(
+      dedupedFiles.map(async (f) => {
+        const path = (f.thumbnail || f.content) as string;
+        const url = `${BASE_URL}/resource/file?file_path=${encodeURIComponent(path)}`;
+        try {
+          const r = await fetch(url, { method: "HEAD", cache: "no-cache" });
+          return r.ok ? f : null;
+        } catch {
+          return null;
+        }
+      })
+    ).then((results) => {
+      if (cancelled) return;
+      setFiles(results.filter((x): x is NonNullable<typeof x> => x !== null));
+      setValidating(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [dedupedFiles]);
 
   const selectedTypeLabel = typeFilters.find((f) => f.type === fileType)?.title ?? "全部";
 
@@ -199,14 +234,14 @@ function Files() {
                 : "grid gap-x-3 gap-y-1.5 auto-rows-[281px] grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
           )}
         >
-          {files.length === 0 && !isFetching && (
+          {files.length === 0 && !isFetching && !validating && (
             <EmptyState
               icon={<IconUnknown className="w-7 h-7" />}
               title="沒有檔案"
               desc="這個頻道 / 篩選條件下還沒有任何上傳的檔案"
             />
           )}
-          {files.length === 0 && isFetching && (
+          {files.length === 0 && (isFetching || validating) && (
             <div className="text-sm text-fg-muted">載入中…</div>
           )}
           {files.map((file) => {
