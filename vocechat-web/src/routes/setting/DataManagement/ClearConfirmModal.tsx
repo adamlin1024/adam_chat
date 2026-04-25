@@ -48,9 +48,11 @@ const ClearConfirmModal: FC<Props> = ({ context, title, desc, closeModal }) => {
       }
       // 後端清完後同步把瀏覽器這側的 SW image cache 也清掉，避免「真實已沒、快取仍餵舊圖」
       await purgeImageCaches();
-      // RTK Query 因 invalidatesTags("Files") 會自動 refetch 所有訂閱 getFiles 的元件
       toast.success(t("tip.clear_success", { ns: "common" }));
       closeModal();
+      // 強制整頁重載：讓 waiting 中的新版 SW 直接接管 + 清空 in-memory RTK Query state +
+      // 跳過任何 HTTP cache 殘影。是「絕對乾淨」的最後一道保險。
+      setTimeout(() => window.location.reload(), 200);
     } catch (e) {
       const msg = (e as { data?: { msg?: string } } | undefined)?.data?.msg;
       toast.error(msg || t("tip.failed", { ns: "common", defaultValue: "操作失敗" }));
