@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neko-talk-v3';
+const CACHE_NAME = 'neko-talk-v4';
 const STATIC_ASSETS = ['/', '/index.html', '/share.html'];
 
 self.addEventListener('install', (event) => {
@@ -26,8 +26,10 @@ self.addEventListener('fetch', (event) => {
 
   // API: network-first
   if (url.pathname.startsWith('/api/')) {
+    // /api/resource/file 強制 conditional request：伺服器刪檔後，瀏覽器 HTTP cache 不會再餵舊圖
+    const init = url.pathname.startsWith('/api/resource/file') ? { cache: 'no-cache' } : undefined;
     event.respondWith(
-      fetch(request).catch(() => caches.match(request))
+      fetch(request, init).catch(() => caches.match(request))
     );
     return;
   }
