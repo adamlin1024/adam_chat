@@ -59,7 +59,10 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    fetch("/stickers/packs.json")
+    // 加 cache-buster 強制每次都從 server 抓最新 packs.json，
+    // 繞開 Service Worker / Workbox precache / HTTP cache 等所有層級的快取。
+    // 不然新增貼圖包後，使用者 SW 還是吃舊 precache 看不到。
+    fetch(`/stickers/packs.json?cb=${Date.now()}`, { cache: "no-store" })
       .then((res) => {
         if (!res.ok) throw new Error("failed");
         return res.json();
