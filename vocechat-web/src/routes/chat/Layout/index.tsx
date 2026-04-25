@@ -48,12 +48,7 @@ const BottomDock: FC<{ selects: boolean; children: ReactNode }> = ({ selects, ch
     };
   }, []);
   return (
-    <div
-      ref={ref}
-      // pb-safe：黑色透明狀態列模式下 viewport 延伸到 home indicator 下，
-      // 沒這個 padding 的話 input bar 下半被 indicator 區蓋掉。桌機 (md:) 不需要。
-      className={`px-2 py-0 pb-safe md:p-4 md:pb-4 ${selects ? "selecting" : ""}`}
-    >
+    <div ref={ref} className={`px-2 py-0 md:p-4 ${selects ? "selecting" : ""}`}>
       {children}
     </div>
   );
