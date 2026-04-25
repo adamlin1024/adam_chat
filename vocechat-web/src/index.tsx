@@ -36,17 +36,15 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
   const saved = (localStorage.theme as "auto" | "dark" | "light" | undefined) || "auto";
   const isDark = saved === "dark" || (saved === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.classList.add(isDark ? "dark" : "light");
-  // 同步更新瀏覽器 / PWA 狀態列顏色
-  // 動態 import 避免影響 hot path（index.tsx 已經被頻繁載入）
-  import("./utils/themeColor").then((m) => m.applyThemeColor(isDark));
+  // 啟動主題色同步：MutationObserver 監聽 html.class，主題切換時自動更新 meta
+  import("./utils/themeColor").then((m) => m.startThemeColorSync());
 
-  // 系統色彩偏好變動時，若使用者設 auto 也跟著切
+  // 系統色彩偏好變動時，若使用者設 auto 也跟著切（meta 由 observer 自動 sync）
   const mql = window.matchMedia("(prefers-color-scheme: dark)");
   mql.addEventListener("change", (e) => {
     if ((localStorage.theme || "auto") !== "auto") return;
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(e.matches ? "dark" : "light");
-    import("./utils/themeColor").then((m) => m.applyThemeColor(e.matches));
   });
 }
 

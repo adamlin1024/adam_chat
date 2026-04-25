@@ -1,27 +1,43 @@
 /**
  * 同步瀏覽器 / PWA 上方 status bar 顏色（meta name="theme-color"）。
- *
- * 顏色值對應 assets/index.css 中的 --c-bg-app：
- * - dark:  rgb(8 9 11)   = #08090b
- * - light: rgb(242 239 233) = #f2efe9
- *
- * 動到 CSS bg-app 時記得這裡也要同步改。
+ * runtime 從 --c-bg-app token 讀，跟 .dark / .light 切換 100% 同步。
  */
-export const THEME_BAR_COLORS = {
-  dark: "#08090b",
-  light: "#f2efe9"
-} as const;
 
-export function applyThemeColor(isDark: boolean) {
-  const color = isDark ? THEME_BAR_COLORS.dark : THEME_BAR_COLORS.light;
-  // 移除舊的 media-scoped meta（index.html fallback 用），只留一個 JS 控制的
-  document
-    .querySelectorAll('meta[name="theme-color"]')
-    .forEach((el) => el.parentElement?.removeChild(el));
-  const meta = document.createElement("meta");
-  meta.name = "theme-color";
+function readBgAppColor(): string | null {
+  const rgb = getComputedStyle(document.documentElement)
+    .getPropertyValue("--c-bg-app")
+    .trim();
+  return rgb ? `rgb(${rgb})` : null;
+}
+
+export function applyThemeColor() {
+  const color = readBgAppColor();
+  if (!color) return;
+  // 拿掉 index.html 的 media-scoped fallback metas，只留一個由 JS 控制的
+  let meta = document.querySelector<HTMLMetaElement>(
+    'meta[name="theme-color"]:not([media])'
+  );
+  if (!meta) {
+    document
+      .querySelectorAll('meta[name="theme-color"]')
+      .forEach((el) => el.remove());
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.appendChild(meta);
+  }
   meta.content = color;
-  document.head.appendChild(meta);
+}
+
+/**
+ * 啟動主題色同步：監聽 html.class 變動，主題切換時自動更新 meta[theme-color]。
+ * 整個 app 只需 bootstrap 呼叫一次。
+ */
+export function startThemeColorSync() {
+  applyThemeColor();
+  new MutationObserver(applyThemeColor).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
 }
 
 export function isCurrentlyDark(): boolean {
