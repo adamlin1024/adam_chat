@@ -27,7 +27,7 @@ const ForceUpdate = () => {
           type="button"
           onClick={onClick}
           disabled={busy}
-          className="px-3 py-1.5 text-xs font-medium border border-border text-fg-primary bg-bg-canvas hover:bg-bg-hover rounded-md transition-colors disabled:opacity-40"
+          className="shrink-0 whitespace-nowrap px-3 py-1.5 text-xs font-medium border border-border text-fg-primary bg-bg-canvas hover:bg-bg-hover rounded-md transition-colors disabled:opacity-40"
         >
           {busy ? "清除中…" : "立即更新"}
         </button>
