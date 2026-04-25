@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neko-talk-v2';
+const CACHE_NAME = 'neko-talk-v3';
 const STATIC_ASSETS = ['/', '/index.html', '/share.html'];
 
 self.addEventListener('install', (event) => {
@@ -32,10 +32,24 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets (JS/CSS/images): cache-first
-  if (
-    url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|ico|woff2?|ttf)$/)
-  ) {
+  // 貼圖 / 圖片資產：stale-while-revalidate（先回 cache、背景更新，下次刷新就最新）
+  // 避免 cache-first 把舊圖卡死（例如重產 _key.png 後使用者看不到新版）
+  if (url.pathname.match(/\.(png|jpg|jpeg|svg|ico)$/)) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(async (cache) => {
+        const cached = await cache.match(request);
+        const networkPromise = fetch(request).then((res) => {
+          if (res && res.ok) cache.put(request, res.clone());
+          return res;
+        }).catch(() => cached);
+        return cached || networkPromise;
+      })
+    );
+    return;
+  }
+
+  // JS/CSS/字型：cache-first（這些檔名含 hash，更新時檔名會變，cache key 不衝突）
+  if (url.pathname.match(/\.(js|css|woff2?|ttf)$/)) {
     event.respondWith(
       caches.match(request).then(
         (cached) => cached || fetch(request).then((res) => {
