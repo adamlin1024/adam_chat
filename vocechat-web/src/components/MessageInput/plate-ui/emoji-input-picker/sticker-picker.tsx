@@ -91,8 +91,10 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
   const renderTile = (pack: string, id: string) => {
     const url = `/stickers/${pack}/${id}.png`;
     // _key.png 是靜態縮圖：靜態包 = main 同尺寸；動態包 = APNG 第一幀靜態化（避免 picker 一起跑動畫）
-    // 由 scripts/regenerate-sticker-keys.mjs 產生，安裝新貼圖時 add-sticker.mjs 會自動重產
-    const thumbUrl = `/stickers/${pack}/${id}_key.png`;
+    // 由 scripts/regenerate-sticker-keys.mjs 產生，安裝新貼圖時 add-sticker.mjs 會自動重產。
+    // ?v=2：cache-busting，繞開先前部署用 immutable header 卡死的舊低解析度 _key.png；
+    //       未來重產時可直接改這個版本號，使用者不用清快取。
+    const thumbUrl = `/stickers/${pack}/${id}_key.png?v=2`;
     const isPreview = previewUrl === url;
     return (
       <button
