@@ -131,11 +131,17 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
         capture="environment"
         onChange={handleUpload}
       />
+      {/*
+        相片：用最標準的 PHPicker invocation pattern（image/* + multiple，
+        不夾雜 video、不列具體 MIME）。理論上 iOS 14+ Safari 會走 PHPicker
+        直接開圖庫。但 iOS PWA（WKWebView）整合受限，仍可能跳原生 source sheet——
+        這是 web 端硬限制，需 native 才能 100% 直達。
+      */}
       <input
         ref={photoRef}
         type="file"
         className="hidden"
-        accept="image/jpeg,image/png,image/heic,image/heif,image/gif,image/webp,video/mp4,video/quicktime"
+        accept="image/*"
         multiple
         onChange={handleUpload}
       />
