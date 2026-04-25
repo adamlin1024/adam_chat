@@ -10,7 +10,7 @@ import { ChatContext } from "@/types/common";
 import { removeEditingMessage } from "@/app/slices/message";
 import { shallowEqual } from "react-redux";
 import IconCheck from "@/assets/icons/check.sign.svg";
-import IconClose from "@/assets/icons/close.circle.svg";
+import IconClose from "@/assets/icons/close.svg";
 
 type Props = {
   context: ChatContext;
@@ -60,14 +60,6 @@ const Editing: FC<Props> = ({ context, id, mid }) => {
 
   return (
     <div className="flex items-center gap-2 border-t border-border bg-bg-sidebar px-2.5 py-2.5 md:rounded-lg md:border md:px-3">
-      <button
-        type="button"
-        onClick={close}
-        className="shrink-0 w-9 h-9 flex-center rounded-full text-fg-subtle hover:bg-bg-hover active:bg-bg-hover transition-colors"
-        title={t("action.cancel", { ns: "common" })}
-      >
-        <IconClose className="w-5 h-5 fill-current" />
-      </button>
       <div className="flex-1 flex items-center gap-1 min-w-0 rounded-3xl bg-bg-canvas border border-border focus-within:border-border-strong px-4 py-1 min-h-[40px]">
         <TextareaAutosize
           ref={inputRef}
@@ -80,15 +72,26 @@ const Editing: FC<Props> = ({ context, id, mid }) => {
           placeholder={t("edit_msg_placeholder", { ns: "chat" })}
         />
       </div>
-      <button
-        type="button"
-        onClick={handleSave}
-        disabled={isLoading || !text.trim()}
-        className="shrink-0 w-9 h-9 flex-center rounded-full bg-accent text-accent-on disabled:opacity-40 hover:bg-accent-hover active:bg-accent-pressed transition-colors"
-        title={t("save", { ns: "chat" })}
-      >
-        <IconCheck className="w-4 h-4 fill-current" />
-      </button>
+      {/* ✗ 與 ✓ 都靠右、同尺寸圓形底（w-9 h-9），中間 gap-3（12px）便於手指點擊 */}
+      <div className="flex items-center gap-3 shrink-0">
+        <button
+          type="button"
+          onClick={close}
+          className="w-9 h-9 flex-center rounded-full bg-bg-surface text-fg-subtle hover:bg-bg-hover active:bg-bg-hover transition-colors"
+          title={t("action.cancel", { ns: "common" })}
+        >
+          <IconClose className="w-4 h-4 fill-current" />
+        </button>
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={isLoading || !text.trim()}
+          className="w-9 h-9 flex-center rounded-full bg-accent text-accent-on disabled:opacity-40 hover:bg-accent-hover active:bg-accent-pressed transition-colors"
+          title={t("save", { ns: "chat" })}
+        >
+          <IconCheck className="w-4 h-4 fill-current" />
+        </button>
+      </div>
     </div>
   );
 };

@@ -223,9 +223,9 @@ cover.style.cssText = "background:rgb(var(--c-bg-app));"
 | 訊息長按 action panel（手機，LINE 風格） | `bg-bg-elevated`、`border-border`、`text-fg-body`、`text-fg-secondary`、`shadow-overlay`；hover/active：`bg-bg-hover`；danger 用 `text-danger` | `components/Message/MessageActionSheet.tsx`（含 action grid 與 reaction view 兩個 view）；觸發在 `components/Message/index.tsx` 用 `useLongPress` |
 | 訊息桌機 hover bar（hidden md:flex） | `bg-bg-app`、`border-border`、`text-fg-subtle`、`fill-fg-subtle`、`shadow-dropdown` | `components/Message/Commands.tsx` |
 | 訊息桌機右鍵選單 | 走全域 `.context-menu` | `components/Message/ContextMenu.tsx`（純殼，items 由父層傳入） |
-| 訊息收藏標記 | `fill-accent`（小 bookmark icon 在時間旁） | `components/Message/index.tsx`（讀 `useFavMessage().isFavorited(mid)`） |
+| 訊息收藏標記 | `fill-accent` 書籤 icon，絕對定位在氣泡右上角（`-top-1.5 right-1.5`、`w-4 h-5`、`z-10`） | `components/Message/index.tsx`（讀 `useFavMessage().isFavorited(mid)`） |
 | 多選操作底部 bar（手機 LINE 風格） | `bg-bg-elevated`、`border-border-subtle`、`text-fg-secondary`、`fill-fg-body`、`bg-bg-hover`（active）、`text-danger` / `fill-danger`（刪除） | `routes/chat/Layout/Operations.tsx`（多選模式下顯示） |
-| 訊息編輯（手機，輸入區接管） | `bg-bg-sidebar`、`bg-bg-canvas`、`border-border`、`text-fg-primary`、`bg-accent text-accent-on`（✓ 確認）、`text-fg-subtle`（✗ 取消）、`bg-bg-hover` | `components/Send/Editing.tsx`；redux 狀態見 `app/slices/message.ts` `editing` |
+| 訊息編輯（手機，輸入區接管） | textarea 容器：`bg-bg-canvas`、`border-border`、`text-fg-primary`；外殼 `bg-bg-sidebar`；按鈕都 `w-9 h-9` 圓形、靠右並列 gap-3：✗ 取消 = `bg-bg-surface text-fg-subtle hover:bg-bg-hover`、✓ 儲存 = `bg-accent text-accent-on hover:bg-accent-hover active:bg-accent-pressed`；icon 用 `close.svg`（純 X）非 `close.circle.svg` | `components/Send/Editing.tsx`；redux 狀態見 `app/slices/message.ts` `editing` |
 
 **坑**：
 - `bg-accent/20` 是 alpha 修飾子 → 必須變數為 RGB triplet 才會渲染（先前事件源頭）
@@ -252,7 +252,7 @@ cover.style.cssText = "background:rgb(var(--c-bg-app));"
 | Modal 容器 | `bg-bg-elevated`、`border-border-subtle`、`shadow-overlay` | `components/styled/Modal/*` |
 | Action Sheet（手機底部） | `bg-bg-elevated`、`border-border-subtle` | `components/ActionSheet.tsx` |
 | Channel Modal | 同上 | `components/ChannelModal/index.tsx` |
-| Forward Modal | 同上 | `components/ForwardModal/index.tsx` |
+| Forward Modal（沿用 UsersModal 外殼：手機 bottom-sheet + 拖把可拖收 / 桌機 centered modal） | `bg-bg-elevated`、`border-border-subtle`、`bg-bg-overlay`（遮罩）、`bg-bg-surface`（搜尋 input）、`border-border-strong`（focus）、`bg-bg-hover`（active row）、`bg-fg-disabled`（drag handle 條） | `components/ForwardModal/index.tsx` |
 | Invite Modal | 同上 | `components/InviteModal/*` |
 | Announcement Modal / Banner | `bg-bg-elevated` / `bg-idle/10`+`text-idle`（warning banner） | `components/AnnouncementModal.tsx`、`AnnouncementBanner.tsx` |
 | Users Modal | 同 Modal | `components/UsersModal.tsx` |

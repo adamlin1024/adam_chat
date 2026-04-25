@@ -41,5 +41,6 @@
   "search_by_email": "Search by email",
   "search_by_email_ph": "Input user email",
   "search_by_name": "Search by name",
-  "search_by_name_ph": "Input user name"
+  "search_by_name_ph": "Input user name",
+  "search_user": "Search user"
 }

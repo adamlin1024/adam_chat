@@ -78,6 +78,7 @@ const Reaction: FC<Props> = ({ mid, reactions = null, readOnly = false }) => {
               offset={[0, 20]}
               interactive
               placement="top"
+              touch={["hold", 500]}
               content={<ReactionDetails uids={uids} emoji={reaction as keyof Emojis} index={idx} />}
             >
               <i className="emoji text-xs not-italic">

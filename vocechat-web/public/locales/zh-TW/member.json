@@ -38,5 +38,8 @@
   "search_by_id": "用戶 ID",
   "search_by_id_ph": "請輸入用戶 ID",
   "search_by_email": "用戶信箱",
-  "search_by_email_ph": "請輸入用戶信箱"
+  "search_by_email_ph": "請輸入用戶信箱",
+  "search_by_name": "用戶名稱",
+  "search_by_name_ph": "請輸入用戶名稱",
+  "search_user": "搜尋用戶"
 }

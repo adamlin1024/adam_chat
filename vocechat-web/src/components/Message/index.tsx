@@ -24,7 +24,6 @@ import useLongPress from "@/hooks/useLongPress";
 import usePinMessage from "@/hooks/usePinMessage";
 import useSendMessage from "@/hooks/useSendMessage";
 import useFavMessage from "@/hooks/useFavMessage";
-import { useReactMessageMutation } from "@/app/services/message";
 import { updateSelectMessages } from "@/app/slices/ui";
 import { addEditingMessage } from "@/app/slices/message";
 import IconInfo from "@/assets/icons/info.svg";
@@ -37,6 +36,7 @@ import ContextMenu from "./ContextMenu";
 import EditMessage from "./EditMessage";
 import ExpireTimer from "./ExpireTimer";
 import Reaction from "./Reaction";
+import ReactionPicker from "./ReactionPicker";
 import renderContent from "./renderContent";
 import Reply from "./Reply";
 import useInView from "./useInView";
@@ -70,6 +70,7 @@ const Message: FC<IProps> = ({
   const inViewRef = useInView<HTMLDivElement>();
   const [edit, setEdit] = useState(false);
   const [sheetVisible, setSheetVisible] = useState(false);
+  const [sheetView, setSheetView] = useState<"actions" | "reactions">("actions");
   const [selectedText, setSelectedText] = useState("");
   const [nativeSelectMode, setNativeSelectMode] = useState(false);
   const bubbleRef = useRef<HTMLDivElement>(null);
@@ -122,8 +123,6 @@ const Message: FC<IProps> = ({
       sel.addRange(range);
     }, 50);
   };
-  const [reactMessage] = useReactMessageMutation();
-  const handleReact = (emoji: string) => reactMessage({ mid, action: emoji });
   const handleAddFav = async () => {
     if (isFavorited(mid)) { toast.success(t("tip.fav_already")); return; }
     const ok = await addFavorite(mid);
@@ -155,7 +154,7 @@ const Message: FC<IProps> = ({
     op.canCopy && { title: t("action.select_text", { ns: "common", defaultValue: "選取文字" }), icon: <IconSelect className="w-6 h-6 fill-current" />, handler: handleNativeSelect },
     op.canReply && { title: t("action.reply"), icon: <IconReply className="w-6 h-6 fill-current" />, handler: handleReply },
     { title: t("action.add_to_fav"), icon: <IconBookmark className="w-6 h-6 fill-current" />, handler: handleAddFav },
-    { title: t("action.add_reaction"), icon: <IconReact className="w-6 h-6 fill-current" />, handler: () => {}, isReact: true },
+    { title: t("action.add_reaction"), icon: <IconReact className="w-6 h-6 fill-current" />, handler: () => setSheetView("reactions"), keepOpen: true },
     { title: t("action.forward"), icon: <IconForward className="w-6 h-6 fill-current" />, handler: op.toggleForwardModal },
     { title: t("action.select"), icon: <IconSelect className="w-6 h-6 fill-current" />, handler: handleSelect },
     op.canEdit && { title: t("action.edit_msg"), icon: <IconEdit className="w-6 h-6 fill-current" />, handler: toggleEditMessage },
@@ -174,9 +173,14 @@ const Message: FC<IProps> = ({
 
   const longPressHandlers = useLongPress(() => {
     if (readOnly || failed) return;
-    hideAll();           // 關掉其他訊息已開的 panel，確保只有一個
+    hideAll();              // 關掉其他訊息已開的 panel，確保只有一個
+    setSheetView("actions"); // 每次開啟都從 action grid 開始（修 view 殘留 bug）
     setSheetVisible(true);
   });
+  const closeSheet = () => {
+    setSheetVisible(false);
+    setSheetView("actions"); // 關閉時也重置，雙保險
+  };
 
   useEffect(() => {
     if (!read) {
@@ -341,13 +345,13 @@ const Message: FC<IProps> = ({
               placement="top"
               appendTo={() => document.body}
               popperOptions={{ strategy: "fixed" }}
-              onClickOutside={() => setSheetVisible(false)}
+              onClickOutside={closeSheet}
               content={
-                <MessageActionPanel
-                  items={sheetItems}
-                  hide={() => setSheetVisible(false)}
-                  onReact={handleReact}
-                />
+                sheetView === "reactions" ? (
+                  <ReactionPicker mid={mid} hidePicker={closeSheet} />
+                ) : (
+                  <MessageActionPanel items={sheetItems} hide={closeSheet} />
+                )
               }
             >
             <div
@@ -355,7 +359,7 @@ const Message: FC<IProps> = ({
               {...(nativeSelectMode ? {} : longPressHandlers)}
               className={clsx(
                 // 手機 select-none 阻止 iOS 長按系統選字 menu；桌機 md:select-text 維持選字
-                "vc-msg ts-msg text-fg-body wb whitespace-pre-wrap min-w-0",
+                "vc-msg relative ts-msg text-fg-body wb whitespace-pre-wrap min-w-0",
                 nativeSelectMode
                   ? "select-text [-webkit-user-select:text] [-webkit-touch-callout:default]"
                   : "select-none md:select-text [-webkit-touch-callout:none] md:[-webkit-touch-callout:default]",
@@ -370,6 +374,12 @@ const Message: FC<IProps> = ({
                 sending && "opacity-70"
               )}
             >
+              {isFavorited(mid) && (
+                <IconBookmarked
+                  className="absolute -top-1.5 right-1.5 z-10 w-4 h-5 fill-accent"
+                  title={t("action.add_to_fav", { ns: "common" }) as string}
+                />
+              )}
               {reply_mid && (
                 <Reply key={reply_mid} mid={reply_mid} context={context} to={contextId} />
               )}
@@ -401,12 +411,6 @@ const Message: FC<IProps> = ({
                 {timeText}
               </time>
             </Tooltip>
-            {isFavorited(mid) && (
-              <IconBookmarked
-                className="w-3 h-3 fill-accent shrink-0 mb-0.5"
-                title={t("action.add_to_fav", { ns: "common" }) as string}
-              />
-            )}
             {hideIdentity && failed && (
               <span className="text-danger ts-2xs font-mono flex items-center gap-1 shrink-0">
                 <IconInfo className="stroke-danger w-3 h-3" /> Send Failed
