@@ -63,13 +63,13 @@ const MessageActionPanel: FC<Props> = ({ items, hide, onReact }) => {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-6 gap-1 p-1">
+        <div className="grid grid-cols-4 gap-1 p-1">
           {Emojis.map((emoji) => (
             <button
               key={emoji}
               type="button"
               onClick={() => handleEmoji(emoji)}
-              className="flex-center w-10 h-10 rounded-lg active:bg-bg-hover hover:bg-bg-hover transition-colors text-2xl"
+              className="flex-center cursor-pointer rounded-lg p-3 active:bg-bg-hover hover:bg-bg-hover transition-colors"
             >
               <Emoji native={emoji as any} />
             </button>
