@@ -1,4 +1,4 @@
-import { FC, ReactElement, useEffect, useRef } from "react";
+import { FC, ReactElement, ReactNode, useEffect, useRef } from "react";
 import { useDrop } from "react-dnd";
 import { NativeTypes } from "react-dnd-html5-backend";
 import { toast } from "react-hot-toast";
@@ -20,6 +20,39 @@ import Operations from "./Operations";
 import VirtualMessageFeed, { VirtualMessageFeedHandle } from "./VirtualMessageFeed";
 import { platform } from "@/utils";
 import { shallowEqual } from "react-redux";
+
+/**
+ * 底部底座：包住 Send / Operations / LoginTip 等任一者，
+ * 即時把當下高度寫進 CSS 變數 --chat-send-h，讓 NewMessageBottomTip
+ * 等浮動元件可以準確貼齊「目前底部實際長出來的東西」上緣。
+ *
+ * - text 模式：高度 ≈ Send 輸入列
+ * - emoji / sticker / markdown 撐高：跟著抽高
+ * - select / share mode：Operations bar 高度
+ * - readonly / reachLimit：LoginTip / LicenseUpgradeTip 高度
+ */
+const BottomDock: FC<{ selects: boolean; children: ReactNode }> = ({ selects, children }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      document.documentElement.style.setProperty("--chat-send-h", `${el.offsetHeight}px`);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      document.documentElement.style.removeProperty("--chat-send-h");
+    };
+  }, []);
+  return (
+    <div ref={ref} className={`px-2 py-0 md:p-4 ${selects ? "selecting" : ""}`}>
+      {children}
+    </div>
+  );
+};
 
 interface Props {
   readonly?: boolean;
@@ -105,7 +138,7 @@ const Layout: FC<Props> = ({
               {/* 消息流 */}
               <VirtualMessageFeed ref={feedRef} context={context} id={to} />
               {/* 发送框 */}
-              <div className={`px-2 py-0 md:p-4 ${selects ? "selecting" : ""}`}>
+              <BottomDock selects={selects}>
                 {readonly ? (
                   <LoginTip />
                 ) : reachLimit ? (
@@ -116,7 +149,7 @@ const Layout: FC<Props> = ({
                   </div>
                 )}
                 {selects && <Operations context={context} id={to} />}
-              </div>
+              </BottomDock>
             </div>
           </div>
         </main>

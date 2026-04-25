@@ -254,7 +254,7 @@ const ForwardSheet: FC<Props> = ({ mids, context, contextId, closeModal }) => {
 
   if (isMobile) {
     return createPortal(
-      <div className="fixed inset-0 z-[200]">
+      <div className="fixed inset-0 z-[2000]">
         <div
           className="absolute inset-0 bg-bg-app/50 transition-opacity duration-300"
           style={{ opacity: animated ? 1 : 0 }}
@@ -295,7 +295,7 @@ const ForwardSheet: FC<Props> = ({ mids, context, contextId, closeModal }) => {
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-bg-overlay" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-bg-overlay" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
       <div className="relative flex flex-col w-[440px] max-w-[90vw] bg-bg-elevated border border-border rounded-xl shadow-overlay overflow-hidden">
         {Header}
         {Grid}

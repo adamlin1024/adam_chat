@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 
 import { updateChannelVisibleAside } from "@/app/slices/footprint";
-import { updateRememberedNavs, updateSelectMessages } from "@/app/slices/ui";
+import { updateInputMode, updateRememberedNavs, updateSelectMessages } from "@/app/slices/ui";
 import { useAppSelector } from "@/app/store";
 import { useGetGroupAnnouncementQuery } from "@/app/services/server";
 import GoBackNav from "@/components/GoBackNav";
@@ -73,10 +73,11 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
     };
   }, [pathname]);
 
-  // 離開聊天時清掉選取狀態（select / share mode），避免下次進來看到殘留 bar
+  // 離開聊天時清掉選取狀態（select / share mode）+ markdown 模式，避免下次進來看到殘留
   useEffect(() => {
     return () => {
       if (cid) dispatch(updateSelectMessages({ context: "channel", id: cid, operation: "reset" }));
+      dispatch(updateInputMode("text"));
     };
   }, [cid]);
 

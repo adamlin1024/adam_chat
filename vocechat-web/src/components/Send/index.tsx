@@ -242,8 +242,10 @@ const Send: FC<IProps> = ({
 
         <div
           className={clsx(
-            `flex items-center gap-2 border-t border-border bg-bg-sidebar px-2.5 py-2.5 transition-colors md:rounded-lg md:border md:px-3`,
-            isMarkdownMode && `!rounded-lg md:!border !px-3.5 !py-3 grid grid-cols-[1fr_1fr] grid-rows-[auto_auto] gap-0 focus-within:bg-bg-canvas md:focus-within:border-border-strong`
+            `flex items-center gap-2 border-t border-border bg-bg-sidebar px-2.5 py-2.5 transition-colors md:rounded-lg md:border md:border-border md:px-3`,
+            // Markdown 模式：強制四邊邊框 + 圓角（取代手機版的 border-t-only，避免「圓角配只有上邊框」的跑版）
+            // relative：讓 Toolbar 浮動 ✕ / 全螢幕按鈕用此容器當定位基準
+            isMarkdownMode && `relative !rounded-lg !border !border-border !px-3.5 !py-3 grid grid-cols-[1fr_1fr] grid-rows-[auto_auto] gap-0 focus-within:bg-bg-canvas focus-within:border-border-strong md:focus-within:border-border-strong`
           )}
         >
           {mode == Modes.text && (
@@ -272,6 +274,7 @@ const Send: FC<IProps> = ({
                 mode={mode}
                 fullscreen={markdownFullscreen}
                 toggleMarkdownFullscreen={toggleMarkdownFullscreen}
+                toggleMode={toggleMode}
               />
             </>
           )}
@@ -293,6 +296,7 @@ const Send: FC<IProps> = ({
                 mode={mode}
                 fullscreen={markdownFullscreen}
                 toggleMarkdownFullscreen={toggleMarkdownFullscreen}
+                toggleMode={toggleMode}
               />
               <MarkdownEditor
                 updateDraft={getUpdateDraft("markdown")}

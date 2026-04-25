@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/app/store";
-import { updateSelectMessages } from "@/app/slices/ui";
+import { updateInputMode, updateSelectMessages } from "@/app/slices/ui";
 import GoBackNav from "@/components/GoBackNav";
 import Tooltip from "@/components/Tooltip";
 import MessageSearch from "@/components/MessageSearch";
@@ -35,10 +35,11 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
     }
   }, [currUser]);
 
-  // 離開 DM 時清掉選取狀態，避免下次進來看到殘留 bar
+  // 離開 DM 時清掉選取狀態 + markdown 模式，避免下次進來看到殘留
   useEffect(() => {
     return () => {
       if (uid) dispatch(updateSelectMessages({ context: "dm", id: uid, operation: "reset" }));
+      dispatch(updateInputMode("text"));
     };
   }, [uid]);
 

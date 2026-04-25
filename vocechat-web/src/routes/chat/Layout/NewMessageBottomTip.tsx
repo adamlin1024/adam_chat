@@ -42,10 +42,12 @@ const NewMessageBottomTip = ({ context, id, scrollToBottom }: Props) => {
   return (
     <aside
       className={clsx(
-        "z-[999] absolute bottom-24 left-1/2 -translate-x-1/2 justify-center text-xs rounded-full flex items-center cursor-pointer",
+        "z-[999] absolute left-1/2 -translate-x-1/2 justify-center text-xs rounded-full flex items-center cursor-pointer",
         unreads > 0 ? "py-1 px-3" : "w-8 h-8"
       )}
-      style={style}
+      // 用 Send 容器當下實際高度（vararg 由 Send 設）+ 12px gap 動態貼齊輸入區上緣，
+      // emoji 開合 / markdown / Replying / 上傳列表撐高都會跟著走
+      style={{ ...style, bottom: "calc(var(--chat-send-h, 96px) + 12px)" }}
       onClick={scrollToBottom}
     >
       {unreads > 0 ? (
