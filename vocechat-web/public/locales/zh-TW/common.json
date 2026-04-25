@@ -36,6 +36,7 @@
     "select": "選擇",
     "select_text": "選取文字",
     "forward": "轉傳",
+    "share": "分享",
     "reply": "回覆",
     "pin": "置頂",
     "unpin": "取消置頂",
@@ -141,7 +142,8 @@
     "add_members_success": "成員已加入",
     "unpin_success": "已取消置頂",
     "min_length_6": "至少 6 個字元",
-    "updated": "已更新"
+    "updated": "已更新",
+    "sending": "傳送中…"
   },
   "new_version": "有<0>新版本</0>",
   "mobile_app": "歡迎下載使用<0>手機 APP</0>",

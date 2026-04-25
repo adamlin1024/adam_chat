@@ -37,6 +37,7 @@
     "select": "Select",
     "select_text": "Select text",
     "forward": "Forward",
+    "share": "Share",
     "reply": "Reply",
     "pin": "Pin It",
     "unpin": "Unpin",
@@ -141,7 +142,8 @@
     "add_members_success": "Members added",
     "unpin_success": "Unpinned successfully",
     "min_length_6": "Minimum length is 6",
-    "updated": "Updated"
+    "updated": "Updated",
+    "sending": "Sending…"
   },
   "new_version": "<0>New Version</0> Available",
   "mobile_app": "Check out our <0>Mobile APP</0>",

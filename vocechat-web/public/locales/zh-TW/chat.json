@@ -82,6 +82,7 @@
   "replying_to": "回覆給 <0>{{name}}</0>",
   "select_msgs": "選擇訊息",
   "selected_count": "已選 {{count}} 則",
+  "recent_targets": "最近的傳送對象",
   "forward_to": "轉傳給",
   "forward_one_by_one": "逐則轉傳",
   "send_count": "傳送（{{count}}）",

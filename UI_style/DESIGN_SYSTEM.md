@@ -268,7 +268,9 @@ cover.style.cssText = "background:rgb(var(--c-bg-app));"
 | Modal 容器 | `bg-bg-elevated`、`border-border-subtle`、`shadow-overlay` | `components/styled/Modal/*` |
 | Action Sheet（手機底部） | `bg-bg-elevated`、`border-border-subtle` | `components/ActionSheet.tsx` |
 | Channel Modal | 同上 | `components/ChannelModal/index.tsx` |
-| Forward Modal（沿用 UsersModal 外殼：手機 bottom-sheet + 拖把可拖收 / 桌機 centered modal） | `bg-bg-elevated`、`border-border-subtle`、`bg-bg-overlay`（遮罩）、`bg-bg-surface`（搜尋 input）、`border-border-strong`（focus）、`bg-bg-hover`（active row）、`bg-fg-disabled`（drag handle 條） | `components/ForwardModal/index.tsx` |
+| Forward Sheet（LINE 風格快速分享 bottom-sheet：4×2 頭像 grid、第 8 格固定為「更多」） | `bg-bg-elevated`、`border-border`、`border-border-subtle`、`bg-bg-overlay`、`bg-bg-surface`（avatar 底）、`fill-fg-secondary`、`text-fg-secondary`、`bg-fg-disabled`（drag handle）、`bg-accent text-accent-on`（選中 ✓ + 底部 share button） | `components/ForwardSheet/index.tsx`；多選 ✓；點「更多」/🔍 → ForwardFullSheet |
+| Forward Full Sheet（完整分享面板，固定 90vh 高、tab/搜尋/留言/多選） | 同 ForwardSheet token 集 + `bg-accent`（tab indicator + send button + ✓） | `components/ForwardFullSheet/index.tsx`；含留言 input、聊天/好友 tab、最近對象 + 完整列表 |
+| Forward Modal（既有舊版，已被 ForwardSheet + FullSheet 取代，保留以防相容） | 同上 | `components/ForwardModal/index.tsx` |
 | Invite Modal | 同上 | `components/InviteModal/*` |
 | Announcement Modal / Banner | `bg-bg-elevated` / `bg-idle/10`+`text-idle`（warning banner） | `components/AnnouncementModal.tsx`、`AnnouncementBanner.tsx` |
 | Users Modal | 同 Modal | `components/UsersModal.tsx` |

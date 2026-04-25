@@ -18,6 +18,8 @@ export interface UIState {
     [key: string]: UploadFileData[];
   };
   selectMessages: { [key: string]: number[] | null };
+  // 選取模式來源："select" = 多選操作（分享 / 收藏 / 刪除）；"share" = 只走分享流程
+  selectMode: { [key: string]: "select" | "share" };
   draftMarkdown: { [key: string]: any };
   draftMixedText: { [key: string]: any };
   rememberedNavs: {
@@ -36,6 +38,7 @@ const initialState: UIState = {
   fileListView: "grid",
   uploadFiles: {},
   selectMessages: {},
+  selectMode: {},
   draftMarkdown: {},
   draftMixedText: {},
   // todo: typo
@@ -167,8 +170,9 @@ const uiSlice = createSlice({
       }
     },
     updateSelectMessages(state, action) {
-      const { context = "channel", id = null, operation = "add", data = null } = action.payload;
-      let currData = state.selectMessages[`${context}_${id}`];
+      const { context = "channel", id = null, operation = "add", data = null, mode } = action.payload;
+      const key = `${context}_${id}`;
+      let currData = state.selectMessages[key];
       switch (operation) {
         case "add": {
           currData = currData ? [...currData, data] : [data];
@@ -182,12 +186,17 @@ const uiSlice = createSlice({
         }
         case "reset": {
           currData = null;
+          delete state.selectMode[key];
           break;
         }
         default:
           break;
       }
-      state.selectMessages[`${context}_${id}`] = currData;
+      state.selectMessages[key] = currData;
+      // 入選時順便標記 mode（"select" 或 "share"）；reset 時上面已 delete
+      if (operation !== "reset" && mode) {
+        state.selectMode[key] = mode;
+      }
     },
   },
 });

@@ -83,6 +83,7 @@
   "replying_to": "Replying to <0>{{name}}</0>",
   "select_msgs": "Select messages",
   "selected_count": "{{count}} selected",
+  "recent_targets": "Recent targets",
   "forward_to": "Forward to",
   "forward_one_by_one": "Forward one by one",
   "send_count": "Send ({{count}})",

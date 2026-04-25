@@ -7,7 +7,7 @@ import { updateSelectMessages } from "@/app/slices/ui";
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { ChatContext } from "@/types/common";
 import DeleteMessageConfirmModal from "@/components/DeleteMessageConfirm";
-import ForwardModal from "@/components/ForwardModal";
+import ForwardSheet from "@/components/ForwardSheet";
 import useDeleteMessage from "@/hooks/useDeleteMessage";
 import useFavMessage from "@/hooks/useFavMessage";
 import IconBookmark from "@/assets/icons/bookmark.svg";
@@ -26,6 +26,10 @@ const Operations: FC<Props> = ({ context, id }) => {
   const { canDelete } = useDeleteMessage();
   const { addFavorite } = useFavMessage({});
   const mids = useAppSelector((store) => store.ui.selectMessages[`${context}_${id}`], shallowEqual);
+  const mode = useAppSelector(
+    (store) => store.ui.selectMode?.[`${context}_${id}`] ?? "select",
+    shallowEqual
+  );
   const [forwardModalVisible, setForwardModalVisible] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -66,50 +70,82 @@ const Operations: FC<Props> = ({ context, id }) => {
   return (
     <>
       <div className="relative w-full bg-bg-elevated border-t border-border-subtle pb-safe">
-        <div className="flex items-center justify-between px-3 py-2.5">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="ts-meta text-fg-secondary px-2 py-1 hover:text-fg-primary transition-colors"
-          >
-            {t("action.cancel", { ns: "common" })}
-          </button>
-          <span className="ts-meta text-fg-primary font-semibold">
-            {count > 0 ? t("selected_count", { ns: "chat", count, defaultValue: `已選 ${count} 則` }) : t("select_msgs", { ns: "chat", defaultValue: "選擇訊息" })}
-          </span>
-          <span className="w-12" />
-        </div>
-        <div className="grid grid-cols-3 gap-1 px-3 pb-2">
-          <button
-            type="button"
-            onClick={toggleForwardModal}
-            disabled={disabled}
-            className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
-          >
-            <IconForward className="w-6 h-6 fill-fg-body" />
-            <span className="ts-mini text-fg-secondary">{t("action.forward", { ns: "common" })}</span>
-          </button>
-          <button
-            type="button"
-            onClick={handleFav}
-            disabled={disabled}
-            className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
-          >
-            <IconBookmark className="w-6 h-6 fill-fg-body" />
-            <span className="ts-mini text-fg-secondary">{t("action.add_to_fav", { ns: "common" })}</span>
-          </button>
-          <button
-            type="button"
-            onClick={toggleDeleteModal.bind(null, false)}
-            disabled={disabled || !canDel}
-            className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
-          >
-            <IconDelete className="w-6 h-6 fill-danger" />
-            <span className="ts-mini text-danger">{t("action.remove", { ns: "common" })}</span>
-          </button>
-        </div>
+        {mode === "share" ? (
+          // Share mode：單列「取消 / 分享 (N)」，兩個都做成圓角填底按鈕
+          <div className="flex items-center gap-3 px-3 py-3">
+            <button
+              type="button"
+              onClick={handleClose}
+              className="flex-1 py-3 rounded-lg bg-bg-surface border border-border text-fg-primary ts-sm font-semibold hover:bg-bg-hover active:bg-bg-hover transition-colors"
+            >
+              {t("action.cancel", { ns: "common" })}
+            </button>
+            <button
+              type="button"
+              onClick={toggleForwardModal}
+              disabled={disabled}
+              className="flex-1 py-3 rounded-lg bg-accent text-accent-on ts-sm font-semibold disabled:opacity-40 hover:bg-accent-hover active:bg-accent-pressed transition-colors"
+            >
+              {t("action.share", { ns: "common" })}
+              {count > 0 && ` (${count})`}
+            </button>
+          </div>
+        ) : (
+          // Select mode：標題列（取消 / 已選 N 則）+ 3 個操作（分享 / 收藏 / 刪除）
+          <>
+            <div className="flex items-center justify-between px-3 py-2.5">
+              <button
+                type="button"
+                onClick={handleClose}
+                className="ts-meta text-fg-secondary px-2 py-1 hover:text-fg-primary transition-colors"
+              >
+                {t("action.cancel", { ns: "common" })}
+              </button>
+              <span className="ts-meta text-fg-primary font-semibold">
+                {count > 0 ? t("selected_count", { ns: "chat", count, defaultValue: `已選 ${count} 則` }) : t("select_msgs", { ns: "chat", defaultValue: "選擇訊息" })}
+              </span>
+              <span className="w-12" />
+            </div>
+            <div className="grid grid-cols-3 gap-1 px-3 pb-2">
+              <button
+                type="button"
+                onClick={toggleForwardModal}
+                disabled={disabled}
+                className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
+              >
+                <IconForward className="w-6 h-6 fill-fg-body" />
+                <span className="ts-mini text-fg-secondary">{t("action.share", { ns: "common" })}</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleFav}
+                disabled={disabled}
+                className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
+              >
+                <IconBookmark className="w-6 h-6 fill-fg-body" />
+                <span className="ts-mini text-fg-secondary">{t("action.add_to_fav", { ns: "common" })}</span>
+              </button>
+              <button
+                type="button"
+                onClick={toggleDeleteModal.bind(null, false)}
+                disabled={disabled || !canDel}
+                className="flex flex-col items-center gap-1 py-2.5 rounded-lg active:bg-bg-hover hover:bg-bg-hover disabled:opacity-40 disabled:active:bg-transparent transition-colors"
+              >
+                <IconDelete className="w-6 h-6 fill-danger" />
+                <span className="ts-mini text-danger">{t("action.remove", { ns: "common" })}</span>
+              </button>
+            </div>
+          </>
+        )}
       </div>
-      {forwardModalVisible && <ForwardModal mids={mids} closeModal={toggleForwardModal} />}
+      {forwardModalVisible && (
+        <ForwardSheet
+          mids={mids}
+          context={context}
+          contextId={id}
+          closeModal={toggleForwardModal}
+        />
+      )}
       {deleteModalVisible && (
         <DeleteMessageConfirmModal mids={mids} closeModal={toggleDeleteModal} />
       )}
