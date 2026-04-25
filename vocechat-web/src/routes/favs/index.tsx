@@ -10,6 +10,7 @@ import { useAppSelector } from "@/app/store";
 import FavoredMessage from "@/components/Message/FavoredMessage";
 import useFavMessage from "@/hooks/useFavMessage";
 import ImagePreviewModal from "@/components/ImagePreviewModal";
+import EmptyState from "@/components/EmptyState";
 import IconChannel from "@/assets/icons/channel.svg";
 import IconRemove from "@/assets/icons/close.svg";
 import IconAudio from "@/assets/icons/file.audio.svg";
@@ -110,11 +111,20 @@ function FavsPage() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto no-scrollbar p-4 md:p-5 flex flex-col gap-6 pb-[80px] md:pb-6">
+        <div
+          className={clsx(
+            "flex-1 overflow-y-auto no-scrollbar p-4 md:p-5 pb-[80px] md:pb-6",
+            favs.length === 0
+              ? "flex items-center justify-center"
+              : "flex flex-col gap-6"
+          )}
+        >
           {favs.length === 0 && (
-            <div className="flex-1 flex items-center justify-center py-16 text-fg-disabled text-sm">
-              {t("all_items")} 0
-            </div>
+            <EmptyState
+              icon={<IconUnknown className="w-7 h-7" />}
+              title="沒有收藏"
+              desc="長按或右鍵訊息可以加入收藏，留在這裡長期保存"
+            />
           )}
           {favs.map(({ id, created_at, messages }) => {
             if (!messages || messages.length === 0) return null;

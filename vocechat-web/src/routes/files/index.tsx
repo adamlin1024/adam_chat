@@ -4,6 +4,7 @@ import Tippy from "@tippyjs/react";
 import BASE_URL from "@/app/config";
 import { useAppSelector } from "@/app/store";
 import FileBox from "@/components/FileBox";
+import EmptyState from "@/components/EmptyState";
 import FilterChannel from "./Filter/Channel";
 import { useLazyGetFilesQuery } from "@/app/services/server";
 import { shallowEqual, useDispatch } from "react-redux";
@@ -33,7 +34,7 @@ const typeFilters = [
 
 function Files() {
   const dispatch = useDispatch();
-  const [getFiles, { data }] = useLazyGetFilesQuery();
+  const [getFiles, { data, isFetching }] = useLazyGetFilesQuery();
   const [fileType, setFileType] = useState("");
   const [gid, setGid] = useState<number | undefined>(undefined);
   const [channelMenuVisible, setChannelMenuVisible] = useState(false);
@@ -49,11 +50,13 @@ function Files() {
     getFiles(f);
   }, [fileType, gid]);
 
-  if (!data) return null;
-
-  const files = [...data.filter((item) => !item.expired)].sort(
-    (a, b) => b.created_at - a.created_at
-  );
+  // 拉資料中先不渲染 stale list，避免上次刪檔後仍閃出舊檔造成破圖
+  const files =
+    !data || isFetching
+      ? []
+      : [...data.filter((item) => !item.expired)].sort(
+          (a, b) => b.created_at - a.created_at
+        );
 
   const selectedTypeLabel = typeFilters.find((f) => f.type === fileType)?.title ?? "全部";
 
@@ -170,13 +173,22 @@ function Files() {
         <div
           className={clsx(
             "flex-1 overflow-y-auto no-scrollbar p-4 pb-[80px] md:pb-4",
-            view === "item" ? "flex flex-col gap-3" : "grid gap-x-3 gap-y-1.5 auto-rows-[281px] grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+            files.length === 0
+              ? "flex items-center justify-center"
+              : view === "item"
+                ? "flex flex-col gap-3"
+                : "grid gap-x-3 gap-y-1.5 auto-rows-[281px] grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
           )}
         >
-          {files.length === 0 && (
-            <div className="col-span-full flex items-center justify-center py-16 text-fg-disabled text-sm">
-              沒有檔案
-            </div>
+          {files.length === 0 && !isFetching && (
+            <EmptyState
+              icon={<IconUnknown className="w-7 h-7" />}
+              title="沒有檔案"
+              desc="這個頻道 / 篩選條件下還沒有任何上傳的檔案"
+            />
+          )}
+          {files.length === 0 && isFetching && (
+            <div className="text-sm text-fg-muted">載入中…</div>
           )}
           {files.map((file) => {
             const { mid, thumbnail, content, created_at, from_uid, properties } = file;
