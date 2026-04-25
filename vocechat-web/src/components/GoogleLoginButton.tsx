@@ -44,7 +44,7 @@ const GoogleLoginInner: FC<Props> = ({ type = "login", loaded, loadError }) => {
 
   return (
     <Button
-      className=" group relative w-full !bg-white dark:!bg-gray-700 !text-gray-600 dark:!text-gray-200 overflow-hidden border border-solid border-gray-300 dark:border-gray-500"
+      className=" group relative w-full !bg-bg-elevated dark:!bg-bg-surface !text-fg-subtle dark:!text-fg-body overflow-hidden border border-solid border-border-strong"
       disabled={!loaded || isLoading}
     >
       <div className="absolute left-0 top-0 w-full h-full flex-center gap-3 z-[998] bg-inherit">

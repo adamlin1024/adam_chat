@@ -86,8 +86,8 @@ const WebhookEdit = ({ uid }: Props) => {
               name="webhook"
               defaultValue={url}
               className={clsx(
-                "text-sm text-gray-400 dark:text-gray-100 dark:bg-slate-900 px-2 py-1",
-                editable ? "ring-1 ring-gray-500 bg-gray-50" : "bg-transparent"
+                "text-sm text-fg-primary bg-bg-app px-2 py-1",
+                editable ? "ring-1 ring-border-strong bg-bg-elevated" : "bg-transparent"
               )}
             />
           </form>
@@ -95,21 +95,21 @@ const WebhookEdit = ({ uid }: Props) => {
             {isUpdating ? (
               <Orbit size={16} />
             ) : editable ? (
-              <IconSave className="stroke-gray-500 !w-5 !h-5" />
+              <IconSave className="stroke-fg-muted !w-5 !h-5" />
             ) : (
-              <IconEdit className="fill-gray-500 !w-5 !h-5" />
+              <IconEdit className="fill-fg-muted !w-5 !h-5" />
             )}
           </button>
           {editable && !isUpdating && (
             <button type="button" disabled={isUpdating} onClick={handleCancelEdit}>
-              <IconCancel className="!w-5 !h-5 fill-gray-500" />
+              <IconCancel className="!w-5 !h-5 fill-fg-muted" />
             </button>
           )}
         </div>
       ) : (
         <button
           type="button"
-          className="rounded-full bg-primary-50 text-green-600 text-xs py-0.5 px-2"
+          className="rounded-full bg-bg-surface text-online text-xs py-0.5 px-2"
           onClick={handleEditable}
         >
           Set Webhook

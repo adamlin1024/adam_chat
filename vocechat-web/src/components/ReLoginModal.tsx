@@ -43,7 +43,7 @@ const ReLoginModal: FC<Props> = ({ reasonType = "role_changed" }) => {
           </>
         }
       >
-        <div className="text-sm text-gray-400 flex justify-end items-center">
+        <div className="text-sm text-fg-secondary flex justify-end items-center">
           {t(`logout.${reasonType}`)}
         </div>
       </StyledModal>

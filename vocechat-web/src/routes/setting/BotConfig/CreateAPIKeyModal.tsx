@@ -73,15 +73,15 @@ const CreateAPIKeyModal = ({ closeModal, uid }: Props) => {
       >
         {isSuccess ? (
           <div className="flex flex-col gap-2 text-sm">
-            <div className="border-green-600 bg-green-200/50 rounded border border-solid p-2 max-w-md w-full whitespace-pre-wrap break-all">
+            <div className="border-online bg-online/20 rounded border border-solid p-2 max-w-md w-full whitespace-pre-wrap break-all">
               {data}
             </div>{" "}
-            <div className="text-red-400">⚠️ {t("create_key_warning")}</div>
+            <div className="text-danger">⚠️ {t("create_key_warning")}</div>
           </div>
         ) : (
           <form ref={formRef} className="w-full flex flex-col gap-2 items-center" action="/">
             <div className="flex flex-col gap-1 w-full">
-              <label htmlFor={"name"} className="text-sm text-gray-500">
+              <label htmlFor={"name"} className="text-sm text-fg-muted">
                 Name
               </label>
               <Input name={"name"} required placeholder={t("api_key_name_placeholder")}></Input>

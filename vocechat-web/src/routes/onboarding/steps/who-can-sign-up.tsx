@@ -37,7 +37,7 @@ export default function SignUpSetting() {
   }, [isSuccess]);
   if (!loginConfig) return null;
   return (
-    <div className="h-full px-2 flex-center flex-col text-center w-full md:w-[512px] m-auto dark:text-gray-100">
+    <div className="h-full px-2 flex-center flex-col text-center w-full md:w-[512px] m-auto text-fg-primary">
       <span className="font-bold text-2xl mb-2">{t("onboarding.invite_title")}</span>
       <span className="text-sm mb-6">{t("onboarding.invite_desc")}</span>
       {value && (

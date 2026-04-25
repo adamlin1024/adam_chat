@@ -109,14 +109,14 @@ const DeviceList = ({
       content={
         <div
           onClick={handleBlockClick}
-          className="px-3 pb-3 bg-white dark:bg-gray-800 overflow-auto rounded-lg flex flex-col gap-3 divide-gray-500/50 divide-y-[1px] items-start relative drop-shadow"
+          className="px-3 pb-3 bg-bg-elevated overflow-auto rounded-lg flex flex-col gap-3 divide-border-strong/50 divide-y-[1px] items-start relative drop-shadow"
         >
           {devices.map(({ title, list, selected }) => {
             console.log("device selected", title, selected);
             if (list.length == 0) return null;
             return (
               <div key={title} className="w-full flex flex-col items-start gap-2 pt-3">
-                <p className="text-gray-500 text-xs">{title}</p>
+                <p className="text-fg-muted text-xs">{title}</p>
                 <ul className="w-full flex flex-col gap-4">
                   {list.map(({ deviceId, kind, label }) => {
                     return (
@@ -125,7 +125,7 @@ const DeviceList = ({
                         data-kind={kind}
                         data-device-id={deviceId}
                         key={label}
-                        className="relative rounded-sm cursor-pointer flex items-center justify-between gap-4 text-gray-500 hover:text-gray-900 dark:text-gray-300 hover:dark:text-gray-100 font-semibold text-sm whitespace-nowrap"
+                        className="relative rounded-sm cursor-pointer flex items-center justify-between gap-4 text-fg-muted hover:text-fg-body hover:text-fg-primary font-semibold text-sm whitespace-nowrap"
                         onClick={handleSelect}
                       >
                         {label}
@@ -144,12 +144,12 @@ const DeviceList = ({
     >
       <div
         onClick={toggleVisible}
-        className="group p-1 absolute rounded-sm top-0.5 right-0.5 hover:bg-gray-300/50"
+        className="group p-1 absolute rounded-sm top-0.5 right-0.5 hover:bg-bg-surface/50"
         role="button"
       >
         <IconArrow
           className={clsx(
-            "w-2 fill-gray-600 group-hover:fill-gray-900 dark:fill-white transition-transform",
+            "w-2 fill-fg-subtle group-hover:fill-fg-primary transition-transform",
             visible == type && "rotate-180"
           )}
         />
@@ -209,9 +209,9 @@ const Operations = ({ id, context, mode = "channel" }: Props) => {
   if (!voicingInfo) return null;
   const { muted, video, shareScreen } = voicingInfo;
   const baseButtonClass = clsx(
-    "flex-center py-2 px-3 rounded bg-gray-100 dark:bg-gray-900 relative disabled:pointer-events-none disabled:opacity-50"
+    "flex-center py-2 px-3 rounded bg-bg-app relative disabled:pointer-events-none disabled:opacity-50"
   );
-  const baseIconClass = clsx("w-[25px] h-6 m-auto fill-gray-700 dark:fill-gray-300");
+  const baseIconClass = clsx("w-[25px] h-6 m-auto fill-fg-body");
   return (
     <>
       <Tooltip
@@ -278,13 +278,13 @@ const Operations = ({ id, context, mode = "channel" }: Props) => {
           onClick={shareScreen ? stopShareScreen : startShareScreen}
           className={clsx(
             "py-2 px-3 rounded",
-            shareScreen ? "bg-green-700" : "bg-gray-100 dark:bg-gray-900"
+            shareScreen ? "bg-online" : "bg-bg-app"
           )}
         >
           <IconScreen
             className={clsx(
-              "w-6 h-6 dark:fill-gray-300",
-              shareScreen ? "fill-gray-200" : "fill-gray-800"
+              "w-6 h-6 fill-fg-body",
+              shareScreen ? "fill-fg-body" : "fill-fg-disabled"
             )}
           />
         </button>
@@ -310,7 +310,7 @@ const Operations = ({ id, context, mode = "channel" }: Props) => {
           <button
             onClick={leave}
             className={clsx(
-              "py-2 px-3 rounded bg-red-600 hover:bg-red-700",
+              "py-2 px-3 rounded bg-danger-bg hover:bg-danger-bg",
               mode !== "fullscreen" && "col-span-4"
             )}
           >

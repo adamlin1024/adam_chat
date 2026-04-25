@@ -30,14 +30,14 @@ const ReactionDetails = ({
       : `${names.join(", ")} reacted with`;
   return (
     <div
-      className={`relative bg-white rounded-lg shadow flex items-start gap-2 p-2 ${
+      className={`relative bg-bg-elevated rounded-lg shadow flex items-start gap-2 p-2 ${
         index == 0 ? "first" : ""
       }`}
     >
       <div className="w-8 h-8">
         <ReactionItem native={emoji} />
       </div>
-      <div className="flex flex-col w-[140px] text-xs text-gray-800">
+      <div className="flex flex-col w-[140px] text-xs text-fg-disabled">
         <span>{prefixDesc}</span>
         <span>{ReactionMap[emoji]}</span>
       </div>

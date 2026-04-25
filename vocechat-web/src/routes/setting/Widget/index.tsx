@@ -26,8 +26,8 @@ export default function Widget() {
   // const disableBtn = !reachLimit;
   return (
     <div className="flex flex-col justify-start items-start">
-      <div className="font-semibold dark:text-white">{t("tip")}</div>
-      <label htmlFor="code" className="font-semibold dark:text-white">
+      <div className="font-semibold text-fg-primary">{t("tip")}</div>
+      <label htmlFor="code" className="font-semibold text-fg-primary">
         {t("code")}:
       </label>
       <SyntaxHighlighter id="code" language="html" style={vscDarkPlus} className="rounded">
@@ -37,7 +37,7 @@ export default function Widget() {
           location.origin
         }/widget.js" \n  async \n></script>`}
       </SyntaxHighlighter>
-      <div className="text-sm dark:text-white">{t("custom_style_tip")}:</div>
+      <div className="text-sm text-fg-primary">{t("custom_style_tip")}:</div>
       <SyntaxHighlighter id="code" language="html" style={vscDarkPlus} className="rounded">
         {`<style>
   #VOCECHAT_WIDGET {
@@ -46,7 +46,7 @@ export default function Widget() {
   }
 </style>`}
       </SyntaxHighlighter>
-      <div className="text-sm dark:text-white mt-5">{t("open_widget_tip")}:</div>
+      <div className="text-sm text-fg-primary mt-5">{t("open_widget_tip")}:</div>
       <SyntaxHighlighter id="code" language="html" style={vscDarkPlus} className="rounded">
         {`<!-- ${t("open_widget_example")} -->
 <button onclick="VoceChatWidget.open()">Contact Support</button>
@@ -64,17 +64,17 @@ export default function Widget() {
       </SyntaxHighlighter>
       <ServerVersionChecker version="0.4.0">
         <div className="flex flex-col gap-2">
-          <div className="text-sm dark:text-white">{t("css_code_tip")}:</div>
+          <div className="text-sm text-fg-primary">{t("css_code_tip")}:</div>
           <ExtCSS />
         </div>
       </ServerVersionChecker>
-      <div className="font-semibold dark:text-white mt-5 mb-2">{t("config")}:</div>
-      <div className="w-full md:w-[700px] border border-solid border-gray-300 dark:border-gray-400 rounded overflow-auto md:overflow-hidden">
+      <div className="font-semibold text-fg-primary mt-5 mb-2">{t("config")}:</div>
+      <div className="w-full md:w-[700px] border border-solid border-border rounded overflow-auto md:overflow-hidden">
         {/* 配置说明 */}
         <ConfigDetails />
       </div>
       <div className="mt-8">
-        <p className="text-sm mb-2 text-gray-500 dark:text-gray-50 flex flex-col md:flex-row gap-4">
+        <p className="text-sm mb-2 text-fg-primary flex flex-col md:flex-row gap-4">
           {t("share_link")}{" "}
           <a
             className="text-accent flex gap-1 items-center"

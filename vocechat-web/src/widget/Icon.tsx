@@ -31,7 +31,7 @@ const Icon = ({ handleClick }: Props) => {
       {/* 常驻提示框 - 绝对定位在左边，移动端不显示 */}
       {showTooltip && (
         <div className="absolute right-[60px] bottom-0 animate-[fadeIn_0.3s_ease-in-out]">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 min-w-[220px] max-w-[300px] border border-gray-200 dark:border-gray-700">
+          <div className="bg-bg-elevated rounded-lg shadow-xl p-4 min-w-[220px] max-w-[300px] border border-border">
             {/* 关闭按钮 */}
             {popupClosable && (
               <button
@@ -39,7 +39,7 @@ const Icon = ({ handleClick }: Props) => {
                   e.stopPropagation();
                   setTooltipVisible(false);
                 }}
-                className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center text-fg-secondary hover:text-fg-body transition-colors"
                 aria-label="Close"
               >
                 <svg
@@ -67,16 +67,16 @@ const Icon = ({ handleClick }: Props) => {
                 />
               )}
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
+                <div className="text-sm font-semibold text-fg-primary mb-1">
                   {popupTitle}
                 </div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                <div className="text-xs text-fg-secondary leading-relaxed">
                   {popupSubtitle}
                 </div>
               </div>
             </div>
             {/* 小三角指向右边 */}
-            <div className="absolute bottom-3 -right-[6px] w-3 h-3 bg-white dark:bg-gray-800 border-r border-t border-gray-200 dark:border-gray-700 transform rotate-45"></div>
+            <div className="absolute bottom-3 -right-[6px] w-3 h-3 bg-bg-elevated border-r border-t border-border transform rotate-45"></div>
           </div>
         </div>
       )}

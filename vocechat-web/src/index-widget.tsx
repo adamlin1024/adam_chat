@@ -21,11 +21,9 @@ function initWidget(rootElement: HTMLElement, searchParams?: string) {
   const rootDoc = rootElement.getRootNode() as Document | ShadowRoot;
   const docElement = rootDoc instanceof ShadowRoot ? rootElement : document.documentElement;
 
-  if (isDarkMode()) {
-    docElement.classList.add("dark");
-  } else {
-    docElement.classList.remove("dark");
-  }
+  docElement.classList.remove("dark");
+  docElement.classList.remove("light");
+  docElement.classList.add(isDarkMode() ? "dark" : "light");
 
   // 如果是 Shadow DOM，将 shadowRoot 存储到 window 对象供 Widget 组件使用
   if (rootDoc instanceof ShadowRoot) {
@@ -39,7 +37,7 @@ function initWidget(rootElement: HTMLElement, searchParams?: string) {
         <WidgetProvider>
           <Toaster
             toastOptions={{
-              className: "dark:!bg-gray-800 dark:!text-gray-50"
+              className: "dark:!bg-bg-elevated dark:!text-fg-primary"
             }}
           />
           <Widget hostId={Number(hostId)} />

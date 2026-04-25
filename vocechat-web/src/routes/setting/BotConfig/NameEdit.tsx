@@ -79,9 +79,9 @@ const NameEdit = ({ uid }: Props) => {
           name="name"
           defaultValue={name}
           className={clsx(
-            "text-gray-900 dark:text-gray-100 w-auto",
+            "text-fg-primary w-auto",
             editable
-              ? "ring-1 ring-gray-500 bg-gray-50 px-2 py-1 dark:bg-slate-900"
+              ? "ring-1 ring-border-strong bg-bg-elevated px-2 py-1 bg-bg-app"
               : "bg-transparent"
           )}
         />
@@ -90,14 +90,14 @@ const NameEdit = ({ uid }: Props) => {
         {isUpdating ? (
           <Orbit size={16} />
         ) : editable ? (
-          <IconSave className="stroke-gray-500 !w-5 !h-5" />
+          <IconSave className="stroke-fg-muted !w-5 !h-5" />
         ) : (
-          <IconEdit className="fill-gray-500 !w-5 !h-5" />
+          <IconEdit className="fill-fg-muted !w-5 !h-5" />
         )}
       </button>
       {editable && !isUpdating && (
         <button type="button" disabled={isUpdating} onClick={handleCancelEdit}>
-          <IconCancel className="!w-5 !h-5 fill-gray-500" />
+          <IconCancel className="!w-5 !h-5 fill-fg-muted" />
         </button>
       )}
     </div>

@@ -14,7 +14,7 @@ const Dashboard = ({ context = "channel", id, visible }: Props) => {
   const { voicingInfo } = useVoice({ id, context });
   return (
     <div
-      className={`h-full flex-col gap-1 w-[226px] overflow-y-scroll overflow-x-hidden p-2 border border-black/10 md:border-none md:shadow-[inset_1px_0px_0px_rgba(0,_0,_0,_0.1)] ${
+      className={`h-full flex-col gap-1 w-[226px] overflow-y-scroll overflow-x-hidden p-2 border border-border-strong/10 md:border-none md:shadow-[inset_1px_0px_0px_rgba(0,_0,_0,_0.1)] ${
         visible ? "flex" : "hidden"
       }`}
     >

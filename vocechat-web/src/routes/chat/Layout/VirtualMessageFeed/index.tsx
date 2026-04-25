@@ -188,8 +188,8 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
         setTimeout(() => {
           const msgEle = document.querySelector<HTMLDivElement>(`[data-msg-mid='${mid}']`);
           if (msgEle) {
-            const _class1 = `md:dark:bg-gray-800`;
-            const _class2 = `md:bg-gray-100`;
+            const _class1 = `md:dark:bg-bg-elevated`;
+            const _class2 = `md:bg-bg-elevated`;
             msgEle.classList.add(_class1);
             msgEle.classList.add(_class2);
             setTimeout(() => {
@@ -207,8 +207,8 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
             setTimeout(() => {
               const msgEle = document.querySelector<HTMLDivElement>(`[data-msg-mid='${mid}']`);
               if (msgEle) {
-                const _class1 = `md:dark:bg-gray-800`;
-                const _class2 = `md:bg-gray-100`;
+                const _class1 = `md:dark:bg-bg-elevated`;
+                const _class2 = `md:bg-bg-elevated`;
                 msgEle.classList.add(_class1);
                 msgEle.classList.add(_class2);
                 setTimeout(() => {

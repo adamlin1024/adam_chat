@@ -16,8 +16,8 @@ const Channel: FC<Props> = ({ select = 0, updateFilter }) => {
   };
 
   return (
-    <div className="rounded-lg p-1 pt-0 bg-white dark:bg-gray-800 overflow-auto max-h-[400px] flex flex-col items-start relative drop-shadow">
-      <div className=" bg-white dark:bg-gray-800 sticky top-0 z-10 w-full">
+    <div className="rounded-lg p-1 pt-0 bg-bg-elevated overflow-auto max-h-[400px] flex flex-col items-start relative drop-shadow">
+      <div className=" bg-bg-elevated sticky top-0 z-10 w-full">
         <Search embed={true} value={input} updateSearchValue={updateInput} />
       </div>
       <ul className="w-full flex flex-col gap-4 p-2">
@@ -26,7 +26,7 @@ const Channel: FC<Props> = ({ select = 0, updateFilter }) => {
           onClick={handleClick.bind(null, undefined)}
         >
           <ChannelIcon />
-          <span className="text-gray-500 dark:text-gray-100 font-semibold text-sm">
+          <span className="text-fg-primary font-semibold text-sm">
             Any Channel
           </span>
           {!select && <CheckSign className="absolute right-0 top-1/2 -translate-y-1/2" />}
@@ -39,7 +39,7 @@ const Channel: FC<Props> = ({ select = 0, updateFilter }) => {
               onClick={handleClick.bind(null, gid)}
             >
               <ChannelIcon personal={!is_public} />
-              <span className="text-gray-500 dark:text-gray-100 font-semibold text-sm flex-1">
+              <span className="text-fg-primary font-semibold text-sm flex-1">
                 {name}
               </span>
               {select == gid && <CheckSign className="" />}

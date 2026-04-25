@@ -23,7 +23,7 @@ const Version: FC<Props> = () => {
     }, 2000);
   };
   return (
-    <ul className="flex flex-col gap-2 dark:text-white">
+    <ul className="flex flex-col gap-2 text-fg-primary">
       <li>
         {t("client_version")}: {process.env.VERSION}
       </li>
@@ -32,7 +32,7 @@ const Version: FC<Props> = () => {
       </li>
       <li>
         {t("build_time")}: {ts}{" "}
-        <span className="text-gray-700 dark:text-gray-300">({dayjs(ts * 1000).fromNow()})</span>
+        <span className="text-fg-body">({dayjs(ts * 1000).fromNow()})</span>
       </li>
       <li>
         <Button disabled={syncing} onClick={handleSync}>

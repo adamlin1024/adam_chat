@@ -24,7 +24,7 @@ const PreviewMessage: FC<Props> = ({ mid = 0, context = "forward" }) => {
       className={clsx(
         `w-full relative flex items-start gap-3 p-2 my-2 rounded-lg`,
         pinMsg &&
-          "max-h-64 overflow-auto overflow-x-hidden border border-solid border-gray-200 dark:border-gray-400"
+          "max-h-64 overflow-auto overflow-x-hidden border border-solid border-border"
       )}
     >
       <div className="w-10 h-10 flex shrink-0">
@@ -38,11 +38,11 @@ const PreviewMessage: FC<Props> = ({ mid = 0, context = "forward" }) => {
       </div>
       <div className="w-full flex flex-col items-start">
         <div className="flex items-center gap-2 font-semibold">
-          <span className="text-gray-500 text-sm">{name}</span>
+          <span className="text-fg-muted text-sm">{name}</span>
         </div>
         <div
           className={clsx(
-            `select-text text-gray-600 text-sm break-all whitespace-pre-wrap dark:text-white`,
+            `select-text text-fg-subtle text-sm break-all whitespace-pre-wrap text-fg-primary`,
             forwardMsg && "max-h-72 overflow-y-scroll"
           )}
         >

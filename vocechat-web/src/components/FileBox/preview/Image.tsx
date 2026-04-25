@@ -51,7 +51,7 @@ const ImageBox: FC<Props> = ({ url, alt }) => {
     <div
       className={clsx(
         "h-[218px] overflow-hidden flex-center",
-        status == "error" && "bg-red-100 dark:bg-red-200/60"
+        status == "error" && "bg-danger/20"
       )}
     >
       {status == "loaded" ? (
@@ -61,9 +61,9 @@ const ImageBox: FC<Props> = ({ url, alt }) => {
           <LineWobble color="rgb(21,91,117)" />
         </span>
       ) : status == 404 ? (
-        <span className="text-lg text-orange-500">File not found, removed maybe</span>
+        <span className="text-lg text-danger">File not found, removed maybe</span>
       ) : (
-        <span className="text-lg text-red-800">Load image error</span>
+        <span className="text-lg text-danger">Load image error</span>
       )}
     </div>
   );

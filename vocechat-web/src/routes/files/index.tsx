@@ -87,7 +87,7 @@ function Files() {
                   "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
                   gid
                     ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
-                    : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
+                    : "text-fg-subtle border border-border-subtle hover:bg-bg-hover"
                 )}
               >
                 <ChannelIcon
@@ -134,7 +134,7 @@ function Files() {
                   "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
                   fileType
                     ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
-                    : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
+                    : "text-fg-subtle border border-border-subtle hover:bg-bg-hover"
                 )}
               >
                 <span>{selectedTypeLabel}</span>
@@ -148,7 +148,7 @@ function Files() {
             <li
               className={clsx(
                 "cursor-pointer p-1.5 flex-center transition-colors",
-                view !== "grid" ? "bg-bg-surface" : "hover:bg-[#0f1014]"
+                view !== "grid" ? "bg-bg-surface" : "hover:bg-bg-hover"
               )}
               onClick={() => view !== "item" && dispatch(updateFileListView("item"))}
             >
@@ -157,7 +157,7 @@ function Files() {
             <li
               className={clsx(
                 "cursor-pointer p-1.5 flex-center border-l border-border-subtle transition-colors",
-                view === "grid" ? "bg-bg-surface" : "hover:bg-[#0f1014]"
+                view === "grid" ? "bg-bg-surface" : "hover:bg-bg-hover"
               )}
               onClick={() => view !== "grid" && dispatch(updateFileListView("grid"))}
             >

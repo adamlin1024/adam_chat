@@ -120,7 +120,7 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
               <li
                 key={uid}
                 data-uid={uid}
-                className="cursor-pointer flex items-center px-3 rounded hover:bg-[#0f1014] transition-colors"
+                className="cursor-pointer flex items-center px-3 rounded hover:bg-bg-hover transition-colors"
                 onClick={loginUid == uid ? undefined : toggleCheckMember}
               >
                 <StyledCheckbox disabled={loginUid == uid} readOnly checked={checked} name="cb" id="cb" />
@@ -169,7 +169,7 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
   if (isMobile) {
     return createPortal(
       <div className="fixed inset-0 z-[200]">
-        <div className="absolute inset-0 bg-black/50 transition-opacity duration-300" style={{ opacity: animated ? 1 : 0 }} onClick={animateClose} />
+        <div className="absolute inset-0 bg-bg-app/50 transition-opacity duration-300" style={{ opacity: animated ? 1 : 0 }} onClick={animateClose} />
         <div
           ref={sheetRef}
           className="absolute left-0 right-0 bg-bg-elevated flex flex-col overflow-hidden"
@@ -213,7 +213,7 @@ const ChannelModal: FC<Props> = ({ personal = false, closeModal }) => {
                       const checked = members ? members.includes(uid) : false;
                       return (
                         <li key={uid} data-uid={uid}
-                          className="cursor-pointer flex items-center px-2 rounded hover:bg-[#0f1014] transition-colors"
+                          className="cursor-pointer flex items-center px-2 rounded hover:bg-bg-hover transition-colors"
                           onClick={loginUid == uid ? undefined : toggleCheckMember}
                         >
                           <StyledCheckbox disabled={loginUid == uid} readOnly checked={checked} name="cb" id="cb" />

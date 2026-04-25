@@ -48,13 +48,13 @@ const ImageMessage: FC<Props> = ({
       }}
     >
       {uploading && (
-        <div className="absolute left-0 top-0 w-full h-full bg-white/50 flex flex-col justify-center items-center gap-1">
+        <div className="absolute left-0 top-0 w-full h-full bg-bg-elevated/50 flex flex-col justify-center items-center gap-1">
           <Ping size={45} speed={2} color="#555" />
-          <span className="text-xs text-gray-500">{progress}%</span>
+          <span className="text-xs text-fg-muted">{progress}%</span>
         </div>
       )}
       {status == "loading" ? (
-        <div className="w-full h-full flex-center bg-zinc-800/60 animate-pulse">
+        <div className="w-full h-full flex-center bg-bg-elevated/60 animate-pulse">
           <LineWobble />
         </div>
       ) : (

@@ -67,7 +67,7 @@ const ExpiredMessage = ({ type = "file", url = "" }: Props) => {
     <div
       ref={msgRef}
       className={clsx(
-        `bg-stone-100 dark:bg-stone-900 border box-border md:w-96 rounded-md border-gray-300 dark:border-gray-500`
+        `bg-bg-app border box-border md:w-96 rounded-md border-border-strong`
       )}
     >
       <div className="px-3 py-2 flex items-center justify-between gap-2">
@@ -75,18 +75,18 @@ const ExpiredMessage = ({ type = "file", url = "" }: Props) => {
         <div className="flex flex-col gap-1 w-full overflow-hidden">
           <span
             className={clsx(
-              "font-semibold text-sm truncate text-gray-800 dark:text-gray-100"
-              // error ? "text-red-500" : "text-gray-800 dark:text-gray-100"
+              "font-semibold text-sm truncate text-fg-primary"
+              // error ? "text-danger" : "text-fg-primary"
             )}
           >
             {title}
           </span>
-          <span className="hidden md:flex whitespace-nowrap text-xs text-gray-500 dark:text-gray-300 gap-4">
+          <span className="hidden md:flex whitespace-nowrap text-xs text-fg-body gap-4">
             <strong>{desc}</strong>
           </span>
         </div>
-        <span className="text-red-500 text-xs whitespace-nowrap flex items-center gap-1">
-          <IconInfo className="stroke-gray-600 dark:stroke-gray-400 w-6 h-6" />
+        <span className="text-danger text-xs whitespace-nowrap flex items-center gap-1">
+          <IconInfo className="stroke-fg-secondary w-6 h-6" />
         </span>
       </div>
     </div>

@@ -35,11 +35,11 @@ const NicknameModal = ({ visible, updateVisible, uid }: Props) => {
   return (
     <Modal>
       <ServerVersionChecker version="0.5.0">
-        <div className="px-4 py-4 flex flex-col bg-white dark:bg-gray-900 max-w-96 rounded-lg relative">
-          <h2 className="z-50 py-2 bg-white dark:bg-gray-900 flex items-center justify-between text-lg text-gray-700 dark:text-gray-50 sticky top-0">
+        <div className="px-4 py-4 flex flex-col bg-bg-app max-w-96 rounded-lg relative">
+          <h2 className="z-50 py-2 bg-bg-app flex items-center justify-between text-lg text-fg-primary sticky top-0">
             {t("remark")}
           </h2>
-          <p className="text-sm text-gray-500">{t("remark_intro")}</p>
+          <p className="text-sm text-fg-muted">{t("remark_intro")}</p>
           <div className="py-2 flex flex-col gap-2 items-start my-4">
             <Input
               placeholder={t("remark_placeholder")}
@@ -47,7 +47,7 @@ const NicknameModal = ({ visible, updateVisible, uid }: Props) => {
               value={input}
               onChange={handleChange}
             />
-            <button onClick={setInput.bind(null, "")} className="text-primary-500 text-sm">
+            <button onClick={setInput.bind(null, "")} className="text-accent text-sm">
               {t("remark_clear")}
             </button>
           </div>

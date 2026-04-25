@@ -30,7 +30,7 @@ const Tooltip: FC<Props> = ({ tip = "", placement = "right", delay = null, child
       delay={delay ?? [150, 0]}
       placement={placement}
       content={
-        <div className="relative bg-white dark:bg-gray-800 px-3 py-2 text-xs rounded-lg drop-shadow text-gray-700 dark:text-gray-100">
+        <div className="relative bg-bg-elevated px-3 py-2 text-xs rounded-lg drop-shadow text-fg-primary">
           <Triangle placement={placement} />
           {tip}
         </div>

@@ -27,7 +27,7 @@ const Time = ({ time }: { time: number }) => {
     <time
       itemProp="dateCreated"
       dateTime={new Date(time).toISOString()}
-      className="hidden group-hover:inline px-1.5 text-gray-500 text-xs"
+      className="hidden group-hover:inline px-1.5 text-fg-muted text-xs"
     >
       {dayjs.unix(time / 1000).format("LT")}
     </time>

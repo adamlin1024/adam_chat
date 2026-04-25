@@ -18,7 +18,7 @@ const Doc: FC<Props> = ({ url }) => {
   if (!content) return null;
 
   return (
-    <div className="bg-white h-[218px] p-[15px] pb-0 whitespace-pre-wrap break-all">{content}</div>
+    <div className="bg-bg-elevated h-[218px] p-[15px] pb-0 whitespace-pre-wrap break-all">{content}</div>
   );
 };
 

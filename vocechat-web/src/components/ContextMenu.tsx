@@ -66,7 +66,7 @@ const WrapWithSubmenu = ({
                 {icon}
                 {title}
                 {checked && (
-                  <IconChecked className="group-hover:fill-white dark:fill-gray-300 absolute right-2 top-2" />
+                  <IconChecked className="group-hover:fill-fg-body absolute right-2 top-2" />
                 )}
               </li>
             );
@@ -115,7 +115,7 @@ const ContextMenu: FC<Props> = ({ items = [], hideMenu = null }) => {
                 >
                   {icon}
                   {title}
-                  <IconArrow className="group-hover:fill-white dark:fill-gray-300 absolute right-2 top-2" />
+                  <IconArrow className="group-hover:fill-fg-body absolute right-2 top-2" />
                 </li>
               }
             ></WrapWithSubmenu>

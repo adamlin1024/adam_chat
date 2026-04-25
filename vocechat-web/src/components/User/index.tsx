@@ -56,18 +56,18 @@ const User: FC<Props> = ({
   const online = curr.online || curr.uid == loginUid;
   const containerClass = clsx(
     `relative flex items-center justify-start gap-2 rounded-lg select-none transition-colors duration-200`,
-    interactive && "md:hover:bg-gray-500/10",
+    interactive && "md:hover:bg-bg-hover/10",
     compact ? "p-0" : "p-2",
     enableNavToSetting && "cursor-pointer"
   );
   const nameClass = clsx(
-    `text-sm text-gray-500 max-w-[190px] truncate font-semibold dark:text-white`
+    `text-sm text-fg-muted max-w-[190px] truncate font-semibold text-fg-primary`
   );
   const isFromWidget = !!curr.widget_id;
-  const statusContainerClass = `absolute -bottom-[2.5px] -right-[2.5px] border-content rounded-full border-[1px] border-white dark:border-gray-300`;
+  const statusContainerClass = `absolute -bottom-[2.5px] -right-[2.5px] border-content rounded-full border-[1px] border-border`;
   const statusClass = clsx(
     statusContainerClass,
-    online ? "bg-green-500" : "bg-zinc-400",
+    online ? "bg-online" : "bg-bg-hover",
     compact ? "w-[10px] h-[10px]" : "w-3 h-3"
   );
   const statusElement = curr.is_bot ? (
@@ -75,7 +75,7 @@ const User: FC<Props> = ({
       <IconBot className={compact ? "w-[10px] h-[10px]" : "w-3 h-3"} />
     </div>
   ) : (showStatus && online) ? (
-    <div className={clsx(statusContainerClass, "bg-green-500", compact ? "w-[10px] h-[10px]" : "w-3 h-3")}></div>
+    <div className={clsx(statusContainerClass, "bg-online", compact ? "w-[10px] h-[10px]" : "w-3 h-3")}></div>
   ) : null;
   if (!popover)
     return (
@@ -100,7 +100,7 @@ const User: FC<Props> = ({
             <Avatar
               className={cn(
                 "size-full rounded-full object-cover",
-                isFromWidget && "ring-2 ring-orange-500"
+                isFromWidget && "ring-2 ring-danger"
               )}
               title={curr.widget_id}
               width={avatarSize}

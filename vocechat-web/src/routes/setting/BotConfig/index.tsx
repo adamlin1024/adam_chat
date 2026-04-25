@@ -17,7 +17,7 @@ import { shallowEqual } from "react-redux";
 import { ConfigTip } from "@/components/ConfigTip";
 
 const tdClass =
-  "p-6 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100 align-top";
+  "p-6 whitespace-nowrap text-sm font-medium text-fg-primary align-top";
 type WebhookParams = { webhook?: string; uid: number };
 type DeleteParams = { name: string; uid: number };
 export default function BotConfig() {
@@ -61,7 +61,7 @@ export default function BotConfig() {
           <ConfigTip title={t("webhook_tip_title")} desc={t("webhook_tip_desc")} />
         </div>
         <div className="flex flex-col gap-1">
-          <h2 className="font-semibold flex gap-4 items-center dark:text-white">
+          <h2 className="font-semibold flex gap-4 items-center text-fg-primary">
             {t("manage")}
             <a
               href="https://doc.voce.chat/bot/bot-and-webhook"
@@ -72,11 +72,11 @@ export default function BotConfig() {
               🔗 {t("how_to_use")}
             </a>
           </h2>
-          <p className="text-gray-400 text-xs">{t("manage_desc")}</p>
+          <p className="text-fg-secondary text-xs">{t("manage_desc")}</p>
         </div>
         <div className="w-full md:w-fit overflow-auto md:overflow-hidden">
           <table className="min-w-full table-auto">
-            <thead className="border-b dark:border-b-gray-500 bg-gray-50 dark:bg-gray-600">
+            <thead className="border-b-gray-500 bg-bg-surface">
               <tr>
                 {[
                   t("col_avatar"),
@@ -88,7 +88,7 @@ export default function BotConfig() {
                   <th
                     key={title}
                     scope="col"
-                    className="text-sm font-bold text-gray-900 dark:text-gray-100 px-6 py-4 text-left"
+                    className="text-sm font-bold text-fg-primary px-6 py-4 text-left"
                   >
                     {title}
                   </th>
@@ -101,7 +101,7 @@ export default function BotConfig() {
                 return (
                   <tr
                     key={uid}
-                    className="bg-white dark:bg-gray-800 border-b dark:border-b-gray-500 transition duration-300 ease-in-out md:hover:bg-gray-100 dark:md:hover:bg-transparent"
+                    className="bg-bg-elevated border-b-gray-500 transition duration-300 ease-in-out md:hover:bg-transparent"
                   >
                     <td className="px-4 py-2">
                       <AvatarUploader
@@ -114,7 +114,7 @@ export default function BotConfig() {
                     </td>
                     <td className={`${tdClass}`}>
                       <NameEdit uid={uid} />
-                      <div className="text-xs text-gray-500">#{uid}</div>
+                      <div className="text-xs text-fg-muted">#{uid}</div>
                     </td>
                     <td className={`${tdClass} py-2`}>
                       <BotAPIKeys uid={uid} />
@@ -142,7 +142,7 @@ export default function BotConfig() {
           <Button onClick={toggleCreateModalVisible} className="small">
             {ct("action.add")}
           </Button>
-          {/* {bots.length > 0 && <Button onClick={toggleTestAPIKeyModalVisible} className="ghost small stroke-slate-200 fill-gray-200"> Test API Key</Button>} */}
+          {/* {bots.length > 0 && <Button onClick={toggleTestAPIKeyModalVisible} className="ghost small stroke-fg-body fill-fg-body"> Test API Key</Button>} */}
         </div>
       </div>
       {createModalVisible && <CreateModal closeModal={toggleCreateModalVisible} />}

@@ -18,7 +18,7 @@ export default function SignInLink({ token }: { token?: string }) {
   }, [token, ctx]);
 
   return (
-    <div className="flex gap-1 mt-7 text-sm text-slate-500 dark:text-gray-100 justify-center">
+    <div className="flex gap-1 mt-7 text-sm text-fg-primary justify-center">
       <span>{t("reg.have_account")}</span>
       <NavLink to={"/login"} className="text-accent cursor-pointer hover:text-accent-hover">
         {t("sign_in")}

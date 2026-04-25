@@ -41,25 +41,25 @@ const InviteInMobile = () => {
         </span>
       </div>
 
-      <p className="text-md text-gray-600 my-5">
+      <p className="text-md text-fg-subtle my-5">
         {t("have_already")}
-        <a href={app_link} className="text-primary-500 px-2">
+        <a href={app_link} className="text-accent px-2">
           {t("open")}
         </a>
       </p>
       <div className="flex flex-col items-center mb-12">
         {webLink && (
-          <a href={webLink} className="p-2 mt-2 rounded bg-primary-500 text-white">
+          <a href={webLink} className="p-2 mt-2 rounded bg-accent text-accent-on">
             Continue with webapp
           </a>
         )}
-        <div className="text-gray-600 w-[80%] flex flex-col items-center gap-2 my-4">
-          <i className="text-gray-400 not-italic text-xs break-words text-center">
+        <div className="text-fg-subtle w-[80%] flex flex-col items-center gap-2 my-4">
+          <i className="text-fg-secondary not-italic text-xs break-words text-center">
             👇App not showing? You may copy the following invitation link and paste it into VoceChat
             App.
           </i>
           <div
-            className="text-left bg-gray-200 font-bold p-2 rounded-md break-all overflow-y-scroll resize-none"
+            className="text-left bg-bg-surface font-bold p-2 rounded-md break-all overflow-y-scroll resize-none"
             spellCheck={false}
           >
             {inviteLink}

@@ -205,13 +205,13 @@ const Session: FC<IProps> = ({
       >
         <button
           onClick={handleHide}
-          className="flex-1 flex flex-col items-center justify-center bg-zinc-600 text-white ts-meta font-medium gap-0.5"
+          className="flex-1 flex flex-col items-center justify-center bg-bg-surface text-fg-primary ts-meta font-medium gap-0.5"
         >
           <span>隱藏</span>
         </button>
         <button
           onClick={handleDelete}
-          className="flex-1 flex flex-col items-center justify-center bg-red-500 text-white ts-meta font-medium gap-0.5"
+          className="flex-1 flex flex-col items-center justify-center bg-danger-bg text-white ts-meta font-medium gap-0.5"
         >
           <span>刪除</span>
         </button>
@@ -245,7 +245,7 @@ const Session: FC<IProps> = ({
             clsx(
               `nav flex gap-2.5 rounded-md px-2.5 py-[9px] w-full transition-colors duration-200`,
               isActive && "shadow-inset-hairline",
-              linkActive ? "bg-bg-surface shadow-inset-hairline" : "hover:bg-[#0f1014]"
+              linkActive ? "bg-bg-surface shadow-inset-hairline" : "hover:bg-bg-hover"
             )
           }
           to={navPath}
@@ -271,7 +271,7 @@ const Session: FC<IProps> = ({
               <span className={clsx(`flex items-center gap-1 min-w-0`)}>
                 <i
                   className={clsx(
-                    "not-italic font-medium ts-msg text-[#e4e4e7] truncate",
+                    "not-italic font-medium ts-msg text-fg-body truncate",
                     !resolveMsgTime(previewMsg) && "max-w-full"
                   )}
                 >

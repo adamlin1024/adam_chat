@@ -16,13 +16,13 @@ const StyledButton = ({ children, className = "", ...rest }: Props) => {
         `text-sm text-accent-on bg-accent break-keep shadow-sm rounded-lg px-3.5 h-11 md:hover:bg-accent-hover active:bg-accent-pressed disabled:bg-fg-disabled disabled:hover:bg-fg-disabled disabled:hover:cursor-not-allowed transition-colors duration-200`,
         isFull && "w-full text-center justify-center",
         isGhost &&
-          " !text-gray-700 dark:!text-gray-100  !border !border-solid !border-gray-300 dark:!border-gray-500 !bg-transparent",
+          " !text-fg-disabled dark:!text-fg-primary  !border !border-solid !border-border dark:!border-border-strong !bg-transparent",
         isCancel &&
-          "!bg-transparent !text-black dark:!text-gray-50 !border !border-solid !border-gray-200",
+          "!bg-transparent !text-fg-primary dark:!text-fg-primary !border !border-solid !border-border-subtle",
         isSmall && "!h-auto !py-2",
         noBorder && "!shadow-none !border-none",
         isMini && "!h-auto !px-2.5 !py-1 !text-xs",
-        isDanger && "!bg-red-500 disabled:!bg-gray-300 md:hover:!bg-red-500/80 active:bg-red-700",
+        isDanger && "!bg-danger-bg disabled:!bg-bg-surface md:hover:!bg-danger-bg/80 active:bg-danger-bg",
         className
       )}
       {...rest}

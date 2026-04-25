@@ -84,7 +84,7 @@ const CreateModal = ({ closeModal }: Props) => {
       >
         <div className="w-full flex flex-col gap-2">
           <div className="flex flex-col items-start gap-1 w-full">
-            <label htmlFor={"name"} className="text-sm text-gray-500">
+            <label htmlFor={"name"} className="text-sm text-fg-muted">
               Name
             </label>
             <Input
@@ -95,7 +95,7 @@ const CreateModal = ({ closeModal }: Props) => {
             ></Input>
           </div>
           <div className="flex flex-col items-start gap-1 w-full">
-            <label htmlFor={"webhook_url"} className="text-sm text-gray-500">
+            <label htmlFor={"webhook_url"} className="text-sm text-fg-muted">
               Webhook URL (Optional)
             </label>
             <Input

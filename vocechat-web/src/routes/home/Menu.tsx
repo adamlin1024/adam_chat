@@ -12,7 +12,7 @@ const Menu: FC<Props> = () => {
       <NavLink to={`/setting/overview?f=${pathname}`}>
         <Tooltip placement="right" tip="Settings">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg
-                          text-white hover:text-white transition-colors duration-200">
+                          text-fg-primary hover:text-fg-primary transition-colors duration-200">
             <IconSetting className="w-[18px] h-[18px] stroke-current fill-none" />
           </div>
         </Tooltip>

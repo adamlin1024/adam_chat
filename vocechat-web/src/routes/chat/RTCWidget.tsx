@@ -47,16 +47,16 @@ const RTCWidget = ({ id, context = "channel" }: Props) => {
   const targetDMUsername =
     callFrom == loginUser.uid ? userData[callTo]?.name : userData[callFrom]?.name;
   return (
-    <div className="bg-gray-100 dark:bg-gray-900 flex flex-col p-2 rounded-3xl m-3 mb-4 text-sm">
-      <div className="border-b border-b-gray-200 dark:border-b-gray-800 pb-2">
+    <div className="bg-bg-app flex flex-col p-2 rounded-3xl m-3 mb-4 text-sm">
+      <div className="border-b border-b-gray-800 pb-2">
         <div className="flex justify-between items-center">
           <div className="flex flex-1 items-center gap-1">
             <Signal strength={voicingInfo.downlinkNetworkQuality} />
             <div className="flex flex-col">
-              <span className={clsx("text-green-800 font-bold", isReConnecting && `text-red-500`)}>
+              <span className={clsx("text-online font-bold", isReConnecting && `text-danger`)}>
                 {isReConnecting ? `Voice Reconnecting...` : `Voice Connected`}
               </span>
-              <span className="text-gray-600 dark:text-gray-400 text-xs truncate max-w-[170px]">
+              <span className="text-fg-secondary text-xs truncate max-w-[170px]">
                 {voicingInfo.context == "channel" ? "Channel" : "DM"} /{" "}
                 {voicingInfo.context == "channel"
                   ? channelData[voicingInfo.id]?.name
@@ -65,25 +65,25 @@ const RTCWidget = ({ id, context = "channel" }: Props) => {
             </div>
           </div>
           <Tooltip tip={t("leave_voice")} placement="top">
-            <IconCallOff onClick={leave} role="button" className="fill-red-600" />
+            <IconCallOff onClick={leave} role="button" className="fill-danger" />
           </Tooltip>
         </div>
         <div
           className={clsx(
-            "flex items-center justify-around gap-2 mt-3 text-sm font-semibold text-gray-800 dark:text-gray-200"
+            "flex items-center justify-around gap-2 mt-3 text-sm font-semibold text-fg-body"
           )}
         >
           <button
             onClick={voicingInfo.video ? closeCamera : openCamera}
             className={clsx(
               "rounded-lg py-2 px-5 flex items-center gap-1",
-              voicingInfo.video ? "bg-green-700 text-gray-200" : "bg-white/50 dark:bg-black/50 "
+              voicingInfo.video ? "bg-online text-fg-body" : "bg-bg-app/50 "
             )}
           >
             <IconCamera
               className={clsx(
-                "dark:fill-gray-200 w-6 h-6",
-                voicingInfo.video ? "fill-gray-200" : "fill-gray-800"
+                "fill-fg-body w-6 h-6",
+                voicingInfo.video ? "fill-fg-body" : "fill-fg-disabled"
               )}
             />
             <span>Video</span>
@@ -93,14 +93,14 @@ const RTCWidget = ({ id, context = "channel" }: Props) => {
             className={clsx(
               "rounded-lg py-2 px-5 flex items-center gap-1",
               voicingInfo.shareScreen
-                ? "bg-green-700 text-gray-200"
-                : "bg-white/50 dark:bg-black/50 "
+                ? "bg-online text-fg-body"
+                : "bg-bg-app/50 "
             )}
           >
             <IconScreen
               className={clsx(
-                "dark:fill-gray-200 w-6 h-6",
-                voicingInfo.shareScreen ? "fill-gray-200" : "fill-gray-800"
+                "fill-fg-body w-6 h-6",
+                voicingInfo.shareScreen ? "fill-fg-body" : "fill-fg-disabled"
               )}
             />
             <span>Screen</span>
@@ -111,8 +111,8 @@ const RTCWidget = ({ id, context = "channel" }: Props) => {
         <div className="flex items-center gap-3">
           <User uid={loginUser.uid} compact />
           <div className="flex flex-col">
-            <span className="dark:text-white text-sm font-bold">{loginUser.name}</span>
-            <span className="text-gray-400 text-xs">#{loginUser.uid}</span>
+            <span className="text-fg-primary text-sm font-bold">{loginUser.name}</span>
+            <span className="text-fg-secondary text-xs">#{loginUser.uid}</span>
           </div>
         </div>
         <div className="flex gap-2 px-1">

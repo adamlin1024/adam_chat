@@ -84,7 +84,7 @@ const MessageFeed = ({ hostId }: Props) => {
       {hasNewMsg && (
         <button
           type="button"
-          className="sticky bottom-4 left-1/2 -translate-x-1/2 bg-white border border-orange-300 px-2 py-1.5 text-xs text-orange-500 rounded-lg"
+          className="sticky bottom-4 left-1/2 -translate-x-1/2 bg-bg-elevated border border-idle/30 px-2 py-1.5 text-xs text-danger rounded-lg"
           onClick={handleNewMessageScroll}
         >
           New Message

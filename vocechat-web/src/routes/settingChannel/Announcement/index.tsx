@@ -78,27 +78,27 @@ export default function Announcement({ id = 0 }) {
   return (
     <ServerVersionChecker version="0.5.13">
       {!canManage ? (
-        <div className="w-full md:w-[512px] p-4 text-gray-500 dark:text-gray-400">
+        <div className="w-full md:w-[512px] p-4 text-fg-secondary">
           {t("no_permission") || "You don't have permission to manage announcements"}
         </div>
       ) : (
         <div className="w-full md:w-[512px] flex flex-col gap-6 h-full mb-10">
           <div className="flex flex-col gap-2">
             <Label>Channel Announcement</Label>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-fg-secondary">
               Create or update the announcement for this channel. Members will see it as a popup when
               it's new or updated.
             </p>
           </div>
 
           {/* Tab Switcher */}
-          <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex gap-2 border-b border-border">
             <button
               onClick={() => setMode("edit")}
               className={`px-4 py-2 font-medium transition-colors ${
                 mode === "edit"
                   ? "text-accent border-b-2 border-accent"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  : "text-fg-secondary hover:text-fg-body"
               }`}
             >
               Edit
@@ -108,7 +108,7 @@ export default function Announcement({ id = 0 }) {
               className={`px-4 py-2 font-medium transition-colors ${
                 mode === "preview"
                   ? "text-accent border-b-2 border-accent"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  : "text-fg-secondary hover:text-fg-body"
               }`}
             >
               Preview
@@ -129,20 +129,20 @@ export default function Announcement({ id = 0 }) {
                 className="font-mono"
               />
               <div className="flex justify-between items-center text-sm">
-                <span className="text-gray-500 dark:text-gray-400">
+                <span className="text-fg-secondary">
                   {content.length} / 5000 characters
                 </span>
                 {content.length > 5000 && (
-                  <span className="text-red-500">Character limit exceeded</span>
+                  <span className="text-danger">Character limit exceeded</span>
                 )}
               </div>
             </div>
           ) : (
-            <div className="border border-gray-200 dark:border-gray-700 rounded p-4 min-h-[300px] bg-gray-50 dark:bg-gray-900">
+            <div className="border border-border rounded p-4 min-h-[300px] bg-bg-app">
               {content.trim() ? (
                 <MarkdownRender content={content} />
               ) : (
-                <p className="text-gray-400 dark:text-gray-500 italic">
+                <p className="text-fg-muted italic">
                   {t("no_announcements") || "No content to preview"}
                 </p>
               )}
@@ -160,26 +160,26 @@ export default function Announcement({ id = 0 }) {
                 {!showDeleteConfirm ? (
                   <Button
                     onClick={() => setShowDeleteConfirm(true)}
-                    className="!bg-red-500 hover:!bg-red-600"
+                    className="!bg-danger-bg hover:!bg-danger-bg"
                     disabled={deleting}
                   >
                     Delete
                   </Button>
                 ) : (
                   <div className="flex gap-2 items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                    <span className="text-sm text-fg-secondary">
                       Are you sure?
                     </span>
                     <Button
                       onClick={handleDelete}
-                      className="!bg-red-500 hover:!bg-red-600"
+                      className="!bg-danger-bg hover:!bg-danger-bg"
                       disabled={deleting}
                     >
                       {deleting ? "Deleting..." : "Confirm Delete"}
                     </Button>
                     <Button
                       onClick={() => setShowDeleteConfirm(false)}
-                      className="!bg-gray-500 hover:!bg-gray-600"
+                      className="!bg-bg-hover hover:!bg-bg-surface"
                     >
                       Cancel
                     </Button>

@@ -35,10 +35,10 @@ const UpdateFrontendURL = ({ refreshInviteLink }: Props) => {
     }
   }, [isSuccess]);
   return (
-    <div className="absolute left-1/2 -translate-x-1/2 bottom-8 border-2 border-solid border-primary-300 dark:border-primary-700 bg-primary-25 dark:bg-primary-900 rounded-lg px-2 py-3 flex justify-start gap-4">
+    <div className="absolute left-1/2 -translate-x-1/2 bottom-8 border-2 border-solid border-accent-pressed bg-accent-pressed rounded-lg px-2 py-3 flex justify-start gap-4">
       <InfoIcon />
       <div className="flex flex-col items-start gap-2">
-        <span className="text-sm text-primary-700 dark:text-primary-300 mb-1">
+        <span className="text-sm text-accent mb-1">
           {t("update_domain_tip")}
         </span>
         <div className="w-[300px] md:w-[400px] rounded flex gap-2">

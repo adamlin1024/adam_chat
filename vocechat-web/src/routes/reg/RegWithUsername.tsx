@@ -83,16 +83,16 @@ const RegWithUsername: FC = () => {
     setUsername(evt.target.value);
   };
 
-  if (!token) return <span className="dark:text-white">No Token</span>;
+  if (!token) return <span className="text-fg-primary">No Token</span>;
   const isLoading = loginLoading || regLoading;
   const isSuccess = loginSuccess || regSuccess;
   return (
     <>
       <div className="flex-center flex-col pb-6 max-w-md">
-        <h2 className="font-semibold text-2xl text-gray-800 dark:text-gray-100 mb-2">
+        <h2 className="font-semibold text-2xl text-fg-primary mb-2">
           {t("reg.input_name")}
         </h2>
-        <span className="text-gray-400 text-center dark:text-gray-100">
+        <span className="text-fg-secondary text-fg-primary">
           {t("reg.input_name_tip")}
         </span>
       </div>

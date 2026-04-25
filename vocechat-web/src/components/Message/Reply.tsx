@@ -20,7 +20,7 @@ const renderContent = (data: MessagePayload, context: ChatContext, to: number) =
   switch (content_type) {
     case ContentTypes.text:
       res = (
-        <span className="max-w-3xl md:break-words md:break-all text-gray-800 dark:text-gray-100 whitespace-break-spaces">
+        <span className="max-w-3xl md:break-words md:break-all text-fg-primary whitespace-break-spaces">
           <LinkifyText
             text={content as string}
             url={false}
@@ -31,7 +31,7 @@ const renderContent = (data: MessagePayload, context: ChatContext, to: number) =
       );
       break;
     case ContentTypes.audio:
-      res = <span className=" text-primary-400 text-sm">[Voice Message]</span>;
+      res = <span className=" text-accent text-sm">[Voice Message]</span>;
       break;
     case ContentTypes.markdown:
       {
@@ -50,7 +50,7 @@ const renderContent = (data: MessagePayload, context: ChatContext, to: number) =
           );
         } else {
           res = (
-            <div className="max-h-[152px] overflow-hidden dark:text-gray-100">
+            <div className="max-h-[152px] overflow-hidden text-fg-primary">
               <MarkdownRender content={content as string} />
             </div>
           );
@@ -67,7 +67,7 @@ const renderContent = (data: MessagePayload, context: ChatContext, to: number) =
           res = (
             <div className="flex gap-1">
               {icon}
-              <span className="ts-2xs text-gray-500 dark:text-gray-100">{name}</span>
+              <span className="ts-2xs text-fg-primary">{name}</span>
             </div>
           );
         }
@@ -111,8 +111,8 @@ const Reply: FC<ReplyProps> = ({ mid, interactive = true, context, to = 0 }) => 
     const { mid } = evt.currentTarget.dataset;
     const msgEle = document.querySelector<HTMLDivElement>(`[data-msg-mid='${mid}']`);
     if (msgEle) {
-      const _class1 = `md:dark:bg-gray-800`;
-      const _class2 = `md:bg-gray-100`;
+      const _class1 = `md:dark:bg-bg-elevated`;
+      const _class2 = `md:bg-bg-elevated`;
       msgEle.classList.add(_class1);
       msgEle.classList.add(_class2);
       msgEle.scrollIntoView({ behavior: "smooth", block: "center" });

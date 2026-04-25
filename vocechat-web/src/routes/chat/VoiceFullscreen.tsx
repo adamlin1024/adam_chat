@@ -62,7 +62,7 @@ const VoiceFullscreen = ({ id, context }: Props) => {
   const membersData = voicingMembers.byId;
   const hasPin = typeof pinUid !== "undefined";
   return (
-    <div className="h-full bg-black text-gray-300 flex flex-col justify-between rounded-r-2xl">
+    <div className="h-full bg-bg-app text-fg-body flex flex-col justify-between rounded-r-2xl">
       {/* top */}
       <div className="px-7 py-6 flex justify-between">
         <span className="text-sm font-semibold">{_name}</span>
@@ -82,17 +82,17 @@ const VoiceFullscreen = ({ id, context }: Props) => {
               data-uid={uid}
               onDoubleClick={handleDoubleClick}
               className={clsx(
-                "bg-gray-700 group overflow-hidden",
+                "bg-bg-surface group overflow-hidden",
                 special
                   ? "absolute left-0 top-0 w-full h-[calc(100%_-_110px)] flex-center"
-                  : "relative border border-gray-600/50 rounded-lg py-1.5 px-12"
+                  : "relative border border-border-strong/50 rounded-lg py-1.5 px-12"
               )}
             >
               <div className={clsx("w-20 h-20 flex shrink-0 relative transition-opacity")}>
                 {speaking && (
                   <div
                     className={clsx(
-                      "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 rounded-full bg-green-500 animate-speaking",
+                      "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 rounded-full bg-online animate-speaking",
                       special ? "w-[88px] h-[88px]" : "w-[86px] h-[86px]"
                     )}
                   ></div>
@@ -109,7 +109,7 @@ const VoiceFullscreen = ({ id, context }: Props) => {
               {shareScreen ? (
                 <div
                   className={clsx(
-                    "w-1 h-1 absolute z-40 rounded-full bg-green-700/60",
+                    "w-1 h-1 absolute z-40 rounded-full bg-online/60",
                     special ? "top-2 left-2" : "top-1 left-1 px-2"
                   )}
                 />
@@ -122,19 +122,19 @@ const VoiceFullscreen = ({ id, context }: Props) => {
                     role={"button"}
                     onClick={handlePin}
                     className={clsx(
-                      "absolute left-1 top-1 z-40 rounded bg-black/50",
+                      "absolute left-1 top-1 z-40 rounded bg-bg-app/50",
                       special ? "px-2 py-0.5" : "px-1 invisible group-hover:visible"
                     )}
                   >
                     <IconPin
-                      className={clsx(special ? "w-4 fill-green-600" : "w-3 fill-gray-200")}
+                      className={clsx(special ? "w-4 fill-online" : "w-3 fill-fg-body")}
                     />
                   </button>
                 </Tooltip>
               )}
               <span
                 className={clsx(
-                  "text-gray-300 bg-black/50 rounded-lg absolute  z-40",
+                  "text-fg-body bg-bg-app/50 rounded-lg absolute  z-40",
                   special ? "left-2 bottom-2 px-2 py-1 text-sm " : "left-1 bottom-1 p-1 text-xs"
                 )}
                 title={curr?.name}
@@ -143,14 +143,14 @@ const VoiceFullscreen = ({ id, context }: Props) => {
               </span>
               <div
                 className={clsx(
-                  "flex items-center gap-2 absolute z-40 rounded bg-black/50",
+                  "flex items-center gap-2 absolute z-40 rounded bg-bg-app/50",
                   special ? "bottom-2 right-2  px-2 py-0.5" : "bottom-1 right-1 px-2"
                 )}
               >
                 {muted ? (
-                  <IconMicOff className={clsx("fill-gray-200", special ? "w-4" : "w-3")} />
+                  <IconMicOff className={clsx("fill-fg-body", special ? "w-4" : "w-3")} />
                 ) : (
-                  <IconMic className={clsx("fill-gray-200 ", special ? "w-4" : "w-3")} />
+                  <IconMic className={clsx("fill-fg-body ", special ? "w-4" : "w-3")} />
                 )}
               </div>
               <div

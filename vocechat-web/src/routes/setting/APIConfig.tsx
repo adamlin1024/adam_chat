@@ -40,7 +40,7 @@ export default function APIConfig() {
         checked={thirdParty}
       />
       <div className="w-full flex flex-col items-start gap-2">
-        <label htmlFor="secret" className="text-sm text-gray-500 dark:text-gray-100">
+        <label htmlFor="secret" className="text-sm text-fg-primary">
           {" "}
           {t("third_app.key")}:
         </label>
@@ -51,8 +51,8 @@ export default function APIConfig() {
         placement="right-start"
         trigger="click"
         content={
-          <div className="p-3 rounded-lg border border-orange-400 border-solid flex flex-col gap-3 w-[250px] bg-white">
-            <div className="text-orange-500 text-xs">{t("third_app.update_tip")}</div>
+          <div className="p-3 rounded-lg border border-danger border-solid flex flex-col gap-3 w-[250px] bg-bg-elevated">
+            <div className="text-danger text-xs">{t("third_app.update_tip")}</div>
             <div className="flex justify-end gap-3 w-full">
               <Button onClick={() => hideAll()} className="cancel mini">
                 {ct("action.cancel")}
@@ -66,7 +66,7 @@ export default function APIConfig() {
       >
         <Button disabled={!thirdParty}> {t("third_app.update")}</Button>
       </Tippy>
-      <div className="text-xs text-orange-400">
+      <div className="text-xs text-danger">
         {t("third_app.key_tip")}
         <a
           className="text-accent font-bold"

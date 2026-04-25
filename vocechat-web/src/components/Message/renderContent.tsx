@@ -44,7 +44,7 @@ const renderContent = ({
           <LinkifyText text={content} cid={to} />
           {edited && (
             <span
-              className="ml-1 text-gray-500 ts-2xs"
+              className="ml-1 text-fg-muted ts-2xs"
               title={dayjs(+edited).format("YYYY-MM-DD h:mm:ss A")}
             >
               ({i18n.t("edited", { ns: "chat" })})
@@ -61,7 +61,7 @@ const renderContent = ({
             <img
               src={stickerUrl}
               alt="sticker"
-              className="w-[160px] h-[160px] md:w-[180px] md:h-[180px] object-contain select-none pointer-events-none"
+              className="w-[200px] h-[200px] md:w-[240px] md:h-[240px] object-contain select-none pointer-events-none"
               draggable={false}
             />
           );

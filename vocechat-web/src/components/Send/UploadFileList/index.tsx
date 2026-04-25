@@ -45,11 +45,11 @@ export default function UploadFileList({ context, id }: { context: ChatContext; 
         />
       )}
 
-      <ul className="w-full overflow-auto flex gap-2 justify-start p-4 pt-6 bg-gray-200 dark:bg-gray-800 rounded-t-lg">
+      <ul className="w-full overflow-auto flex gap-2 justify-start p-4 pt-6 bg-bg-elevated rounded-t-lg">
         {stageFiles.map(({ name, url, size, type, converting }, idx: number) => {
           return (
             <li
-              className="group relative flex flex-col bg-gray-100 dark:bg-gray-700 rounded p-2"
+              className="group relative flex flex-col bg-bg-surface rounded p-2"
               key={url}
             >
               <div className="flex-center w-20 h-20 md:w-40 md:h-40">
@@ -63,11 +63,11 @@ export default function UploadFileList({ context, id }: { context: ChatContext; 
                   getFileIcon(type, name)
                 )}
               </div>
-              <h4 className="w-20 md:w-40 mt-1 md:mt-4 mb-0.5 md:font-semibold text-xs md:text-sm text-gray-800 dark:text-gray-100 truncate">
+              <h4 className="w-20 md:w-40 mt-1 md:mt-4 mb-0.5 md:font-semibold text-xs md:text-sm text-fg-primary truncate">
                 {name}
               </h4>
-              <span className="text-xs text-gray-500">{formatBytes(size)}</span>
-              <ul className="invisible group-hover:visible bg-inherit border border-solid border-black/10 box-border rounded-md flex items-center absolute -right-5 -top-2.5">
+              <span className="text-xs text-fg-muted">{formatBytes(size)}</span>
+              <ul className="invisible group-hover:visible bg-inherit border border-solid border-border-strong/10 box-border rounded-md flex items-center absolute -right-5 -top-2.5">
                 <li
                   className="p-1 cursor-pointer edit"
                   onClick={handleOpenEditModal.bind(null, idx)}

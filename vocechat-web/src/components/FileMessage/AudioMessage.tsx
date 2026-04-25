@@ -27,17 +27,17 @@ const AudioMessage = ({ url, name, size, download }: Props) => {
   return (
     <div
       className={clsx(
-        "md:w-96 flex flex-col gap-2 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-500 overflow-hidden bg-stone-100 dark:bg-stone-900"
+        "md:w-96 flex flex-col gap-2 px-3 py-2 rounded-md border border-border-strong overflow-hidden bg-bg-app"
       )}
     >
       <div className="flex justify-between z-30 overflow-hidden">
         <div className="flex gap-2 ">
           <IconAudio className={clsx("w-9 h-auto")} />
-          <div className="flex flex-col gap-1 text-sm text-gray-900 dark:text-gray-100">
+          <div className="flex flex-col gap-1 text-sm text-fg-primary">
             <span title={name} className={clsx("font-bold truncate w-[240px]")}>
               {name}
             </span>
-            <span className="text-gray-400">{_size}</span>
+            <span className="text-fg-secondary">{_size}</span>
           </div>
         </div>
         <DownloadArea copyLink={download} downloadLink={download} />

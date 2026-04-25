@@ -43,15 +43,15 @@ export default function AddEntriesMenu() {
   const handleCloseModal = closeModal;
 
   const itemClass =
-    "rounded flex items-center gap-2 text-sm font-semibold cursor-pointer px-2 py-2.5 md:hover:bg-gray-800/20 md:dark:hover:bg-gray-200/20 transition-colors duration-200";
-  const iconClass = "w-5 h-5 dark:fill-gray-300";
+    "rounded flex items-center gap-2 text-sm font-semibold cursor-pointer px-2 py-2.5 md:hover:bg-bg-elevated/20 md:hover:bg-bg-surface/20 transition-colors duration-200";
+  const iconClass = "w-5 h-5 fill-fg-body";
   const canPrivateGroup = onlyAdminCreateGroup ? isAdmin : true;
   const showInvite = isAdmin || !onlyAdminCanInvite;
   const showNewMsg = isAdmin || dmEnable;
   const showSearchPeople = isAdmin || searchUserEnable;
   return (
     <>
-      <ul className="flex flex-col rounded-xl drop-shadow p-1 select-none text-gray-500 dark:text-gray-300 bg-white dark:bg-black">
+      <ul className="flex flex-col rounded-xl drop-shadow p-1 select-none text-fg-body bg-bg-app">
         {/* temp remove public channel */}
         {isAdmin && (
           <li className={itemClass} onClick={handleOpenChannelModal.bind(null, false)}>

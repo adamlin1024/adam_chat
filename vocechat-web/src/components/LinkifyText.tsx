@@ -36,7 +36,7 @@ const LinkifyText = ({
           email: ({ content, attributes: { href: link } }) => {
             if (mentionTextOnly) return <>{content}</>;
             return (
-              <a className="text-primary-500" href={link} rel="noreferrer">
+              <a className="text-accent" href={link} rel="noreferrer">
                 {content}
               </a>
             );
@@ -46,7 +46,7 @@ const LinkifyText = ({
             if (!url || !content.startsWith("http")) return <>{content}</>;
             return (
               <>
-                <a className="text-primary-500" target="_blank" href={link} rel="noreferrer">
+                <a className="text-accent" target="_blank" href={link} rel="noreferrer">
                   {content}
                 </a>
                 {enablePreview && <URLPreview url={link} />}

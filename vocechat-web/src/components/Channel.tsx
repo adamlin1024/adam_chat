@@ -24,7 +24,7 @@ const Channel: FC<Props> = ({ interactive = true, id, compact = false, avatarSiz
       className={clsx(
         `flex items-center justify-start gap-2 p-2 rounded-lg select-none`,
         compact && "p-0",
-        interactive && "md:hover:bg-gray-500/10 transition-colors duration-200"
+        interactive && "md:hover:bg-bg-hover/10 transition-colors duration-200"
       )}
     >
       <div
@@ -42,7 +42,7 @@ const Channel: FC<Props> = ({ interactive = true, id, compact = false, avatarSiz
         />
       </div>
       {!compact && (
-        <div className="flex text-sm text-gray-500 font-semibold">
+        <div className="flex text-sm text-fg-muted font-semibold">
           <span className="max-w-[140px] truncate">{name}</span> (
           {is_public ? totalMemberCount : members.length})
         </div>

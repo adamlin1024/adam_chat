@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { Emoji, UseEmojiPickerType } from "@udecode/plate-emoji";
 import clsx from "clsx";
 
@@ -17,6 +17,7 @@ type Props = Pick<
   | "emojiLibrary"
 > & {
   recents?: string[];
+  modeToggle?: ReactNode;
 };
 
 export function EmojiTabbedPicker({
@@ -27,7 +28,8 @@ export function EmojiTabbedPicker({
   searchResult,
   onSelectEmoji,
   emojiLibrary,
-  recents = []
+  recents = [],
+  modeToggle
 }: Props) {
   const sections = useMemo(() => {
     const all = emojiLibrary.getGrid().sections();
@@ -70,7 +72,8 @@ export function EmojiTabbedPicker({
   return (
     <div className="flex flex-col w-full h-full">
       {/* Tabs */}
-      <div className="flex items-center gap-0.5 px-2 border-b border-border-subtle shrink-0 overflow-x-auto">
+      <div className="flex items-center gap-0.5 px-2 border-b border-border-subtle shrink-0 overflow-x-auto no-scrollbar">
+        {modeToggle}
         {/* Recent tab */}
         <button
           type="button"
@@ -81,7 +84,7 @@ export function EmojiTabbedPicker({
             setActiveCategoryId(RECENT_ID);
           }}
           className={clsx(
-            "flex-center w-9 h-8 shrink-0 rounded transition-colors",
+            "flex-center w-9 h-10 shrink-0 rounded transition-colors",
             !isSearching && showingRecent
               ? "text-accent"
               : "text-fg-subtle hover:text-fg-primary"
@@ -106,7 +109,7 @@ export function EmojiTabbedPicker({
                 setActiveCategoryId(id);
               }}
               className={clsx(
-                "flex-center w-9 h-8 shrink-0 rounded transition-colors",
+                "flex-center w-9 h-10 shrink-0 rounded transition-colors",
                 active
                   ? "text-accent"
                   : "text-fg-subtle hover:text-fg-primary"

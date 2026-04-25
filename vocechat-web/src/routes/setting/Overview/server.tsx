@@ -72,7 +72,7 @@ const Index = () => {
         </div>
         {isAdmin && (
           <div className="flex flex-col justify-between items-start">
-            <div className="text-sm text-gray-600 dark:text-gray-100">
+            <div className="text-sm text-fg-primary">
               {t("overview.upload_desc")}
             </div>
           </div>

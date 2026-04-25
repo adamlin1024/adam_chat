@@ -39,13 +39,13 @@ const VoiceManagement = ({ id, context, info }: Props) => {
   };
   if (!info) return null;
   const nameClass = clsx(
-    `text-sm text-gray-500 max-w-[120px] truncate font-semibold dark:text-white`
+    `text-sm text-fg-muted max-w-[120px] truncate font-semibold text-fg-primary`
   );
   const members = voicingMembers.ids;
   const membersData = voicingMembers.byId;
   if (info.joining) {
     return (
-      <div className="w-full h-full flex-center p-1 text-sm text-gray-600 dark:text-gray-400">
+      <div className="w-full h-full flex-center p-1 text-sm text-fg-secondary">
         Connecting to voice channel...
       </div>
     );
@@ -53,8 +53,8 @@ const VoiceManagement = ({ id, context, info }: Props) => {
   if (info.connectionState == "RECONNECTING") {
     return (
       <div className="w-full h-full flex-center flex-col gap-1 p-1 ">
-        <span className="text-red-300">Reconnecting...</span>
-        <span className="text-xs text-red-500">Please check network connection!</span>
+        <span className="text-danger">Reconnecting...</span>
+        <span className="text-xs text-danger">Please check network connection!</span>
       </div>
     );
   }
@@ -72,7 +72,7 @@ const VoiceManagement = ({ id, context, info }: Props) => {
                 <div className="flex items-center gap-2 transition-opacity">
                   <div className={clsx("w-8 h-8 flex shrink-0 relative")}>
                     {speaking && (
-                      <div className="z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 rounded-full bg-green-500 animate-speaking w-[36px] h-[36px]"></div>
+                      <div className="z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 rounded-full bg-online animate-speaking w-[36px] h-[36px]"></div>
                     )}
                     <Avatar
                       width={32}
@@ -90,9 +90,9 @@ const VoiceManagement = ({ id, context, info }: Props) => {
                 <div className="flex items-center gap-2">
                   {/* {deafen ? <IconHeadphoneOff className="w-4" /> : <IconHeadphone className="w-4" />} */}
                   {muted ? (
-                    <IconMicOff className="w-4 fill-gray-500 dark:fill-gray-400" />
+                    <IconMicOff className="w-4 fill-fg-secondary" />
                   ) : (
-                    <IconMic className="w-4 fill-gray-500  dark:fill-gray-400" />
+                    <IconMic className="w-4 fill-fg-secondary" />
                   )}
                 </div>
               </div>
@@ -105,9 +105,9 @@ const VoiceManagement = ({ id, context, info }: Props) => {
                 </div>
                 <button
                   onClick={handleFullscreen.bind(null, uid)}
-                  className="invisible group-hover:visible w-5 h-5 p-1 bg-black/40 top-1 right-1.5 absolute rounded"
+                  className="invisible group-hover:visible w-5 h-5 p-1 bg-bg-app/40 top-1 right-1.5 absolute rounded"
                 >
-                  <IconFullscreen className="w-full h-full fill-white" />
+                  <IconFullscreen className="w-full h-full fill-fg-primary" />
                 </button>
               </div>
             </li>

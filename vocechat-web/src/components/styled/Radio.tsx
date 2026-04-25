@@ -46,14 +46,14 @@ const Radio: FC<Props> = ({
             }}
             id={`${id}-${index}`}
           />
-          <div className="text-left px-2 py-3 border border-border rounded-lg w-full h-full bg-bg-surface text-sm text-white transition-colors duration-200">
+          <div className="text-left px-2 py-3 border border-border rounded-lg w-full h-full bg-bg-surface text-sm text-fg-primary transition-colors duration-200">
             <label className="ml-6 cursor-pointer" htmlFor={`${id}-${index}`}>
               {item}
             </label>
           </div>
-          <div className="absolute top-1/2 left-3 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-zinc-500 peer-checked:hidden"></div>
-          <div className="absolute top-1/2 left-3 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-teal-300 invisible peer-checked:visible flex-center">
-            <div className="w-1.5 h-1.5 bg-teal-300 rounded-full"></div>
+          <div className="absolute top-1/2 left-3 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-border-strong peer-checked:hidden"></div>
+          <div className="absolute top-1/2 left-3 -translate-y-1/2 w-3.5 h-3.5 rounded-full border border-accent invisible peer-checked:visible flex-center">
+            <div className="w-1.5 h-1.5 bg-accent rounded-full"></div>
           </div>
         </div>
       ))}

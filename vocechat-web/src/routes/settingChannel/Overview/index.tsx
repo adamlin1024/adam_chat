@@ -99,7 +99,7 @@ export default function Overview({ id = 0 }) {
       <div className="flex flex-col gap-6 items-start">
         <div className={"flex items-center gap-1"}>
           <Label htmlFor="name">{t("id")}</Label>
-          <span className="text-gray-500">#{id}</span>
+          <span className="text-fg-muted">#{id}</span>
         </div>
         <div className={inputClass}>
           <Label htmlFor="name">{t("name")}</Label>
@@ -113,7 +113,7 @@ export default function Overview({ id = 0 }) {
             id="name"
             placeholder={t("name")}
           />
-          <IconChannel className="absolute bottom-2.5 left-2 dark:fill-gray-300" />
+          <IconChannel className="absolute bottom-2.5 left-2 fill-fg-body" />
         </div>
         <div className={inputClass}>
           <Label htmlFor="desc">{t("topic")}</Label>

@@ -80,7 +80,7 @@ export default function Logins() {
               <div className="txt">
                 <Label>{t("password")}</Label>
               </div>
-              <span className="desc dark:!text-gray-400">{t("password_desc")}</span>
+              <span className="desc dark:!text-fg-secondary">{t("password_desc")}</span>
             </div>
             <Toggle
               onClick={handleToggle.bind(null, { password: !password })}
@@ -94,7 +94,7 @@ export default function Logins() {
               <div className="txt">
                 <Label>{t("magic_link")}</Label>
               </div>
-              <span className="desc dark:!text-gray-400">{t("magic_link_desc")}</span>
+              <span className="desc dark:!text-fg-secondary">{t("magic_link_desc")}</span>
             </div>
             <Toggle
               onClick={handleToggle.bind(null, { magic_link: !magic_link })}
@@ -109,7 +109,7 @@ export default function Logins() {
                 <Label>{t("google")}</Label>
                 <Tooltip link="https://doc.voce.chat/setting/third_login/login-google" />
               </div>
-              <span className="desc dark:!text-gray-400">{t("google_desc")}</span>
+              <span className="desc dark:!text-fg-secondary">{t("google_desc")}</span>
             </div>
             <Toggle
               onClick={handleToggle.bind(null, { google: !google })}
@@ -132,7 +132,7 @@ export default function Logins() {
                 <Label>{t("github")}</Label>
                 <Tooltip link="https://doc.voce.chat/setting/third_login/login-github" />
               </div>
-              <span className="desc dark:!text-gray-400">{t("github_desc")}</span>
+              <span className="desc dark:!text-fg-secondary">{t("github_desc")}</span>
             </div>
             <Toggle
               onClick={handleToggle.bind(null, { github: !github })}
@@ -163,7 +163,7 @@ export default function Logins() {
                 <Label>{t("metamask")}</Label>
                 <Tooltip link="https://doc.voce.chat/setting/third_login/login-metamask" />
               </div>
-              <span className="desc dark:!text-gray-400">{t("metamask_desc")}</span>
+              <span className="desc dark:!text-fg-secondary">{t("metamask_desc")}</span>
             </div>
             <Toggle
               onClick={handleToggle.bind(null, { metamask: !metamask })}
@@ -178,7 +178,7 @@ export default function Logins() {
                 <div className="txt">
                   <Label>{t("passkey")}</Label>
                 </div>
-                <span className="desc dark:!text-gray-400">{t("passkey_desc")}</span>
+                <span className="desc dark:!text-fg-secondary">{t("passkey_desc")}</span>
               </div>
               <Toggle
                 onClick={handleToggle.bind(null, { passkey: !passkey })}
@@ -194,7 +194,7 @@ export default function Logins() {
                 <Label>{t("oidc")}</Label>
                 <Tooltip link="https://doc.voce.chat/setting/third_login/login-webid" />
               </div>
-              <span className="desc dark:!text-gray-400">{t("oidc_desc")}</span>
+              <span className="desc dark:!text-fg-secondary">{t("oidc_desc")}</span>
             </div>
           </div>
           <div className="row">

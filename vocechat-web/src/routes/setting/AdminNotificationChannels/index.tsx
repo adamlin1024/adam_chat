@@ -88,7 +88,7 @@ export default function AdminNotificationChannels() {
   if (isLoading) {
     return (
       <div className="setting-container max-md:w-full">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-fg-muted">Loading...</div>
       </div>
     );
   }
@@ -101,20 +101,20 @@ export default function AdminNotificationChannels() {
       {/* Enabled Channel Types */}
       {channelTypes.length > 0 && (
         <div className="mt-6">
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <h3 className="font-semibold text-fg-primary mb-4">
             {t("enabled_types")}
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">
+                <tr className="border-b border-border">
+                  <th className="text-left py-3 px-4 font-semibold text-fg-body">
                     {t("channel_type")}
                   </th>
-                  <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">
+                  <th className="text-left py-3 px-4 font-semibold text-fg-body">
                     {t("channel_status")}
                   </th>
-                  <th className="text-right py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">
+                  <th className="text-right py-3 px-4 font-semibold text-fg-body">
                     {t("actions")}
                   </th>
                 </tr>
@@ -125,14 +125,14 @@ export default function AdminNotificationChannels() {
                   return (
                     <tr
                       key={channelType.id}
-                      className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      className="border-b border-border hover:bg-bg-elevated"
                     >
                       <td className="py-3 px-4">
                         <div>
-                          <div className="font-medium text-gray-900 dark:text-gray-100">
+                          <div className="font-medium text-fg-primary">
                             {schema?.name || channelType.channel_type}
                           </div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                          <div className="text-sm text-fg-secondary">
                             {schema?.description}
                           </div>
                         </div>
@@ -148,8 +148,8 @@ export default function AdminNotificationChannels() {
                           <span
                             className={
                               channelType.enabled
-                                ? "text-green-600 dark:text-green-400"
-                                : "text-gray-500"
+                                ? "text-online"
+                                : "text-fg-muted"
                             }
                           >
                             {channelType.enabled ? t("enabled") : t("disabled")}
@@ -177,7 +177,7 @@ export default function AdminNotificationChannels() {
 
       {/* Available Channel Types to Enable */}
       <div className="mt-8">
-        <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <h3 className="font-semibold text-fg-primary mb-4">
           {t("available_types")}
         </h3>
         {availableToEnable.length > 0 ? (
@@ -188,12 +188,12 @@ export default function AdminNotificationChannels() {
               return (
                 <div
                   key={type}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 flex flex-col"
+                  className="border border-border rounded-lg p-4 bg-bg-elevated flex flex-col"
                 >
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  <h4 className="font-semibold text-fg-primary mb-2">
                     {schema.name}
                   </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex-1">
+                  <p className="text-sm text-fg-secondary mb-4 flex-1">
                     {schema.description}
                   </p>
                   <Button onClick={() => handleEnableNew(type)} className="w-full">
@@ -204,7 +204,7 @@ export default function AdminNotificationChannels() {
             })}
           </div>
         ) : (
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-fg-secondary">
             All channel types are already enabled. Total schemas: {channelSchemas.length}
           </p>
         )}
@@ -212,12 +212,12 @@ export default function AdminNotificationChannels() {
 
       {/* Delete Confirmation Modal */}
       {deletingType && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <div className="fixed inset-0 bg-bg-app bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-bg-app rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-semibold text-fg-primary mb-4">
               {t("delete_title")}
             </h3>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">
+            <p className="text-fg-body mb-6">
               {t("delete_desc")}
             </p>
             <div className="flex gap-3 justify-end">

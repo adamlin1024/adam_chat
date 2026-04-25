@@ -27,7 +27,7 @@ const Index = ({ needLogin = false }: Props) => {
           >
             <div
               dangerouslySetInnerHTML={{ __html: welcome || t("welcome") }}
-              className="text-md text-gray-900 dark:text-gray-100 px-3 py-1.5 bg-gray-100 dark:bg-gray-900 rounded-lg mb-1.5"
+              className="text-md text-fg-primary px-3 py-1.5 bg-bg-app rounded-lg mb-1.5"
             ></div>
           </div>
         </div>

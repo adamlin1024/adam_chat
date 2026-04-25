@@ -18,7 +18,7 @@ const Index: FC<Props> = ({ handleClose }) => {
         {logo && <img src={logo} alt="logo" className="size-full" />}
       </div>
       <div className="flex-1 px-4 pr-2 text-lg">
-        <span className="text-lg font-bold truncate text-gray-50" style={{ color: fgColor }}>
+        <span className="text-lg font-bold truncate text-fg-primary" style={{ color: fgColor }}>
           {title}
         </span>
       </div>
@@ -26,7 +26,7 @@ const Index: FC<Props> = ({ handleClose }) => {
         <button type="button" className="size-6">
           <IconClose
             onClick={handleClose}
-            className={fgColor == "black" ? `fill-black` : "fill-white"}
+            className={fgColor == "black" ? `fill-fg-primary` : "fill-fg-primary"}
           />
         </button>
       )}

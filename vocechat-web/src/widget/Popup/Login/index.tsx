@@ -105,7 +105,7 @@ const Login = () => {
   const hasSocialLogins = enableGithubLogin || googleLogin;
   return (
     <div className="w-full max-w-[288px] flex flex-col gap-2 mt-4 animate-[fadeInUp_.5s_.8s_ease-in-out_both]">
-      <div className="bg-white dark:bg-gray-700 border dark:border-gray-500 rounded-lg">
+      <div className="bg-bg-surface border border-border-strong rounded-lg">
         <form className="px-4 py-3 flex flex-col gap-2" onSubmit={handleSubmit}>
           {/* input email as username */}
           <Input required placeholder={t("placeholder_name")} type="text" name="username" />

@@ -12,7 +12,7 @@ const Row = ({
   remarks: string;
 }) => {
   return (
-    <tr className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-50 border-b transition duration-300 ease-in-out md:hover:bg-gray-100 dark:md:hover:bg-gray-900">
+    <tr className="bg-bg-elevated text-fg-primary border-b transition duration-300 ease-in-out md:hover:bg-bg-app">
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{paramKey}</td>
       <td className="text-sm font-light px-6 py-4 whitespace-nowrap">
         {paramKey == "theme-color" ? (
@@ -34,13 +34,13 @@ const ConfigDetails = ({}: Props) => {
   const { t: wt } = useTranslation("widget");
   return (
     <table className="min-w-full table-auto">
-      <thead className="border-b bg-gray-50 dark:bg-gray-500">
+      <thead className="border-b bg-bg-hover">
         <tr>
           {[t("param_key"), t("default_value"), t("remark")].map((title) => (
             <th
               key={title}
               scope="col"
-              className="text-sm font-bold text-gray-900 dark:text-white px-6 py-4 text-left whitespace-nowrap"
+              className="text-sm font-bold text-fg-primary px-6 py-4 text-left whitespace-nowrap"
             >
               {title}
             </th>
@@ -138,11 +138,11 @@ const ConfigDetails = ({}: Props) => {
           <Row key={row.paramKey} {...row} />
         ))}
       </tbody>
-      <tfoot className="border-t border-solid border-gray-200 dark:border-gray-50 dark:bg-gray-500">
+      <tfoot className="border-t border-solid border-border-subtle bg-bg-hover">
         <tr>
-          <td colSpan={3} className="text-gray-400 dark:text-white px-5 py-3 text-sm">
+          <td colSpan={3} className="text-fg-primary px-5 py-3 text-sm">
             * All the parameters are optional, and prefixed by{" "}
-            <i className="bg-gray-700 text-white px-1">data-</i>
+            <i className="bg-bg-surface text-fg-primary px-1">data-</i>
           </td>
         </tr>
       </tfoot>

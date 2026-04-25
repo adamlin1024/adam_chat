@@ -91,7 +91,7 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 transition-opacity duration-300"
+        className="absolute inset-0 bg-bg-app/50 transition-opacity duration-300"
         style={{ opacity: animated ? 1 : 0 }}
         onClick={animateClose}
       />
@@ -121,7 +121,7 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
           <div className="relative flex items-center justify-between px-4 py-2.5 border-b border-border-subtle">
             {stack.length > 0 ? (
               <button className="p-1 -ml-1 rounded" onClick={handleBack}>
-                <IconBack className="w-5 h-5 dark:stroke-white" />
+                <IconBack className="w-5 h-5 stroke-fg-primary" />
               </button>
             ) : (
               <div className="w-7" />
@@ -147,13 +147,13 @@ const ActionSheet: FC<Props> = ({ visible, onClose, items, title }) => {
               key={item.title}
               onClick={() => handleItem(item)}
               className={`flex items-center justify-between px-4 py-3.5 cursor-pointer transition-colors active:bg-bg-surface text-sm ${
-                item.danger ? "text-red-400" : "text-fg-body"
+                item.danger ? "text-danger" : "text-fg-body"
               }`}
             >
               <span>{item.title}</span>
               {item.checked && <IconChecked className="w-4 h-4 fill-accent" />}
               {item.subs && item.subs.length > 0 && (
-                <IconBack className="w-5 h-5 dark:stroke-white rotate-180" />
+                <IconBack className="w-5 h-5 stroke-fg-primary rotate-180" />
               )}
             </li>
           ))}

@@ -84,11 +84,11 @@ const ExpireTimer: FC<Props> = ({
   return (
     <div
       className={clsx(
-        "absolute bottom-1 text-xs text-gray-400 flex items-center gap-1 font-mono",
+        "absolute bottom-1 text-xs text-fg-secondary flex items-center gap-1 font-mono",
         enableRightLayout ? "left-2" : "right-2"
       )}
     >
-      <IconTimer className="w-4 h-4 stroke-slate-400" />
+      <IconTimer className="w-4 h-4 stroke-fg-secondary" />
       {formatted_countdown}
     </div>
   );

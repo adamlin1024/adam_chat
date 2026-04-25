@@ -14,10 +14,10 @@ import { shallowEqual } from "react-redux";
 
 const getClass = (selected: boolean) => {
   return clsx(
-    `cursor-pointer flex items-center gap-1 md:gap-2 shadow rounded-lg p-1 md:py-2 md:px-3 text-xs text-gray-900 dark:text-gray-200`,
+    `cursor-pointer flex items-center gap-1 md:gap-2 shadow rounded-lg p-1 md:py-2 md:px-3 text-xs text-fg-body`,
     selected
-      ? "text-white bg-primary-400"
-      : "border border-solid border-gray-300 dark:border-gray-400 "
+      ? "text-accent-on bg-accent"
+      : "border border-solid border-border "
   );
 };
 export default function Filter({ filter, updateFilter }) {
@@ -78,7 +78,7 @@ export default function Filter({ filter, updateFilter }) {
           <span className="txt">
             {t("from")} {uid && userMap[uid].name}
           </span>
-          <ArrowDown className="dark:stroke-gray-100" />
+          <ArrowDown className="stroke-fg-primary" />
         </div>
       </Tippy> */}
       <Tippy
@@ -90,7 +90,7 @@ export default function Filter({ filter, updateFilter }) {
       >
         <div className={getClass(gid)} onClick={toggleFilterVisible.bind(null, { gid: true })}>
           <span className="txt">{gid ? `In ${channelMap[gid].name}` : t("channel")}</span>
-          <ArrowDown className="dark:stroke-gray-100" />
+          <ArrowDown className="stroke-fg-primary" />
         </div>
       </Tippy>
       <Tippy
@@ -105,7 +105,7 @@ export default function Filter({ filter, updateFilter }) {
           onClick={toggleFilterVisible.bind(null, { file_type: true })}
         >
           <span className="txt">{file_type ? FileTypes[file_type].title : t("type")}</span>
-          <ArrowDown className="dark:stroke-gray-100" />
+          <ArrowDown className="stroke-fg-primary" />
         </div>
       </Tippy>
       <Tippy
@@ -124,7 +124,7 @@ export default function Filter({ filter, updateFilter }) {
           <span className="txt">
             {creation_time_type ? Dates[creation_time_type].title : t("date")}
           </span>
-          <ArrowDown className="dark:stroke-gray-100" />
+          <ArrowDown className="stroke-fg-primary" />
         </div>
       </Tippy>
     </div>

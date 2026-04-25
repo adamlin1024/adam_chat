@@ -43,7 +43,7 @@ const Loading: FC<Props> = ({
       data-ctx={context}
       className={clsx(
         "w-full h-full flex-center flex-col gap-4 ",
-        transparent ? "bg-transparent" : "dark:bg-gray-800/80",
+        transparent ? "bg-transparent" : "bg-bg-elevated/80",
         fullscreen ? "w-screen h-screen" : ""
       )}
     >

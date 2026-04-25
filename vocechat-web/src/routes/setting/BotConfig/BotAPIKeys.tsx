@@ -14,7 +14,7 @@ type Props = {
   uid: number;
 };
 type DeleteAPIKeyProps = { uid: number; kid: number };
-const tdClass = "p-1 whitespace-nowrap text-xs text-gray-500 dark:text-gray-200 align-middle px-1";
+const tdClass = "p-1 whitespace-nowrap text-xs text-fg-body align-middle px-1";
 const BotAPIKeys = ({ uid }: Props) => {
   const { t } = useTranslation("setting", { keyPrefix: "bot" });
   const [currentUid, setCurrentUid] = useState<number | undefined>();
@@ -32,7 +32,7 @@ const BotAPIKeys = ({ uid }: Props) => {
   const colWidths = ["w-20", "w-[166px]", "w-36", "w-15", "w-10"];
   return (
     <div className="flex flex-col gap-2 items-start">
-      <div className="border-t border-solid border-b border-gray-100 dark:border-gray-500 py-2 w-full">
+      <div className="border-t border-solid border-b border-border-strong py-2 w-full">
         <table className="min-w-full table-fixed font-mono">
           <thead>
             <tr>
@@ -47,7 +47,7 @@ const BotAPIKeys = ({ uid }: Props) => {
                   key={title}
                   scope="col"
                   className={clsx(
-                    `text-xs text-gray-900 dark:text-gray-50 px-1 text-left pb-2`,
+                    `text-xs text-fg-primary px-1 text-left pb-2`,
                     colWidths[idx]
                   )}
                 >
@@ -80,7 +80,7 @@ const BotAPIKeys = ({ uid }: Props) => {
               })
             ) : (
               <tr>
-                <td colSpan={4} className="text-center text-xs text-gray-400 py-2">
+                <td colSpan={4} className="text-center text-xs text-fg-secondary py-2">
                   {t("no_api_key")}
                 </td>
               </tr>
@@ -89,9 +89,9 @@ const BotAPIKeys = ({ uid }: Props) => {
         </table>
         <button
           onClick={toggleCreateModal.bind(null, uid)}
-          className="text-green-600 text-xs py-0.5 flex items-center gap-1 m-auto my-2 bg-green-50 rounded-full px-2 "
+          className="text-online text-xs py-0.5 flex items-center gap-1 m-auto my-2 bg-online/10 rounded-full px-2 "
         >
-          <IconAdd className="!w-4 !h-4 fill-green-600" /> {t("add_api_key")}
+          <IconAdd className="!w-4 !h-4 fill-online" /> {t("add_api_key")}
         </button>
       </div>
       {currentUid && (

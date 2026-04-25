@@ -56,8 +56,8 @@ const InvitePrivate = () => {
   };
   if (!fetchChannelSuccess) return null;
   return (
-    <div className="flex-center flex-col gap-4 h-screen overflow-x-hidden overflow-y-auto dark:bg-gray-700 dark:text-slate-100">
-      <div className="flex flex-col gap-4 items-center py-8 px-10 rounded-lg shadow-md bg-slate-100/30 dark:bg-gray-800 text-center">
+    <div className="flex-center flex-col gap-4 h-screen overflow-x-hidden overflow-y-auto text-fg-primary">
+      <div className="flex flex-col gap-4 items-center py-8 px-10 rounded-lg shadow-md bg-bg-elevated text-center">
         <div className="flex flex-col items-center gap-4">
           <img src={server.logo} className="w-20 h-20" alt="server logo" />
           <h2 className="text-2xl font-bold">{server.name}</h2>
@@ -68,7 +68,7 @@ const InvitePrivate = () => {
           ) : isTokenValid ? (
             <>
               You are invited to join private channel{" "}
-              <strong className="text-primary-400">#{channel?.name}</strong>
+              <strong className="text-accent">#{channel?.name}</strong>
             </>
           ) : (
             "The invite link is invalid or expired"

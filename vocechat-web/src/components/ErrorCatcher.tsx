@@ -8,7 +8,7 @@ type FallbackProps = {
 };
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
-    <div role="alert" className="text-lg text-red-600">
+    <div role="alert" className="text-lg text-danger">
       <p>Something went wrong:</p>
       <pre>{error.message}</pre>
       <StyledButton className="mini" onClick={resetErrorBoundary}>

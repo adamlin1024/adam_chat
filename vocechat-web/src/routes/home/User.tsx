@@ -18,7 +18,7 @@ const User: FC<Props> = ({ uid }) => {
     <div className="px-3 pt-3 pb-2 invisible md:visible">
       <NavLink to={`/setting/my_account?f=${pathname}`}>
         <div className="relative group flex h-9 w-9 items-center justify-center rounded-full
-                        bg-gradient-to-br from-teal-300 to-cyan-500 cursor-pointer
+                        bg-gradient-to-br from-accent to-accent-pressed cursor-pointer
                         hover:shadow-inset-hairline transition-shadow duration-[120ms]">
           <Avatar
             className="object-cover w-full h-full rounded-full"

@@ -98,20 +98,20 @@ const VoiceMessage = ({ file_path }: { file_path: string }) => {
     <div
       className={clsx(
         "relative whitespace-nowrap select-none flex items-center gap-2 p-2 rounded-lg max-w-sm",
-        "bg-primary-100 dark:bg-primary-900"
+        "bg-accent-pressed"
       )}
     >
       <button className="disabled:opacity-60" onClick={handleClick} disabled={notReady}>
         {playing ? (
-          <IconPause className="stroke-primary-500" />
+          <IconPause className="stroke-accent" />
         ) : (
-          <IconPlay className="stroke-primary-500" />
+          <IconPlay className="stroke-accent" />
         )}
       </button>
       <div ref={containerRef} className={clsx("flex-1 h-8 min-w-[150px]")}>
         {status == "loading" && <span className="text-xs leading-8">Loading voice message...</span>}
       </div>
-      <time className="text-primary-500 text-xs whitespace-nowrap text-left">{duration}</time>
+      <time className="text-accent text-xs whitespace-nowrap text-left">{duration}</time>
     </div>
   );
 };

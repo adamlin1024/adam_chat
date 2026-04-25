@@ -8,7 +8,7 @@ export default function WelcomePage() {
   const { t } = useTranslation("welcome", { keyPrefix: "onboarding" });
   const { nextStep } = useWizard();
   return (
-    <div className="flex-center flex-col h-full text-center dark:text-gray-100">
+    <div className="flex-center flex-col h-full text-fg-primary">
       <span className="text-2xl mb-2 font-bold">{t("welcome")}</span>
       <span className="text-sm mb-6">{t("welcome_desc")}</span>
       <StyledButton

@@ -75,8 +75,8 @@ const TransferOwnerModal: FC<Props> = ({ id, closeModal, withLeave = true }) => 
               <li
                 key={id}
                 className={clsx(
-                  `cursor-pointer flex items-center px-2 md:hover:bg-gray-500/10`,
-                  uid == id ? "bg-gray-500/10" : ""
+                  `cursor-pointer flex items-center px-2 md:hover:bg-bg-hover/10`,
+                  uid == id ? "bg-bg-hover/10" : ""
                 )}
                 onClick={handleSelectUser.bind(null, id)}
               >

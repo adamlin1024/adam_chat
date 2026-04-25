@@ -61,7 +61,7 @@ const ProfileBasicEditModal: FC<Props> = ({ closeModal }) => {
     isLoading;
 
   const inputClass = `my-4 w-full flex flex-col items-start gap-2`;
-  const labelClass = `text-gray-400 font-semibold`;
+  const labelClass = `text-fg-secondary font-semibold`;
   return (
     <Modal id="modal-modal">
       <StyledModal

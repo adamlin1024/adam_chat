@@ -64,7 +64,7 @@ const FavListModal: FC<Props> = ({ visible, onClose, cid, uid }) => {
     return (
       <div className="fixed inset-0 z-[200]">
         <div
-          className="absolute inset-0 bg-black/50 transition-opacity duration-300"
+          className="absolute inset-0 bg-bg-app/50 transition-opacity duration-300"
           style={{ opacity: animated ? 1 : 0 }}
           onClick={animateClose}
         />
@@ -106,7 +106,7 @@ const FavListModal: FC<Props> = ({ visible, onClose, cid, uid }) => {
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-bg-app/50" onClick={onClose} />
       <div className="relative w-full max-w-lg">
         <FavList cid={cid} uid={uid} />
       </div>

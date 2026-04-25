@@ -9,7 +9,7 @@ import IconList from "@/assets/icons/file.list.svg";
 const getClass = (selected: boolean) =>
   clsx(
     `cursor-pointer p-2 box-border flex-center`,
-    selected && `border border-solid border-primary-400 shadow rounded-lg`
+    selected && `border border-solid border-accent shadow rounded-lg`
   );
 type Props = {
   view?: "item" | "grid";
@@ -24,13 +24,13 @@ export default function View({ view = "item" }: Props) {
   const isGrid = view == "grid";
   return (
     <ul
-      className={`hidden md:flex border border-solid dark:border-gray-400 shadow rounded-lg box-border`}
+      className={`hidden md:flex border border-border shadow rounded-lg box-border`}
     >
       <li className={getClass(!isGrid)} data-view={"item"} onClick={handleChangeView}>
-        <IconList className={`${!isGrid ? "fill-primary-400" : ""} dark:fill-gray-400`} />
+        <IconList className={!isGrid ? "fill-accent" : "fill-fg-secondary"} />
       </li>
       <li className={getClass(isGrid)} data-view={"grid"} onClick={handleChangeView}>
-        <IconGrid className={`${isGrid ? "fill-primary-400" : ""} dark:fill-gray-400`} />
+        <IconGrid className={isGrid ? "fill-accent" : "fill-fg-secondary"} />
       </li>
     </ul>
   );

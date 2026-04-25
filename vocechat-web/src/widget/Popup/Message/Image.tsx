@@ -13,11 +13,11 @@ const Image = ({ thumbnail, content }: Props) => {
   return (
     <>
       {originalVisible && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center">
+        <div className="fixed top-0 left-0 w-full h-full bg-bg-app/50 flex items-center justify-center">
           <div className="relative">
             <img className="max-w-full" src={content || thumbnail} />
             <button className="absolute -top-2 -right-2" onClick={toggleVisible}>
-              <IconClose className="w-5 h-5 dark:fill-gray-300" />
+              <IconClose className="w-5 h-5 fill-fg-body" />
             </button>
           </div>
         </div>

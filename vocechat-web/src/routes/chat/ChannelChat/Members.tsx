@@ -46,11 +46,11 @@ const Members = ({ uids, addVisible, ownerId, cid, membersVisible }: Props) => {
       >
         {addVisible && (
           <div
-            className="cursor-pointer flex items-center justify-start gap-1 select-none rounded-lg p-2.5 md:hover:bg-gray-500/10 transition-colors duration-200"
+            className="cursor-pointer flex items-center justify-start gap-1 select-none rounded-lg p-2.5 md:hover:bg-bg-hover/10 transition-colors duration-200"
             onClick={toggleAddVisible}
           >
-            <IconAdd className="w-6 h-6 dark:fill-slate-300" />
-            <div className="font-semibold text-sm text-gray-600 dark:text-gray-50">
+            <IconAdd className="w-6 h-6 fill-fg-body" />
+            <div className="font-semibold text-sm text-fg-primary">
               {t("add_channel_members")}
             </div>
           </div>

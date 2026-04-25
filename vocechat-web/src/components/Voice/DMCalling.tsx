@@ -69,8 +69,8 @@ const DMCalling = ({ from, to = 0 }: Props) => {
         dragMomentum={false}
         whileDrag={{ scale: 1.1 }}
         className={clsx(`pointer-events-auto 
-        rounded bg-gray-800  relative
-        shadow-lg shadow-slate-200 dark:shadow-slate-800 
+        rounded bg-bg-elevated  relative
+        shadow-lg shadow-bg-app/40
         cursor-move overflow-hidden
         w-64 h-80
         `)}
@@ -81,18 +81,18 @@ const DMCalling = ({ from, to = 0 }: Props) => {
         <div
           className={clsx(
             "absolute left-0 top-0 py-5 w-full h-full flex flex-col justify-between items-center",
-            connected ? "bg-transparent" : "bg-gray-800"
+            connected ? "bg-transparent" : "bg-bg-elevated"
           )}
         >
           <div className="flex flex-col gap-2 items-center">
             <div className="rounded-full overflow-hidden w-20 h-20 shrink-0">
               <Avatar name={name} src={avatar} width={80} height={80} className="h-20" />
             </div>
-            <span className="text-white mb-2">{name}</span>
+            <span className="text-fg-primary mb-2">{name}</span>
           </div>
           <div className="flex flex-col gap-1 items-center my-4">
             <Waveform size={18} lineWeight={3} speed={1} color="#aaa" />
-            <span className="text-xs text-gray-600 dark:text-gray-400">
+            <span className="text-xs text-fg-secondary">
               {sendByMe ? `Calling` : `Incoming call`}
             </span>
           </div>
@@ -100,7 +100,7 @@ const DMCalling = ({ from, to = 0 }: Props) => {
             <Tooltip tip={"Disconnect"} placement="top">
               <button
                 onClick={handleCancel}
-                className="flex-center bg-red-600 hover:bg-red-700 py-2 px-3 rounded-lg"
+                className="flex-center bg-danger-bg hover:bg-danger-bg py-2 px-3 rounded-lg"
               >
                 <IconCallOff className="w-6 h-6" />
               </button>
@@ -110,9 +110,9 @@ const DMCalling = ({ from, to = 0 }: Props) => {
                 <button
                   disabled={joining}
                   onClick={handleAnswer}
-                  className="flex-center bg-green-600 hover:bg-green-700 py-2 px-3 rounded-lg"
+                  className="flex-center bg-online hover:bg-online py-2 px-3 rounded-lg"
                 >
-                  <IconCallAnswer className="w-6 h-6 fill-white" />
+                  <IconCallAnswer className="w-6 h-6 fill-fg-primary" />
                 </button>
               </Tooltip>
             )}

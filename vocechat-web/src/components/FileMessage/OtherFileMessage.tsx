@@ -52,7 +52,7 @@ const OtherFileMessage = ({
   return (
     <div
       className={clsx(
-        `bg-stone-100 dark:bg-stone-900 border box-border md:w-96 rounded-md border-gray-300 dark:border-gray-500`,
+        `bg-bg-app border box-border md:w-96 rounded-md border-border-strong`,
         sending && "opacity-90"
       )}
     >
@@ -61,12 +61,12 @@ const OtherFileMessage = ({
         <div className="flex flex-col gap-1 w-full overflow-hidden">
           <span
             className={clsx(
-              "font-semibold text-sm truncate text-gray-800 dark:text-gray-100"
+              "font-semibold text-sm truncate text-fg-primary"
             )}
           >
             {name}
           </span>
-          <span className="flex whitespace-nowrap text-xs text-gray-500 dark:text-gray-300 gap-4">
+          <span className="flex whitespace-nowrap text-xs text-fg-body gap-4">
             {sending ? (
               <Progress value={progress} width={"80%"} />
             ) : (

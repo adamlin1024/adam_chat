@@ -53,7 +53,7 @@ const VoicingBlocks = ({ onlyToSelf, sendByMe, connected, from, to }: BlockProps
           {speaking && (
             <div
               className={clsx(
-                "z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 rounded-full bg-green-500 animate-speaking",
+                "z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 rounded-full bg-online animate-speaking",
                 "w-[86px] h-[86px]"
               )}
             ></div>
@@ -61,7 +61,7 @@ const VoicingBlocks = ({ onlyToSelf, sendByMe, connected, from, to }: BlockProps
           {showToWaiting && (
             <div
               className={clsx(
-                "z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-400",
+                "z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-bg-hover",
                 "w-[88px] h-[88px]"
               )}
             ></div>
@@ -84,7 +84,7 @@ const VoicingBlocks = ({ onlyToSelf, sendByMe, connected, from, to }: BlockProps
         {video && (
           <span
             className={clsx(
-              "text-gray-300 bg-black/50 rounded absolute z-40",
+              "text-fg-body bg-bg-app/50 rounded absolute z-40",
               "left-1 bottom-1 py-1 px-2 text-xs"
             )}
             title={name}
@@ -95,12 +95,12 @@ const VoicingBlocks = ({ onlyToSelf, sendByMe, connected, from, to }: BlockProps
         {muted && !isMyself && (
           <span
             className={clsx(
-              "bg-black/50 rounded absolute z-40 right-1 bottom-1 p-1",
+              "bg-bg-app/50 rounded absolute z-40 right-1 bottom-1 p-1",
               video && "invisible group-hover:visible"
             )}
             title={name}
           >
-            <IconMicOff className="w-4 h-4 fill-gray-300" />
+            <IconMicOff className="w-4 h-4 fill-fg-body" />
           </span>
         )}
       </div>
@@ -163,7 +163,7 @@ const DMVoice = ({ uid }: Props) => {
   } = voicingMembers.byId[callingFrom] ?? {};
   const fromSpeaking = fromSpeakingVol > 50;
   return (
-    <div className="py-4 px-10 flex flex-col items-center gap-3 bg-slate-200 dark:bg-slate-800">
+    <div className="py-4 px-10 flex flex-col items-center gap-3 bg-bg-elevated">
       <div className="flex items-center gap-4">
         <VoicingBlocks
           onlyToSelf={onlyToSelf}
@@ -192,7 +192,7 @@ const DMVoice = ({ uid }: Props) => {
           <Tooltip tip={"Leave"} placement="top">
             <button
               onClick={handleCancel}
-              className="flex-center bg-red-600 hover:bg-red-700 py-2 px-3 rounded"
+              className="flex-center bg-danger-bg hover:bg-danger-bg py-2 px-3 rounded"
             >
               <IconCallOff className="w-6 h-6" />
             </button>
@@ -203,9 +203,9 @@ const DMVoice = ({ uid }: Props) => {
             <button
               disabled={joining}
               onClick={handleAnswer}
-              className="flex-center bg-green-600 hover:bg-green-700 py-2 px-3 rounded"
+              className="flex-center bg-online hover:bg-online py-2 px-3 rounded"
             >
-              <IconCallAnswer className="w-6 h-6 fill-white" />
+              <IconCallAnswer className="w-6 h-6 fill-fg-primary" />
             </button>
           </Tooltip>
         )}

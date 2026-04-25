@@ -90,16 +90,16 @@ const MemberList: FC<Props> = ({ cid }) => {
             return (
               <li
                 key={uid}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-md md:hover:bg-slate-50 md:dark:hover:bg-gray-800"
+                className="w-full flex items-center justify-between px-3 py-2 rounded-md md:hover:bg-bg-elevated md:hover:bg-bg-elevated"
               >
                 <div className="flex gap-4">
                   <User compact uid={uid} interactive={false} />
                   <div className="flex flex-col">
-                    <span className="font-bold text-sm text-gray-600 dark:text-white flex items-center gap-1">
+                    <span className="font-bold text-sm text-fg-primary flex items-center gap-1">
                       <NameWithRemark name={name} uid={uid} /> {owner && <IconOwner />}
                     </span>
                     {showEmailInChannel && (
-                      <span className="hidden md:block text-xs text-gray-500 dark:text-slate-50">
+                      <span className="hidden md:block text-xs text-fg-primary">
                         {email}
                       </span>
                     )}
@@ -122,7 +122,7 @@ const MemberList: FC<Props> = ({ cid }) => {
                             })}
                           >
                             {t("admin")}
-                            {is_admin && <IconCheck className="icon dark:fill-white" />}
+                            {is_admin && <IconCheck className="icon fill-fg-primary" />}
                           </li>
                           <li
                             className="item sb"
@@ -133,18 +133,18 @@ const MemberList: FC<Props> = ({ cid }) => {
                             })}
                           >
                             {t("user")}
-                            {!is_admin && <IconCheck className="icon dark:fill-white" />}
+                            {!is_admin && <IconCheck className="icon fill-fg-primary" />}
                           </li>
                         </ul>
                       }
                     >
-                      <span className="text-xs text-right text-gray-500 dark:text-slate-100 flex items-center gap-1 cursor-pointer">
+                      <span className="text-xs text-right text-fg-primary flex items-center gap-1 cursor-pointer">
                         {is_admin ? t("admin") : t("user")}
-                        <IconArrowDown className="dark:fill-slate-50" />
+                        <IconArrowDown className="fill-fg-primary" />
                       </span>
                     </Tippy>
                   ) : (
-                    <span className="text-xs text-right text-gray-500 dark:text-slate-100 flex items-center gap-1">
+                    <span className="text-xs text-right text-fg-primary flex items-center gap-1">
                       {is_admin ? t("admin") : t("user")}
                     </span>
                   )}
@@ -185,7 +185,7 @@ const MemberList: FC<Props> = ({ cid }) => {
                       }
                     >
                       <div className="relative w-6 h-6">
-                        <IconMore role="button" className="dark:fill-gray-400" />
+                        <IconMore role="button" className="fill-fg-secondary" />
                       </div>
                     </Tippy>
                   )}

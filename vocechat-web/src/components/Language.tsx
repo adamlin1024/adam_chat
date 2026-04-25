@@ -24,7 +24,7 @@ const SelectLanguage = ({}: Props) => {
       <StyledButton className="small ghost fixed right-3 top-3 inline-flex gap-1 !w-fit">
         <span>{lang}</span>{" "}
         <ArrowDown
-          className={cn("dark:stroke-gray-100 transition-all", visible ? "rotate-180" : "")}
+          className={cn("stroke-fg-primary transition-all", visible ? "rotate-180" : "")}
         />{" "}
       </StyledButton>
     </Tippy>

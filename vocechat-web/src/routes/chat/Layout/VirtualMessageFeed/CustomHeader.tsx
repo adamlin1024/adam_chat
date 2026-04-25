@@ -19,11 +19,11 @@ const ChannelHeader = ({ cid }: ChannelHeaderProps) => {
     : t("welcome_desc", { name: data?.name });
   return (
     <div className="pt-14 px-1 md:px-0 flex flex-col items-start gap-2">
-      <h2 className="font-bold text-4xl dark:text-white">
+      <h2 className="font-bold text-4xl text-fg-primary">
         {t("welcome_channel", { name: data?.name })}
       </h2>
       <p
-        className="text-gray-600 dark:text-gray-300 [&>a]:text-blue-500 [&>a]:hover:underline"
+        className="text-fg-body [&>a]:text-accent [&>a]:hover:underline"
         dangerouslySetInnerHTML={{ __html: desc }}
       />
       {isAdmin && (

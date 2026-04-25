@@ -29,10 +29,10 @@ export default function Server({ readonly = false }: Props) {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <h3 className="text-sm text-gray-600 dark:text-gray-100" title={description}>
+            <h3 className="text-sm text-fg-primary" title={description}>
               {name}
             </h3>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-fg-muted">
               {userCount} {t("members")}
             </span>
           </div>

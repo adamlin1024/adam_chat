@@ -16,13 +16,13 @@ const From: FC<Props> = ({ select = "", updateFilter }) => {
   };
 
   return (
-    <div className="rounded-lg p-1 pt-0 bg-white dark:bg-gray-800 overflow-auto max-h-[300px] flex flex-col items-start relative drop-shadow">
-      <div className="bg-white dark:bg-gray-800 sticky top-0 z-10 w-full">
+    <div className="rounded-lg p-1 pt-0 bg-bg-elevated overflow-auto max-h-[300px] flex flex-col items-start relative drop-shadow">
+      <div className="bg-bg-elevated sticky top-0 z-10 w-full">
         <Search embed={true} value={input} updateSearchValue={updateInput} />
       </div>
       <ul className="w-full flex flex-col">
         <li
-          className="relative cursor-pointer p-2.5 font-semibold text-sm text-gray-500"
+          className="relative cursor-pointer p-2.5 font-semibold text-sm text-fg-muted"
           onClick={handleClick.bind(null, undefined)}
         >
           Anyone

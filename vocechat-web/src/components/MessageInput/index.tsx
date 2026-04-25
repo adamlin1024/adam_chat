@@ -91,7 +91,7 @@ export default function MessageInput({
     <>
       <div
         ref={editorContainerRef}
-        className="input w-full pr-0 max-h-[50vh] overflow-auto text-sm text-gray-600 dark:text-white"
+        className="input w-full pr-0 max-h-[50vh] overflow-auto text-sm text-fg-primary"
       >
         <Plate
           // @ts-ignore

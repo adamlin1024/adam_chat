@@ -12,10 +12,10 @@ type Props = {
 const QRCode = ({ link, size = 512, level = "L" }: Props) => {
   const logo = useAppSelector((store) => store.server.logo, shallowEqual);
   return (
-    <div className="p-2 bg-white dark:bg-slate-200 rounded">
+    <div className="p-2 bg-bg-surface rounded">
       <QRCodeSVG
         value={link}
-        className="rounded border border-solid border-gray-200 dark:border-none !w-full !h-full"
+        className="rounded border border-solid border-none !w-full !h-full"
         size={size}
         bgColor={"#fff"}
         fgColor={"#000"}

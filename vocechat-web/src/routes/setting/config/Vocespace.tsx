@@ -189,11 +189,11 @@ export function ConfigVocespace() {
       <ConfigTip title={t("desc")} desc={`${t("sub_desc")}`} />
       <div className="inputs">
         <div className="input row">
-          <Label style={{ color: "#fff", display: "flex", flexWrap: "wrap" }}>
+          <Label style={{ color: "var(--c-fg-primary)", display: "flex", flexWrap: "wrap" }}>
             <Label style={{ display: "inline", width: "100%" }}>Enable</Label>
             {/* <HowToTip link="https://doc.vocespace.com/zh/doc/guide/overview" text={t("how_to")} /> */}
             <div
-              className="text-gray-400"
+              className="text-fg-secondary"
               style={{
                 fontSize: 12,
               }}
@@ -209,7 +209,7 @@ export function ConfigVocespace() {
             {t("prerequisite.0")}
           </Label>
           <ol
-            className="list-disc list-inside text-sm text-gray-400 mb-4"
+            className="list-disc list-inside text-sm text-fg-secondary mb-4"
             style={{ fontSize: 12, margin: 0 }}
           >
             <li>{t("prerequisite.1")}</li>
@@ -233,7 +233,7 @@ export function ConfigVocespace() {
           <div>
             <a
               style={{ fontSize: 12 }}
-              className="mb-2 block text-gray-400 underline"
+              className="mb-2 block text-fg-secondary underline"
               href={`https://vocespace.com/local_deploy/${
                 server_type === "nas" ? "nas.mp4" : "vps.mp4"
               }`}
@@ -248,7 +248,7 @@ export function ConfigVocespace() {
                 server_type === "nas" ? "nas.mp4" : "vps.mp4"
               }`}
               controls
-              style={{ width: "100%", borderRadius: 8, backgroundColor: "#ddd" }}
+              style={{ width: "100%", borderRadius: 8, backgroundColor: "var(--c-bg-surface)" }}
             ></video>
           </div>
 
@@ -276,7 +276,7 @@ export function ConfigVocespace() {
               )}
               Custom domain for VoceSpace
             </Label>
-            <p className="text-gray-400 text-xs">{t("domain_desc")}</p>
+            <p className="text-fg-secondary text-xs">{t("domain_desc")}</p>
           </div>
 
           <div className="flex gap-2" style={{ width: "100%" }}>
@@ -342,18 +342,18 @@ export function ConfigVocespace() {
             {state === "success" ? (
               <StateDot
                 color="#00ff00"
-                className="text-green-400"
+                className="text-online"
                 word="VoceSpace deployed successfully."
               />
             ) : (
               <>
                 <StateDot
                   color="gray"
-                  className="text-gray-400"
+                  className="text-fg-secondary"
                   word="VoceSpace is not deployed yet or failed."
                 />
                 {enabled && (
-                  <span className="text-red-500">
+                  <span className="text-danger">
                     please run the deploy_vocespace.sh in your vps or server <br></br>{" "}
                     <pre>chmod +x deploy_vocespace.sh && sh ./deploy_vocespace.sh</pre>
                   </span>
@@ -363,7 +363,7 @@ export function ConfigVocespace() {
           </div>
         )}
         <div
-          className="list-disc list-inside text-sm text-gray-400 mb-4"
+          className="list-disc list-inside text-sm text-fg-secondary mb-4"
           style={{ fontSize: 12, margin: 0, paddingTop: 8 }}
         >
           {t("prerequisite.4")}

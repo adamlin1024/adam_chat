@@ -128,7 +128,7 @@ function ChatPage() {
         {sessionListVisible && (
           <div
             onClick={toggleSessionList}
-            className="z-30 fixed top-0 left-4 w-screen h-screen bg-black/50 transition-all backdrop-blur-sm"
+            className="z-30 fixed top-0 left-4 w-screen h-screen bg-bg-app/50 transition-all backdrop-blur-sm"
           ></div>
         )}
         <div

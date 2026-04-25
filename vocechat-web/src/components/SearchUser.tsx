@@ -161,7 +161,7 @@ const SearchUser: FC<Props> = ({ closeModal }) => {
   if (isMobile) {
     return createPortal(
       <div className="fixed inset-0 z-[200]">
-        <div className="absolute inset-0 bg-black/50 transition-opacity duration-300" style={{ opacity: animated ? 1 : 0 }} onClick={animateClose} />
+        <div className="absolute inset-0 bg-bg-app/50 transition-opacity duration-300" style={{ opacity: animated ? 1 : 0 }} onClick={animateClose} />
         <div
           ref={sheetRef}
           className="absolute left-0 right-0 bg-bg-elevated flex flex-col overflow-hidden"

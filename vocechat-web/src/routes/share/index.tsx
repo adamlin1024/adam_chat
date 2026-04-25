@@ -83,7 +83,7 @@ function SharePage() {
           className="h-9 w-9 flex-center rounded-md hover:bg-bg-surface"
           aria-label="返回"
         >
-          <IconBack className="w-5 h-5 stroke-current dark:stroke-white fill-none" />
+          <IconBack className="w-5 h-5 stroke-fg-primary fill-none" />
         </button>
         <h1 className="text-base font-semibold text-fg-primary">分享到…</h1>
       </header>

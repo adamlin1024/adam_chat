@@ -22,10 +22,10 @@ const Navigator = () => {
       {steps.map((stepToRender, indexToRender) => {
         const clickable = canJumpTo.includes(stepToRender.name);
         const itemClass = clsx(
-          `text-sm text-gray-600`,
-          clickable && "cursor-pointer md:hover:text-gray-500",
-          indexToRender === activeStep && "font-bold text-black",
-          indexToRender >= activeStep && "text-gray-400"
+          `text-sm text-fg-subtle`,
+          clickable && "cursor-pointer md:hover:text-fg-muted",
+          indexToRender === activeStep && "font-bold text-fg-primary",
+          indexToRender >= activeStep && "text-fg-secondary"
         );
         const nodeCls = `${itemClass}`;
         return (
@@ -54,7 +54,7 @@ export default function OnboardingPage() {
   return (
     <>
       <title>{t("onboarding.title") || ""}</title>
-      <div className="h-screen bg-neutral-100 dark:bg-neutral-900 overflow-y-auto">
+      <div className="h-screen bg-bg-app overflow-y-auto">
         <Wizard header={<Navigator />}>
           <WelcomePage />
           <ServerName serverName={serverName} setServerName={setServerName} />

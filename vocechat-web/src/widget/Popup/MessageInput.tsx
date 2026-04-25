@@ -30,9 +30,9 @@ const MessageInput = (props: Props) => {
   const [content, setContent] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
   const textareaClassName = clsx(
-    "px-2.5 py-1.5 text-sm rounded-md w-full block dark:bg-gray-700 dark:text-gray-100",
+    "px-2.5 py-1.5 text-sm rounded-md w-full block text-fg-primary",
     "min-h-[32px] max-h-[92px] h-8 resize-none overflow-y-auto",
-    `ring-1 ring-gray-200 dark:ring-gray-800 focus:ring-2 focus:ring-[${color}]`,
+    `ring-1 ring-border-subtle focus:ring-2 focus:ring-[${color}]`,
     "focus:outline-none"
   );
   const handleSend = () => {
@@ -73,7 +73,7 @@ const MessageInput = (props: Props) => {
   // }, [uploadSuccess])
 
   return (
-    <div className="relative border-t border-gray-300 dark:border-gray-600 w-full">
+    <div className="relative border-t border-border-strong w-full">
       <div className={"px-3 py-2 min-h-[48px] flex items-center gap-2"}>
         <textarea
           // disabled={isSending}
@@ -114,7 +114,7 @@ const MessageInput = (props: Props) => {
             {isUploading ? (
               <Wobble size={16} />
             ) : (
-              <IconImage className="dark:stroke-gray-100 w-4 h-4" />
+              <IconImage className="stroke-fg-primary w-4 h-4" />
             )}
             <input
               onChange={handleFileChange}
@@ -131,7 +131,7 @@ const MessageInput = (props: Props) => {
             disabled={content.trim().length === 0}
             className="p-1 disabled:opacity-60"
           >
-            <IconSend className="dark:fill-gray-100 w-4 h-4" />
+            <IconSend className="fill-fg-primary w-4 h-4" />
           </button>
         </div>
       </div>

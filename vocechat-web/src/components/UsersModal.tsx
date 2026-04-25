@@ -60,7 +60,7 @@ const UsersModal: FC<Props> = ({ closeModal }) => {
     return createPortal(
       <div className="fixed inset-0 z-[200]">
         <div
-          className="absolute inset-0 bg-black/50 transition-opacity duration-300"
+          className="absolute inset-0 bg-bg-app/50 transition-opacity duration-300"
           style={{ opacity: animated ? 1 : 0 }}
           onClick={animateClose}
         />

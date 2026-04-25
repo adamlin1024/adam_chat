@@ -77,14 +77,14 @@ const GithubCallback: FC<Props> = ({ code, from = "webapp" }) => {
   };
 
   // if (error) {
-  //   return <span className="text-red-500 text-lg">Something Error</span>;
+  //   return <span className="text-danger text-lg">Something Error</span>;
   // }
 
   return (
     <section className="flex-center flex-col gap-3">
       <StyledButton onClick={handleClose}>{ct("action.close")}</StyledButton>
       {isSuccess && from === "widget" && <h1>{t("github_cb_tip")}</h1>}
-      <span className="text-3xl text-green-600 font-bold">
+      <span className="text-3xl text-online font-bold">
         {isLoading ? t("github_logging_in") : t("github_login_success")}
       </span>
     </section>

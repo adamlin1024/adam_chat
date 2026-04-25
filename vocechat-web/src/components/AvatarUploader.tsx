@@ -46,7 +46,7 @@ const AvatarUploader: FC<Props> = ({
       style={{ width: `${size}px`, height: `${size}px` }}
       className={clsx(className, "relative group cursor-pointer")}
     >
-      <div className="overflow-hidden relative w-full h-full rounded-full bg-gray-50 ring-2 ring-transparent group-hover:ring-accent transition-all duration-200">
+      <div className="overflow-hidden relative w-full h-full rounded-full bg-bg-elevated ring-2 ring-transparent group-hover:ring-accent transition-all duration-200">
         <Avatar
           width={size}
           height={size}
@@ -57,7 +57,7 @@ const AvatarUploader: FC<Props> = ({
         />
         {!disabled && (
           <>
-            <div className="flex-center flex-col whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 absolute inset-0 bg-black/50 text-white font-bold text-xs">
+            <div className="flex-center flex-col whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 absolute inset-0 bg-bg-app/50 text-fg-primary font-bold text-xs">
               {uploading ? t("status.uploading") : t("action.change_avatar")}
             </div>
             <input

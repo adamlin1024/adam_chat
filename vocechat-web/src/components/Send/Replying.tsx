@@ -25,7 +25,7 @@ const renderContent = (data: MessagePayload) => {
     case ContentTypes.audio:
       res = (
         <div className="text-sm">
-          <span className="text-gray-400 italic">[Voice Message]</span>
+          <span className="text-fg-secondary italic">[Voice Message]</span>
         </div>
       );
       break;
@@ -48,7 +48,7 @@ const renderContent = (data: MessagePayload) => {
           res = (
             <div className="flex items-center gap-1">
               {icon}
-              <span className="ml-1 ts-2xs text-gray-400">{name}</span>
+              <span className="ml-1 ts-2xs text-fg-secondary">{name}</span>
             </div>
           );
         }
@@ -80,13 +80,13 @@ export default function Replying({
   const user = usersData[from_uid];
 
   return (
-    <div className="reply bg-gray-100 dark:bg-gray-900 z-[999] flex flex-col md:flex-row items-start justify-start gap-4 rounded-t-lg w-full px-4 py-3 text-sm">
-      <div className="whitespace-nowrap text-gray-400 ">
-        Replying to <span className="font-bold text-gray-600 dark:text-gray-400">{user?.name}</span>
+    <div className="reply bg-bg-app z-[999] flex flex-col md:flex-row items-start justify-start gap-4 rounded-t-lg w-full px-4 py-3 text-sm">
+      <div className="whitespace-nowrap text-fg-secondary ">
+        Replying to <span className="font-bold text-fg-secondary">{user?.name}</span>
       </div>
-      <div className="text-gray-500 overflow-hidden pr-7 ">{renderContent(msg)}</div>
+      <div className="text-fg-muted overflow-hidden pr-7 ">{renderContent(msg)}</div>
       <button className="absolute top-4 right-4 cursor-pointer" onClick={removeReply}>
-        <IconClose className="dark:fill-gray-400" />
+        <IconClose className="fill-fg-secondary" />
       </button>
     </div>
   );

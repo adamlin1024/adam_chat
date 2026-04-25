@@ -28,7 +28,7 @@ const GoBackNav = ({ path, className = "" }: Props) => {
   };
   return (
     <button className={`p-1 absolute left-0 md:hidden ${className}`} onClick={handleBack}>
-      <IconArrow className="dark:stroke-white  w-6 h-6" />
+      <IconArrow className="stroke-fg-primary  w-6 h-6" />
     </button>
   );
 };

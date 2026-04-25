@@ -76,8 +76,8 @@ const AutoDeleteMessages = ({ id, type = "channel" }: Props) => {
   return (
     <section className="max-w-[512px] h-full relative">
       <div className="text-sm">
-        <h2 className="dark:text-white">{t("title")}</h2>
-        <p className="text-gray-400 text-xs">{t("desc")}</p>
+        <h2 className="text-fg-primary">{t("title")}</h2>
+        <p className="text-fg-secondary text-xs">{t("desc")}</p>
       </div>
       <div className="mt-4">
         <StyledRadio
@@ -91,8 +91,8 @@ const AutoDeleteMessages = ({ id, type = "channel" }: Props) => {
       {showClear && (
         <>
           <div className="text-sm mt-8">
-            <h2 className="dark:text-white">{t("clear_title")}</h2>
-            <p className="text-gray-400 text-xs">{t("clear_desc")}</p>
+            <h2 className="text-fg-primary">{t("clear_title")}</h2>
+            <p className="text-fg-secondary text-xs">{t("clear_desc")}</p>
           </div>
           <div className="mt-4">
             <StyledButton className="danger" onClick={handleClear}>

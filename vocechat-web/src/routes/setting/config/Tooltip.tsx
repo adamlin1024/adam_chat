@@ -26,7 +26,7 @@ export default function Tooltip({ link = "#" }) {
       arrow={roundArrow}
       placement="bottom"
       content={
-        <div className="py-2 px-3 bg-gray-800 text-xs text-white rounded-lg">
+        <div className="py-2 px-3 bg-bg-elevated text-xs text-fg-primary rounded-lg">
           <Trans ns="setting" i18nKey={"login.more_details"}>
             <Link to={link} />
           </Trans>

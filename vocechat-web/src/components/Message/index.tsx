@@ -121,7 +121,7 @@ const Message: FC<IProps> = ({
       ref={inViewRef}
       className={clsx(
         `group w-full relative flex items-start gap-2 md:gap-3 px-2 md:px-3 py-1 transition-colors duration-[120ms]`,
-        !readOnly && "hover:bg-[#0d0e11]",
+        !readOnly && "hover:bg-bg-hover",
         showExpire && "bg-danger/10",
         pinInfo && "bg-accent-bg !pt-7 border-l-2 border-accent",
         alignRight && "flex-row-reverse"
@@ -170,7 +170,7 @@ const Message: FC<IProps> = ({
           {pinInfo && (
             <span
               className={clsx(
-                "absolute -top-1 -translate-y-full text-xs text-gray-400",
+                "absolute -top-1 -translate-y-full text-xs text-fg-secondary",
                 alignRight ? "right-0" : "left-0"
               )}
             >
@@ -208,7 +208,7 @@ const Message: FC<IProps> = ({
                 useBubble && [
                   "px-3 py-2 rounded-2xl break-words",
                   alignRight
-                    ? "bg-primary-500/20 text-fg-primary rounded-tr-sm"
+                    ? "bg-accent/20 text-fg-primary rounded-tr-sm"
                     : "bg-bg-surface border border-border-subtle rounded-tl-sm",
                   hideIdentity ? "max-w-full" : "max-w-[85%] md:max-w-[70%]"
                 ],

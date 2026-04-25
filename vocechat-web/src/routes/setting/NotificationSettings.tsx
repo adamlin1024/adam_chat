@@ -167,7 +167,7 @@ export default function NotificationSettings() {
   if (typesLoading || channelsLoading) {
     return (
       <div className="setting-container max-md:w-full">
-        <div className="text-gray-500">{t("loading")}</div>
+        <div className="text-fg-muted">{t("loading")}</div>
       </div>
     );
   }
@@ -176,7 +176,7 @@ export default function NotificationSettings() {
     return (
       <div className="setting-container max-md:w-full">
         <ConfigTip title={t("desc")} />
-        <div className="text-gray-500 mt-4">{t("no_channels")}</div>
+        <div className="text-fg-muted mt-4">{t("no_channels")}</div>
       </div>
     );
   }
@@ -192,7 +192,7 @@ export default function NotificationSettings() {
       {/* User's Configured Channels */}
       {userChannels.length > 0 && (
         <div className="mt-6">
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <h3 className="font-semibold text-fg-primary mb-4">
             {t("my_channels")}
           </h3>
           <div className="space-y-3">
@@ -201,23 +201,23 @@ export default function NotificationSettings() {
               return (
                 <div
                   key={channel.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800"
+                  className="border border-border rounded-lg p-4 bg-bg-elevated"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 dark:text-gray-100">
+                      <h4 className="font-semibold text-fg-primary">
                         {channel.name}
                       </h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      <p className="text-sm text-fg-secondary mt-1">
                         {channelSchema?.name || channel.channel_type}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                      <p className="text-sm text-fg-body mt-2">
                         {t("status")}:{" "}
                         <span
                           className={
                             channel.enabled
-                              ? "text-green-600 dark:text-green-400"
-                              : "text-gray-500"
+                              ? "text-online"
+                              : "text-fg-muted"
                           }
                         >
                           {channel.enabled ? t("enabled") : t("disabled")}
@@ -250,7 +250,7 @@ export default function NotificationSettings() {
       {/* Available Channel Types */}
       {!isEditing && (
         <div className="mt-8">
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <h3 className="font-semibold text-fg-primary mb-4">
             {t("available_types")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -259,12 +259,12 @@ export default function NotificationSettings() {
               return (
                 <div
                   key={type.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-white dark:bg-gray-800 flex flex-col"
+                  className="border border-border rounded-lg p-4 bg-bg-elevated flex flex-col"
                 >
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                  <h4 className="font-semibold text-fg-primary mb-2">
                     {type.name}
                   </h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex-1">
+                  <p className="text-sm text-fg-secondary mb-4 flex-1">
                     {type.description}
                   </p>
                   <Button
@@ -282,8 +282,8 @@ export default function NotificationSettings() {
 
       {/* Create/Edit Form */}
       {isEditing && formData.channel_type && (
-        <div className="mt-8 border border-gray-200 dark:border-gray-700 rounded-lg p-6 bg-white dark:bg-gray-800">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">
+        <div className="mt-8 border border-border rounded-lg p-6 bg-bg-elevated">
+          <h3 className="text-xl font-semibold text-fg-primary mb-6">
             {editingChannelId ? t("edit_channel") : t("create_channel")}
           </h3>
 
@@ -301,9 +301,9 @@ export default function NotificationSettings() {
 
             {/* Channel Configuration */}
             {schema && schema.fields.length > 0 && (
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-4 border-t border-border">
                 <Label className="block font-semibold mb-3">{t("channel_config")}</Label>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+                <p className="text-xs text-fg-secondary mb-4">
                   {schema.description}
                 </p>
 
@@ -344,7 +344,7 @@ export default function NotificationSettings() {
                     )}
 
                     {field.description && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <p className="text-xs text-fg-secondary mt-1">
                         {field.description}
                       </p>
                     )}
@@ -354,7 +354,7 @@ export default function NotificationSettings() {
             )}
 
             {/* Enable Channel */}
-            <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between pt-4 border-t border-border">
               <Label>{t("enable_notifications")}</Label>
               <Toggle
                 checked={formData.enabled || false}
@@ -363,7 +363,7 @@ export default function NotificationSettings() {
             </div>
 
             {/* Trigger Conditions */}
-            <div className="space-y-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="space-y-3 pt-4 border-t border-border">
               <Label className="block font-semibold">{t("trigger_conditions")}</Label>
 
               <div className="flex items-center gap-2">
@@ -408,7 +408,7 @@ export default function NotificationSettings() {
 
             {/* Select Groups */}
             {channels.length > 0 && (
-              <div className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="space-y-2 pt-4 border-t border-border">
                 <Label className="block font-semibold">{t("select_groups")}</Label>
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {channels.map((group) => (
@@ -426,7 +426,7 @@ export default function NotificationSettings() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2 pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-2 pt-6 mt-6 border-t border-border">
             <Button onClick={handleSave} disabled={isCreating || isUpdating}>
               {isCreating || isUpdating ? t("saving") : t("save")}
             </Button>

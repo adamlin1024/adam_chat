@@ -40,7 +40,7 @@ export default function Overview() {
           {/* 设置前端 url */}
           <FrontendURL />
           <div className="flex flex-col">
-            <h4 className="font-bold text-gray-700 dark:text-white">{t("overview.title_feat")}</h4>
+            <h4 className="font-bold text-fg-primary">{t("overview.title_feat")}</h4>
           </div>
 
           {/* 注册开放与否 */}

@@ -60,7 +60,7 @@ const EditMessage: FC<Props> = ({ mid, cancelEdit }) => {
 
   return (
     <div className="w-full">
-      <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4">
+      <div className="bg-bg-app rounded-lg p-4">
         <TextareaAutosize
           autoFocus
           onFocus={(e) =>
@@ -70,7 +70,7 @@ const EditMessage: FC<Props> = ({ mid, cancelEdit }) => {
             )
           }
           ref={inputRef}
-          className="content w-full resize-none bg-transparent text-gray-900 dark:text-gray-100 text-sm break-all outline-none rounded-sm focus:outline-1 focus:outline-primary-500"
+          className="content w-full resize-none bg-transparent text-fg-primary text-sm break-all outline-none rounded-sm focus:outline-1 focus:outline-accent"
           maxRows={8}
           minRows={1}
           onKeyDown={handleInputKeydown}
@@ -83,13 +83,13 @@ const EditMessage: FC<Props> = ({ mid, cancelEdit }) => {
       <div className="flex items-center p-1 gap-4 text-xs">
         <span>
           esc to{" "}
-          <button className="text-primary-500 cursor-pointer px-1" onClick={cancelEdit}>
+          <button className="text-accent cursor-pointer px-1" onClick={cancelEdit}>
             cancel
           </button>
         </span>
         <span>
           enter to{" "}
-          <button className="text-primary-500 cursor-pointer px-1" onClick={handleSave}>
+          <button className="text-accent cursor-pointer px-1" onClick={handleSave}>
             {isEditing ? "saving" : `save`}
           </button>
         </span>

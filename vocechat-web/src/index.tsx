@@ -31,8 +31,12 @@ window.addEventListener("unhandledrejection", (event) => {
 });
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-// dark-only design — always apply dark class
-document.documentElement.classList.add("dark");
+// 套用使用者選擇的主題（auto 跟隨系統）
+{
+  const saved = (localStorage.theme as "auto" | "dark" | "light" | undefined) || "auto";
+  const isDark = saved === "dark" || (saved === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.classList.add(isDark ? "dark" : "light");
+}
 
 // iOS PWA: scroll focused input into view after keyboard animates up
 document.addEventListener("focusin", (e) => {
@@ -48,7 +52,7 @@ document.addEventListener("visibilitychange", () => {
     if (!document.getElementById("ios-snap-cover")) {
       const cover = document.createElement("div");
       cover.id = "ios-snap-cover";
-      cover.style.cssText = "position:fixed;inset:0;background:#08090b;z-index:99998;pointer-events:none;";
+      cover.style.cssText = "position:fixed;inset:0;background:var(--c-bg-app);z-index:99998;pointer-events:none;";
       document.body.appendChild(cover);
     }
   } else {
@@ -71,9 +75,9 @@ root.render(
     <Toaster
       toastOptions={{
         style: {
-          background: "#0c0d10",
-          color: "#d4d4d8",
-          border: "1px solid #27272a",
+          background: "var(--c-bg-elevated)",
+          color: "var(--c-fg-body)",
+          border: "1px solid var(--c-border-default)",
           fontSize: "12.5px",
           fontFamily: "Inter, -apple-system, sans-serif",
         }

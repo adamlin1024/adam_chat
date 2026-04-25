@@ -90,7 +90,7 @@ const VoiceChat = ({ id, context = "channel" }: Props) => {
   if (loginUid == 0) return null;
   const visible = visibleAside == "voice";
   const memberCount = voiceList.find((v) => v.context == context && v.id == id)?.memberCount ?? 0;
-  const badgeClass = `absolute -top-2 -right-2 w-4 h-4 rounded-full bg-primary-400 text-white `;
+  const badgeClass = `absolute -top-2 -right-2 w-4 h-4 rounded-full bg-accent text-accent-on `;
   const { sendMessage } = useSendMessage({ context, from: loginUid, to: id });
   const replying_mid = useAppSelector(
     (store) => store.message.replying[`${context}_${id}`],
@@ -165,7 +165,7 @@ const VoiceChat = ({ id, context = "channel" }: Props) => {
   return (
     <Tooltip disabled={visible} tip={t("voice")} placement="left">
       <li className={`relative group h-9 w-9 flex-center cursor-pointer`}>
-        <IconHeadphone className={"fill-gray-500 w-5 h-5"} role="button" onClick={handleOnClick} />
+        <IconHeadphone className={"fill-fg-muted w-5 h-5"} role="button" onClick={handleOnClick} />
         {/* {visible ? null : (
           <>
             {memberCount > 0 && (

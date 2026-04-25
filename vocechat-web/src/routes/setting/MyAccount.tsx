@@ -68,22 +68,22 @@ export default function MyAccount() {
   return (
     <>
       <div className="flex flex-col items-start gap-8">
-        <div className="md:p-6 flex flex-col items-center w-full md:w-[512px] md:bg-gray-100 md:dark:bg-gray-800 md:rounded-2xl">
+        <div className="md:p-6 flex flex-col items-center w-full md:w-[512px] md:bg-bg-elevated md:bg-bg-elevated md:rounded-2xl">
           <AvatarUploader url={avatar} name={name} uploadImage={uploadAvatar} />
-          <div className="mt-2 mb-16 font-bold text-lg text-gray-800 dark:text-white">
-            {name} <span className="font-normal text-gray-500">#{uid}</span>
+          <div className="mt-2 mb-16 font-bold text-lg text-fg-primary">
+            {name} <span className="font-normal text-fg-muted">#{uid}</span>
           </div>
           <div className="w-full flex items-start justify-between mb-6">
-            <div className="flex flex-col text-gray-500 dark:text-gray-50">
+            <div className="flex flex-col text-fg-primary">
               <span className="text-xs uppercase  font-semibold">{t("email")}</span>
               <span className="text-sm">{email}</span>
             </div>
           </div>
           <div className="w-full flex items-start justify-between mb-6">
-            <div className="flex flex-col text-gray-500 dark:text-gray-50">
+            <div className="flex flex-col text-fg-primary">
               <span className="text-xs uppercase  font-semibold">{t("username")}</span>
               <span className="text-sm ">
-                {name} <span className="text-gray-600 dark:text-gray-400"> #{uid}</span>
+                {name} <span className="text-fg-secondary"> #{uid}</span>
               </span>
             </div>
             <span
@@ -96,7 +96,7 @@ export default function MyAccount() {
           </div>
 
           <div className="w-full flex items-start justify-between mb-6">
-            <div className="flex flex-col text-gray-500 dark:text-gray-50">
+            <div className="flex flex-col text-fg-primary">
               <span className="text-xs uppercase  font-semibold">{t("password")}</span>
               <span className="text-sm">*********</span>
             </div>
@@ -111,7 +111,7 @@ export default function MyAccount() {
         
         {loginConfig?.passkey && (
           <ServerVersionChecker empty version="0.5.5">
-            <div className="w-full md:w-[512px] md:p-6 md:bg-gray-100 md:dark:bg-gray-800 md:rounded-2xl">
+            <div className="w-full md:w-[512px] md:p-6 md:bg-bg-elevated md:bg-bg-elevated md:rounded-2xl">
               <PasskeyManagement />
             </div>
           </ServerVersionChecker>

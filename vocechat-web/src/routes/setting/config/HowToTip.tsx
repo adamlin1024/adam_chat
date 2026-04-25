@@ -8,7 +8,7 @@ type Props = {
 const HowToTip = ({ link, text }: Props) => {
   return (
     <div className="tip">
-      <IconQuestion className="dark:fill-gray-300" />
+      <IconQuestion className="fill-fg-body" />
       <a href={link} target="_blank" className="link" rel="noreferrer">
         {text}
       </a>

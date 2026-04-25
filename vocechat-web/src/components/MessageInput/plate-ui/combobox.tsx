@@ -34,7 +34,7 @@ export function ComboboxItem<TData extends Data = NoData>({
     <div
       className={cn(
         "relative flex cursor-pointer select-none items-center rounded-sm text-sm outline-none ml-1 my-1 transition-colors",
-        "hover:bg-gray-300/50 dark:hover:bg-gray-500/50 hover:text-gray-500 data-[highlighted=true]:bg-gray-300/50 dark:data-[highlighted=true]:bg-gray-500/50 data-[highlighted=true]:text-gray-500"
+        "hover:bg-bg-hover/50 hover:text-fg-muted data-[highlighted=true]:bg-bg-hover/50 data-[highlighted=true]:text-fg-muted"
       )}
       {...props}
     />
@@ -65,7 +65,7 @@ export function ComboboxContent<TData extends Data = NoData>(props: ComboboxCont
           side="bottom"
           align="start"
           className={cn(
-            "z-[500] m-0 max-h-[400px] w-[200px] overflow-x-hidden overflow-y-scroll rounded-md bg-slate-100 dark:bg-slate-900 py-2 shadow-md"
+            "z-[500] m-0 max-h-[400px] w-[200px] overflow-x-hidden overflow-y-scroll rounded-md bg-bg-app py-2 shadow-md"
           )}
           onOpenAutoFocus={(event) => event.preventDefault()}
           ref={wrapperRef}

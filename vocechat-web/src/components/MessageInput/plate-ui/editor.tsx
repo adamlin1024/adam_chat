@@ -38,7 +38,7 @@ const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
         <PlateContent
           className={cn(
             "relative overflow-hidden whitespace-pre-wrap break-words",
-            "w-full rounded-md bg-background ring-offset-background placeholder:text-gray-500 focus-visible:outline-none",
+            "w-full rounded-md bg-background ring-offset-background placeholder:text-fg-muted focus-visible:outline-none",
             "[&_[data-slate-placeholder]]:opacity-30",
             "[&_[data-slate-placeholder]]:top-[4px_!important]",
             className

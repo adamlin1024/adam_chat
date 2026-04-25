@@ -92,8 +92,8 @@ export default function PasskeyManagement() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{t("passkey.title")}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <h3 className="text-lg font-semibold text-fg-primary">{t("passkey.title")}</h3>
+          <p className="text-sm text-fg-secondary">
             {t("passkey.desc")}
           </p>
         </div>
@@ -107,13 +107,13 @@ export default function PasskeyManagement() {
           passkeys.map((passkey) => (
             <div
               key={passkey.credential_id}
-              className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
+              className="flex items-center justify-between p-4 bg-bg-surface rounded-lg"
             >
               <div className="flex flex-col">
-                <span className="text-sm font-medium text-gray-800 dark:text-white">
+                <span className="text-sm font-medium text-fg-primary">
                   {passkey.name}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs text-fg-secondary">
                   {t("passkey.created")}: {new Date(passkey.created_at).toLocaleDateString()}
                   {passkey.last_used_at && 
                     ` • ${t("passkey.last_used")}: ${new Date(passkey.last_used_at).toLocaleDateString()}`
@@ -129,7 +129,7 @@ export default function PasskeyManagement() {
             </div>
           ))
         ) : (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-center py-8 text-fg-secondary">
             {t("passkey.no_passkeys")}
           </div>
         )}

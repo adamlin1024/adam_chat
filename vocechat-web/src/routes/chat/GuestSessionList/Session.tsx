@@ -39,8 +39,8 @@ const Session: FC<IProps> = ({ id, mid }) => {
       <NavLink
         className={({ isActive: linkActive }) =>
           clsx(
-            `nav flex gap-2 rounded-lg p-2 w-full md:hover:bg-gray-500/20`,
-            linkActive && "bg-gray-500/20"
+            `nav flex gap-2 rounded-lg p-2 w-full md:hover:bg-bg-hover/20`,
+            linkActive && "bg-bg-hover/20"
           )
         }
         to={`/chat/channel/${id}`}
@@ -59,18 +59,18 @@ const Session: FC<IProps> = ({ id, mid }) => {
           <div className="flex items-center justify-between">
             <span
               className={clsx(
-                `flex items-center gap-2 font-semibold text-sm text-gray-500 dark:text-white truncate`,
+                `flex items-center gap-2 font-semibold text-sm text-fg-primary truncate`,
                 resolveMsgTime(previewMsg) ? "max-w-[120px]" : "max-w-[190px]"
               )}
             >
               {name}
             </span>
-            <span className="text-xs text-gray-600 max-w-[80px] truncate">
+            <span className="text-xs text-fg-subtle max-w-[80px] truncate">
               {fromNowTime(resolveMsgTime(previewMsg))}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs text-gray-500 w-36 truncate">
+            <span className="text-xs text-fg-muted w-36 truncate">
               {renderPreviewMessage(previewMsg)}
             </span>
           </div>

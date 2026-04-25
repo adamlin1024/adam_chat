@@ -13,8 +13,8 @@ const SettingBlock = ({ toggler, title, desc, children }: Props) => {
     <div className="text-sm w-full">
       <div className="flex justify-between mb-2">
         <div className="">
-          <p className="text-gray-600 dark:text-gray-100 font-semibold">{title}</p>
-          <p className="flex justify-between w-full text-gray-400 text-xs">{desc}</p>
+          <p className="text-fg-primary font-semibold">{title}</p>
+          <p className="flex justify-between w-full text-fg-secondary text-xs">{desc}</p>
         </div>
         {toggler && <div>{toggler}</div>}
       </div>

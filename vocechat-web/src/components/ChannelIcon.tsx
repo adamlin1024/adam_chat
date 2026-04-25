@@ -11,11 +11,11 @@ interface Props {
 
 const ChannelIcon: FC<Props> = ({ personal = false, muted = false, className = "" }) => {
   return (
-    <div className={`flex ${muted ? "!text-gray-400" : ""} ${className}`}>
+    <div className={`flex ${muted ? "!text-fg-secondary" : ""} ${className}`}>
       {personal ? (
-        <LockHashIcon className="dark:fill-gray-300" />
+        <LockHashIcon className="fill-fg-body" />
       ) : (
-        <HashIcon className="dark:fill-gray-300" />
+        <HashIcon className="fill-fg-body" />
       )}
     </div>
   );

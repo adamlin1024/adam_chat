@@ -43,8 +43,8 @@ export default function OAuthPage() {
   }, [isSuccess, data]);
 
   return (
-    <div className="flex-center h-screen dark:bg-gray-900">
-      <span className={clsx("text-gray-900 dark:text-gray-100 text-lg", error && "!text-red-500")}>
+    <div className="flex-center h-screen bg-bg-app">
+      <span className={clsx("text-fg-primary text-lg", error && "!text-danger")}>
         {isLoading ? "loading" : ""}
         {error}
       </span>

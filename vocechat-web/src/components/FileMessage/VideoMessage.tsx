@@ -42,10 +42,10 @@ const VideoMessage = ({ url, name, size, download }: Props) => {
   return (
     <div
       className={clsx(
-        "w-60 md:w-96 relative rounded-md border overflow-hidden group border-gray-300 dark:border-gray-500 h-32 md:h-52"
+        "w-60 md:w-96 relative rounded-md border overflow-hidden group border-border-strong h-32 md:h-52"
       )}
     >
-      <div className="absolute top-0 left-0 w-full h-full bg-black/40 z-20 group-hover:hidden"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-bg-app/40 z-20 group-hover:hidden"></div>
       <div
         className={clsx(
           "w-full flex justify-between z-30 px-3 py-2 overflow-hidden absolute top-0 left-0"
@@ -53,17 +53,17 @@ const VideoMessage = ({ url, name, size, download }: Props) => {
       >
         <div className="flex gap-2 ">
           <IconVideo className={clsx("hidden md:block w-9 h-auto")} />
-          <div className="flex flex-col gap-1 text-sm dark:text-white text-gray-900">
+          <div className="flex flex-col gap-1 text-sm text-fg-primary">
             <span
               title={name}
               className={clsx(
                 "font-bold truncate w-56 md:w-[240px]"
-                // error ? "w-56 text-red-500" : "w-56 md:w-[240px]"
+                // error ? "w-56 text-danger" : "w-56 md:w-[240px]"
               )}
             >
               {name}
             </span>
-            <span className="text-gray-400">{_size}</span>
+            <span className="text-fg-secondary">{_size}</span>
           </div>
         </div>
         <DownloadArea copyLink={download} downloadLink={download} />

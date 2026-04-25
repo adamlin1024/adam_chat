@@ -4,7 +4,7 @@ import React from "react";
 
 const InviteOnlyTip = () => {
   return (
-    <div className="flex-1 dark:text-white flex items-center justify-center">
+    <div className="flex-1 text-fg-primary flex items-center justify-center">
       Only Invite to SignUp
     </div>
   );

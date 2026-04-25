@@ -14,8 +14,8 @@ const LicenseUpgradeTip = () => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-red-600 rounded-md w-full py-3 px-4">
-      <span className="text-white">
+    <div className="flex items-center justify-between bg-danger-bg rounded-md w-full py-3 px-4">
+      <span className="text-fg-primary">
         <i className="text-xl mr-2">🚨</i>
         {t("license_tip")}
       </span>

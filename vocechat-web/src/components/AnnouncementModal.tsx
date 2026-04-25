@@ -33,19 +33,19 @@ const AnnouncementModal: FC<Props> = ({ announcement, onClose, cid }) => {
 
   return (
     <Modal>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg-app/50">
+        <div className="bg-bg-elevated rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <h2 className="text-xl font-semibold text-fg-primary">
               📢 {t("announcement")}
             </h2>
             <button
               onClick={onClose}
-              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+              className="p-1 hover:bg-bg-surface rounded transition-colors"
               aria-label={ct("action.close")}
             >
-              <IconClose className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+              <IconClose className="w-5 h-5 text-fg-secondary" />
             </button>
           </div>
 
@@ -56,7 +56,7 @@ const AnnouncementModal: FC<Props> = ({ announcement, onClose, cid }) => {
             </div>
 
             {/* Metadata */}
-            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400">
+            <div className="mt-6 pt-4 border-t border-border text-sm text-fg-secondary">
               <div className="flex flex-col gap-1">
                 {creator && (
                   <div>
@@ -78,18 +78,18 @@ const AnnouncementModal: FC<Props> = ({ announcement, onClose, cid }) => {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end gap-3 p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-end gap-3 p-4 border-t border-border">
             {canManage && (
               <button
                 onClick={handleEdit}
-                className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded transition-colors"
+                className="px-4 py-2 bg-accent hover:bg-accent-hover text-accent-on rounded transition-colors"
               >
                 {t("edit_announcement")}
               </button>
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded transition-colors"
+              className="px-4 py-2 bg-bg-surface hover:bg-bg-surface text-fg-primary rounded transition-colors"
             >
               {ct("action.close")}
             </button>

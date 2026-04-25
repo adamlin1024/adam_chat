@@ -62,10 +62,10 @@ const InviteLink: FC<Props> = ({ context = "members", cid }) => {
     <>
       <div className="flex flex-col items-start pb-8">
         {context == "members" && (
-          <p className="font-semibold text-sm mb-2 text-gray-500 dark:text-gray-50 flex flex-col md:flex-row gap-4">
+          <p className="font-semibold text-sm mb-2 text-fg-primary flex flex-col md:flex-row gap-4">
             {t("share_invite_link")}
             <a
-              className="text-primary-500 flex gap-1 items-center"
+              className="text-accent flex gap-1 items-center"
               href="http://doc.voce.chat/faq#fe_url"
               target="_blank"
               rel="noopener noreferrer"
@@ -83,12 +83,12 @@ const InviteLink: FC<Props> = ({ context = "members", cid }) => {
             {linkCopied ? "Copied" : t("action.copy", { ns: "common" })}
           </Button>
         </div>
-        <span className="text-xs text-gray-600 dark:text-gray-100 flex gap-2">
+        <span className="text-xs text-fg-primary flex gap-2">
           {t("invite_link_setting_tip", {
             expire: current.expire.label,
             times: current.times.label
           })}
-          <button className="text-primary-500 flex gap-1 items-center" onClick={toggleEditVisible}>
+          <button className="text-accent flex gap-1 items-center" onClick={toggleEditVisible}>
             {t("invite_link_edit")}
           </button>
         </span>
@@ -121,7 +121,7 @@ const InviteLink: FC<Props> = ({ context = "members", cid }) => {
           >
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2 items-start">
-                <span className="text-sm dark:text-gray-100">Expire After:</span>
+                <span className="text-fg-primary">Expire After:</span>
                 <Select
                   options={InviteLinkExpireList.map((item) => {
                     const { label, value } = item;
@@ -142,7 +142,7 @@ const InviteLink: FC<Props> = ({ context = "members", cid }) => {
                 ></Select>
               </div>
               <div className="flex flex-col gap-2 items-start">
-                <span className="text-sm dark:text-gray-100">Max Times of Uses:</span>
+                <span className="text-fg-primary">Max Times of Uses:</span>
                 <Select
                   options={InviteLinkTimesList.map((item) => {
                     const { label, value } = item;

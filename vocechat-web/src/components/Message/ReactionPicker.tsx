@@ -27,7 +27,7 @@ const ReactionPicker: FC<Props> = ({ mid, hidePicker }) => {
   return (
     <div className="z-[999]">
       <ul
-        className={`p-1 grid grid-cols-[repeat(4,_1fr)] gap-2 bg-white dark:bg-gray-900 drop-shadow-md rounded-xl ${
+        className={`p-1 grid grid-cols-[repeat(4,_1fr)] gap-2 bg-bg-elevated drop-shadow-md rounded-xl ${
           isLoading ? "opacity-60" : ""
         }`}
       >
@@ -36,8 +36,8 @@ const ReactionPicker: FC<Props> = ({ mid, hidePicker }) => {
             reactionData[emoji] && reactionData[emoji].findIndex((id) => id == currUid) > -1;
           return (
             <li
-              className={`flex-center cursor-pointer rounded-lg p-4 md:hover:bg-gray-50 w-4 h-4 ${
-                reacted ? "bg-gray-50" : ""
+              className={`flex-center cursor-pointer rounded-lg p-4 md:hover:bg-bg-elevated w-4 h-4 ${
+                reacted ? "bg-bg-elevated" : ""
               }`}
               key={emoji}
               onClick={handleReact.bind(null, emoji)}

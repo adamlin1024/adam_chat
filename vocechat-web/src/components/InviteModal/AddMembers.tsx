@@ -86,7 +86,7 @@ const AddMembers: FC<Props> = ({ cid = 0, closeModal }) => {
             <li
               key={uid}
               data-uid={uid}
-              className="cursor-pointer flex items-center px-2 py-1 rounded-lg md:hover:bg-slate-400/20"
+              className="cursor-pointer flex items-center px-2 py-1 rounded-lg md:hover:bg-bg-hover/20"
               onClick={added ? undefined : toggleCheckMember}
             >
               <StyledCheckbox

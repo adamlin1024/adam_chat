@@ -132,7 +132,7 @@ const Layout: FC<Props> = ({
         )}
         {users && <div className="hidden md:block">{users}</div>}
         {voice && (
-          <div className="z-10 max-md:absolute max-md:right-11 max-md:top-14 max-md:overflow-y-scroll bg-white dark:!bg-gray-700 md:block">
+          <div className="z-10 max-md:absolute max-md:right-11 max-md:top-14 max-md:overflow-y-scroll bg-bg-elevated dark:!bg-bg-surface md:block">
             {voice}
           </div>
         )}

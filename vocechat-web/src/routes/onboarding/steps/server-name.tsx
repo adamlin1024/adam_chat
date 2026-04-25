@@ -15,11 +15,11 @@ const ServerName: FC<Props> = ({ serverName, setServerName }) => {
   const { nextStep } = useWizard();
 
   return (
-    <div className="h-full flex-center flex-col text-center w-[360px] m-auto dark:text-gray-200">
+    <div className="h-full flex-center flex-col text-center w-[360px] m-auto text-fg-body">
       <span className="text-2xl mb-2 font-bold">{t("new_server")}</span>
-      <span className="text-sm mb-6 text-gray-400 dark:text-gray-600">{t("server_desc")}</span>
+      <span className="text-sm mb-6 text-fg-subtle">{t("server_desc")}</span>
       <StyledInput
-        className="h-11 px-3.5 py-2.5 border-gray-300 rounded-lg shadow"
+        className="h-11 px-3.5 py-2.5 border-border rounded-lg shadow"
         placeholder={t("placeholder_server")}
         value={serverName}
         onChange={(e) => setServerName(e.target.value)}

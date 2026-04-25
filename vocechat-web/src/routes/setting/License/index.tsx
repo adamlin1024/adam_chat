@@ -15,13 +15,13 @@ interface ItemProps extends HTMLAttributes<HTMLSpanElement> {
 }
 const Item = ({ label, data, foldable = false, ...rest }: ItemProps) => {
   const infoClass = clsx(
-    "font-bold w-full cursor-pointer dark:text-green-500",
+    "font-bold w-full cursor-pointer text-online",
     foldable ? "truncate" : "whitespace-pre-wrap break-all"
   );
   if (!data) return null;
   return (
     <div className="whitespace-nowrap  flex flex-col items-start justify-start text-lg">
-      <span className="text-sm text-green-500">{label}</span>
+      <span className="text-sm text-online">{label}</span>
       {Array.isArray(data) ? (
         <ul className={infoClass}>
           {data.map((d) => {
@@ -60,8 +60,8 @@ export default function License() {
           className={clsx(
             "relative w-full p-3 rounded border-solid border flex flex-col gap-4 shadow",
             reachLimit
-              ? "border-red-600 bg-red-200/50"
-              : "border-green-600 bg-green-100 dark:bg-green-900"
+              ? "border-danger bg-danger/20"
+              : "border-online bg-online/15"
           )}
         >
           <Item label={t("license.signed")} data={licenseInfo?.sign ? "Yes" : "Not Yet"} />
@@ -92,7 +92,7 @@ export default function License() {
             {t("license.update")}
           </Button>
         </div>
-        <div className="flex flex-col gap-4 bg-primary-500 text-white rounded drop-shadow-xl p-5">
+        <div className="flex flex-col gap-4 bg-accent text-accent-on rounded drop-shadow-xl p-5">
           <h2 className="text-2xl font-bold">{t("license.tip.title")} 🎁</h2>
           <p className="flex flex-col">
             <span>{t("license.tip.user_test")}</span>
@@ -102,7 +102,7 @@ export default function License() {
                 "Privoce"
               ) : (
                 <a
-                  className="underline text-lg text-green-200"
+                  className="underline text-lg text-online"
                   href="https://calendly.com/hansu/han-meeting"
                   target="_blank"
                   rel="noopener noreferrer"

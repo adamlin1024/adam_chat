@@ -100,7 +100,7 @@ function FavsPage() {
                 "flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors",
                 filter
                   ? "bg-bg-surface shadow-inset-hairline text-fg-primary"
-                  : "text-fg-subtle border border-border-subtle hover:bg-[#0f1014]"
+                  : "text-fg-subtle border border-border-subtle hover:bg-bg-hover"
               )}
             >
               <span>{selectedFilterLabel}</span>

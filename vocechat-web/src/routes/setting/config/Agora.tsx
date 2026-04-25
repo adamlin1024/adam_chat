@@ -33,7 +33,7 @@ export default function ConfigAgora() {
   const getClass = (selected: boolean) =>
     clsx(
       `cursor-pointer p-2 box-border flex-center`,
-      selected && `border border-solid border-primary-400 shadow rounded-lg`
+      selected && `border border-solid border-accent shadow rounded-lg`
     );
   const handleUpdate = () => {
     // const { token_url, description } = values;
@@ -68,7 +68,7 @@ export default function ConfigAgora() {
     <div className="setting-container">
       {showVoceSpace && (
         <ul
-          className={`hidden md:flex border border-solid dark:border-gray-400 shadow rounded-lg box-border`}
+          className={`hidden md:flex border border-border shadow rounded-lg box-border`}
           style={{ width: "fit-content" }}
         >
           <li className={getClass(!isAgora)} data-view={"item"} onClick={() => setIsAgora(false)}>

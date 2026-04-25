@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
-
-import { useRecentPicks } from "@/hooks/useRecentPicks";
 
 export type StickerPack = {
   id: string;
@@ -15,10 +13,12 @@ export type StickerPack = {
 export type RecentSticker = { pack: string; id: string };
 
 const RECENT_ID = "_recent";
-const RECENT_MAX = 24;
 
 type Props = {
-  onSelectSticker: (url: string) => void;
+  recents: RecentSticker[];
+  previewUrl: string | null;
+  onTapSticker: (item: RecentSticker, url: string) => void;
+  modeToggle?: ReactNode;
 };
 
 const ClockIcon = ({ className }: { className?: string }) => (
@@ -28,15 +28,10 @@ const ClockIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export function StickerPicker({ onSelectSticker }: Props) {
+export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }: Props) {
   const [packs, setPacks] = useState<StickerPack[]>([]);
   const [activePackId, setActivePackId] = useState<string | undefined>();
   const [loadError, setLoadError] = useState(false);
-  const [recents, pushRecent] = useRecentPicks<RecentSticker>(
-    "recent_stickers",
-    RECENT_MAX,
-    (s) => `${s.pack}/${s.id}`
-  );
 
   useEffect(() => {
     fetch("/stickers/packs.json")
@@ -70,9 +65,8 @@ export function StickerPicker({ onSelectSticker }: Props) {
     return m;
   }, [packs]);
 
-  const handleSelect = (pack: string, id: string) => {
-    pushRecent({ pack, id });
-    onSelectSticker(`/stickers/${pack}/${id}.png`);
+  const handleTap = (pack: string, id: string) => {
+    onTapSticker({ pack, id }, `/stickers/${pack}/${id}.png`);
   };
 
   if (loadError) {
@@ -94,10 +88,39 @@ export function StickerPicker({ onSelectSticker }: Props) {
   const showingRecent = activePackId === RECENT_ID;
   const validRecents = recents.filter((r) => packMap[r.pack]);
 
+  const renderTile = (pack: string, id: string) => {
+    const url = `/stickers/${pack}/${id}.png`;
+    const thumbUrl = `/stickers/${pack}/${id}_key.png`;
+    const isPreview = previewUrl === url;
+    return (
+      <button
+        key={`${pack}/${id}`}
+        type="button"
+        tabIndex={-1}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => handleTap(pack, id)}
+        className={clsx(
+          "flex-center aspect-square rounded transition-colors p-1",
+          isPreview
+            ? "bg-accent/15 ring-2 ring-accent"
+            : "hover:bg-bg-surface"
+        )}
+      >
+        <img
+          src={thumbUrl}
+          alt=""
+          loading="lazy"
+          className="max-w-full max-h-full object-contain"
+        />
+      </button>
+    );
+  };
+
   return (
     <div className="flex flex-col w-full h-full">
       {/* Pack tabs */}
-      <div className="flex items-center gap-0.5 px-2 border-b border-border-subtle shrink-0 overflow-x-auto">
+      <div className="flex items-center gap-0.5 px-2 border-b border-border-subtle shrink-0 overflow-x-auto no-scrollbar">
+        {modeToggle}
         {/* Recent tab */}
         <button
           type="button"
@@ -147,51 +170,13 @@ export function StickerPicker({ onSelectSticker }: Props) {
               尚未使用過貼圖
             </div>
           ) : (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(72px,1fr))] gap-1">
-              {validRecents.map((r) => {
-                const thumbUrl = `/stickers/${r.pack}/${r.id}_key.png`;
-                return (
-                  <button
-                    key={`${r.pack}/${r.id}`}
-                    type="button"
-                    tabIndex={-1}
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => handleSelect(r.pack, r.id)}
-                    className="flex-center aspect-square rounded hover:bg-bg-surface transition-colors p-1"
-                  >
-                    <img
-                      src={thumbUrl}
-                      alt=""
-                      loading="lazy"
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </button>
-                );
-              })}
+            <div className="grid grid-cols-4 gap-1">
+              {validRecents.map((r) => renderTile(r.pack, r.id))}
             </div>
           )
         ) : activePack ? (
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(72px,1fr))] gap-1">
-            {activePack.stickers.map((s) => {
-              const thumbUrl = `/stickers/${activePack.id}/${s.id}_key.png`;
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  tabIndex={-1}
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => handleSelect(activePack.id, s.id)}
-                  className="flex-center aspect-square rounded hover:bg-bg-surface transition-colors p-1"
-                >
-                  <img
-                    src={thumbUrl}
-                    alt=""
-                    loading="lazy"
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </button>
-              );
-            })}
+          <div className="grid grid-cols-4 gap-1">
+            {activePack.stickers.map((s) => renderTile(activePack.id, s.id))}
           </div>
         ) : null}
       </div>

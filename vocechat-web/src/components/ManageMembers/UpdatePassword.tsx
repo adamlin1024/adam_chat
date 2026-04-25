@@ -30,8 +30,8 @@ const UpdatePassword = ({ uid, onClose }: Props) => {
   if (!uid) return null;
   return (
     <Modal>
-      <div className="flex flex-col gap-3 py-4 px-6 rounded-md bg-slate-100 dark:bg-slate-900 relative">
-        <label htmlFor="pwd" className="dark:text-slate-200">
+      <div className="flex flex-col gap-3 py-4 px-6 rounded-md bg-bg-app relative">
+        <label htmlFor="pwd" className="text-fg-body">
           Password:
         </label>
         <Input id="pwd" value={pwd} onChange={handleChange} placeholder={t("placeholder.new_password")} />

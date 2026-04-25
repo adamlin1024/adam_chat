@@ -15,8 +15,8 @@ type Props = {
 const Signal = ({ strength = 0 }: Props) => {
   const finalStrength = 6 - strength;
   const color =
-    finalStrength <= 2 ? `bg-red-700` : finalStrength == 3 ? `bg-yellow-700` : `bg-green-700`;
-  let bgColor = ` bg-gray-500`;
+    finalStrength <= 2 ? `bg-danger-bg` : finalStrength == 3 ? `bg-idle` : `bg-online`;
+  let bgColor = ` bg-bg-hover`;
   return (
     <div className="w-6 h-6 flex-center">
       <div className="w-[18px] h-[15px] flex items-end gap-[2px]">

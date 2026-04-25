@@ -41,7 +41,7 @@ const InviteByEmail: FC<Props> = ({ cid }) => {
   return (
     <div className="pt-4">
       <div className="flex flex-col gap-4 mb-6">
-        <label className="text-sm text-gray-400 dark:text-gray-100" htmlFor="">
+        <label className="text-sm text-fg-primary" htmlFor="">
           {t("invite_by_email")}
         </label>
         <div className="relative flex items-center">
@@ -67,7 +67,7 @@ const InviteByEmail: FC<Props> = ({ cid }) => {
         </div>
       </div>
       <div className="flex flex-col gap-2 mb-3">
-        <label className="text-sm text-gray-400 dark:text-gray-100" htmlFor="">
+        <label className="text-sm text-fg-primary" htmlFor="">
           {t("send_invite_link")}
         </label>
         <InviteLink context="channel" cid={cid} />

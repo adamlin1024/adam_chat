@@ -15,25 +15,25 @@ const AnnouncementBanner: FC<Props> = ({ announcement, onExpand, onDismiss }) =>
   const truncatedContent = firstLine.length > 100 ? `${firstLine.slice(0, 100)}...` : firstLine;
 
   return (
-    <div className="w-full bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-800 px-4 py-3">
+    <div className="w-full bg-idle/10  border-b border-idle/30  px-4 py-3">
       <div className="flex items-center gap-3">
         <div className="flex-1 flex items-center gap-2">
-          <span className="text-yellow-800 dark:text-yellow-200 font-semibold text-sm">
+          <span className="text-idle font-semibold text-sm">
             📢 {t("announcement")}:
           </span>
           <button
             onClick={onExpand}
-            className="flex-1 text-left text-yellow-700 dark:text-yellow-300 text-sm hover:underline truncate"
+            className="flex-1 text-left text-idle  text-sm hover:underline truncate"
           >
             {truncatedContent}
           </button>
         </div>
         <button
           onClick={onDismiss}
-          className="shrink-0 p-1 hover:bg-yellow-200 dark:hover:bg-yellow-800 rounded transition-colors"
+          className="shrink-0 p-1 hover:bg-idle/20 rounded transition-colors"
           aria-label={t("dismiss_announcement")}
         >
-          <IconClose className="w-4 h-4 text-yellow-700 dark:text-yellow-300" />
+          <IconClose className="w-4 h-4 text-idle " />
         </button>
       </div>
     </div>

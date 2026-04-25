@@ -25,7 +25,7 @@ const MentionElement = forwardRef<React.ElementRef<typeof PlateElement>, Mention
       <PlateElement
         ref={ref}
         className={cn(
-          "inline-block cursor-pointer rounded-md px-1.5 py-0.5 align-baseline text-sm font-medium bg-gray-100 dark:bg-gray-900",
+          "inline-block cursor-pointer rounded-md px-1.5 py-0.5 align-baseline text-sm font-medium bg-bg-app",
           selected && focused && "ring-2 ring-ring",
           element.children[0].bold === true && "font-bold",
           element.children[0].italic === true && "italic",

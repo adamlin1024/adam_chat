@@ -77,7 +77,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
       <div className="fixed inset-0 z-[150]">
         {/* Backdrop */}
         <div
-          className="absolute inset-0 bg-black/50 transition-opacity duration-300"
+          className="absolute inset-0 bg-bg-app/50 transition-opacity duration-300"
           style={{ opacity: animated ? 1 : 0 }}
           onClick={animateClose}
         />
@@ -107,7 +107,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
             <div className="relative flex items-center px-4 py-2.5 border-b border-border-subtle">
               {nav ? (
                 <NavLink to={pathPrefix} className="p-1 -ml-1">
-                  <IconBack className="w-6 h-6 dark:stroke-white" />
+                  <IconBack className="w-6 h-6 stroke-fg-primary" />
                 </NavLink>
               ) : (
                 <div className="w-7" />
@@ -142,7 +142,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                             <NavLink to={`${pathPrefix}/${name}`}
                               className="flex items-center justify-between px-1 py-3.5 text-sm text-fg-body">
                               {itemTitle}
-                              <IconBack className="w-5 h-5 dark:stroke-white rotate-180" />
+                              <IconBack className="w-5 h-5 stroke-fg-primary rotate-180" />
                             </NavLink>
                           )}
                         </li>
@@ -154,7 +154,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
                   if (typeof d === "boolean" || !d) return null;
                   return (
                     <button key={d.title} onClick={d.handler}
-                      className="w-full text-left px-1 py-3.5 text-sm text-red-400 border-t border-border-subtle">
+                      className="w-full text-left px-1 py-3.5 text-sm text-danger border-t border-border-subtle">
                       {d.title}
                     </button>
                   );
@@ -183,14 +183,14 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
             onClick={closeModal}
             className="hidden md:flex gap-2 items-center text-sm md:text-base cursor-pointer mb-8 font-bold text-fg-primary"
           >
-            <IconBack className="w-5 h-5 dark:fill-gray-400" /> {title}
+            <IconBack className="w-5 h-5 fill-fg-secondary" /> {title}
           </h2>
           {navs.map(({ title, items }) => {
             return (
               <ul
                 key={title}
                 data-title={title}
-                className="flex flex-col gap-0.5 mb-5 md:mb-9 before:md:pl-3 before:content-[attr(data-title)] before:font-bold before:text-xs before:text-gray-400"
+                className="flex flex-col gap-0.5 mb-5 md:mb-9 before:md:pl-3 before:content-[attr(data-title)] before:font-bold before:text-xs before:text-fg-secondary"
               >
                 {items.map(({ name, link, title }) => {
                   if (link)
@@ -230,7 +230,7 @@ const StyledSettingContainer: FC<PropsWithChildren<Props>> = ({
             );
           })}
           {dangers.length ? (
-            <ul className="flex flex-col gap-2 mb-9 md:text-sm font-semibold text-red-500 dark:text-red-400">
+            <ul className="flex flex-col gap-2 mb-9 md:text-sm font-semibold text-danger">
               {dangers.map((d) => {
                 if (typeof d === "boolean" || !d) return null;
                 const { title, handler } = d;

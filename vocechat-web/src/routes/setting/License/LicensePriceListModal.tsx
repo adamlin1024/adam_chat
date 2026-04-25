@@ -111,7 +111,7 @@ const LicensePriceListModal: FC<Props> = ({ closeModal }) => {
     <Modal id="modal-modal">
       <StyledModal
         footer={
-          <div className="text-sm text-gray-400 dark:text-gray-100 mt-3">
+          <div className="text-sm text-fg-primary mt-3">
             {t("vocespace.prerequisite.4")}
           </div>
         }
@@ -125,7 +125,7 @@ const LicensePriceListModal: FC<Props> = ({ closeModal }) => {
             </Button>
             {isBooking ? (
               <Button
-                className="text-sm text-white bg-primary-400 break-keep shadow rounded-lg px-3.5 py-2.5 md:hover:bg-primary-500 active:bg-primary-500 disabled:bg-gray-300"
+                className="text-sm text-accent-on bg-accent break-keep shadow rounded-lg px-3.5 py-2.5 md:hover:bg-accent active:bg-accent disabled:bg-bg-surface"
                 onClick={handleTalk}
               >
                 {t("license.renew")}
@@ -138,11 +138,11 @@ const LicensePriceListModal: FC<Props> = ({ closeModal }) => {
                 offset={[-50, -40]}
                 trigger="click"
                 content={
-                  <div className="p-3 rounded-lg border border-solid border-gray-200 dark:border-gray-900 flex flex-col items-start gap-3 w-[430px] bg-white dark:bg-gray-800 shadow shadow-gray-200 dark:shadow-gray-900 drop-shadow-xl">
-                    <div className="text-gray-500 text-sm">{t("license.tip_domain")}</div>
+                  <div className="p-3 rounded-lg border border-solid border-border-subtle flex flex-col items-start gap-3 w-[430px] bg-bg-elevated shadow shadow-bg-app/40 drop-shadow-xl">
+                    <div className="text-fg-muted text-sm">{t("license.tip_domain")}</div>
                     <Input value={host} onChange={handleUpdateHost} />
                     <div className="flex justify-between items-center w-full mt-4">
-                      <span className="text-xs text-orange-500 text-left">
+                      <span className="text-xs text-danger text-left">
                         {" "}
                         {t("license.tip_port")}
                       </span>
@@ -168,7 +168,7 @@ const LicensePriceListModal: FC<Props> = ({ closeModal }) => {
               >
                 <button
                   onClick={togglePopUpVisible}
-                  className="text-sm text-white bg-primary-400 break-keep shadow rounded-lg px-3.5 py-2.5 md:hover:bg-primary-500 active:bg-primary-500 disabled:bg-gray-300"
+                  className="text-sm text-accent-on bg-accent break-keep shadow rounded-lg px-3.5 py-2.5 md:hover:bg-accent active:bg-accent disabled:bg-bg-surface"
                 >
                   {" "}
                   {t("license.renew")}
