@@ -276,7 +276,9 @@ const Message: FC<IProps> = ({
       data-created-at={time}
       ref={inViewRef}
       className={clsx(
-        `group w-full relative flex items-start gap-2 md:gap-3 px-2 md:px-3 py-1 transition-colors duration-[120ms]`,
+        // hover 時提升 z-index，讓 Commands 浮動列 / reaction picker / more menu
+        // 不會被「下方」訊息的 hover bg 蓋住（DOM 順序晚的兄弟原本會疊在上面）
+        `group w-full relative flex items-start gap-2 md:gap-3 px-2 md:px-3 py-1 transition-colors duration-[120ms] hover:z-10`,
         // 整列擋掉 iOS / Android 原生長按選單與選字（時間、空白等氣泡外區域也納入）；
         // 桌機 (md:) 與 bubble 內 nativeSelectMode 由各自規則覆蓋。
         "msg-no-native-touch",
