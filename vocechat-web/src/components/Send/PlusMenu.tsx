@@ -117,11 +117,17 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
         </Popover.Portal>
       </Popover.Root>
 
+      {/*
+        accept 用具體 MIME types 而不是 image/* 通配符。
+        iOS Safari 對 image/* 一律跳「拍照 / 圖庫 / 檔案」三選一原生 sheet，
+        改成明確列出常見格式，PHPicker 較有機會直接開圖庫不跳 sheet。
+        capture 則維持只在「拍照 / 錄影」用，明確強制相機。
+      */}
       <input
         ref={cameraRef}
         type="file"
         className="hidden"
-        accept="image/*,video/*"
+        accept="image/jpeg,image/png,image/heic,image/heif,video/mp4,video/quicktime"
         capture="environment"
         onChange={handleUpload}
       />
@@ -129,14 +135,19 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
         ref={photoRef}
         type="file"
         className="hidden"
-        accept="image/*,video/*"
+        accept="image/jpeg,image/png,image/heic,image/heif,image/gif,image/webp,video/mp4,video/quicktime"
         multiple
         onChange={handleUpload}
       />
+      {/*
+        檔案：明確排除照片相關 MIME，讓 iOS 只走檔案 picker（不跳圖庫選項）。
+        document / archive / 常見辦公文件都列上；若需要其他類型再補。
+      */}
       <input
         ref={fileRef}
         type="file"
         className="hidden"
+        accept="application/pdf,application/zip,application/x-zip-compressed,application/x-rar-compressed,application/x-7z-compressed,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/csv,text/markdown,application/json,application/xml,audio/mpeg,audio/wav,audio/mp4,audio/aac"
         multiple
         onChange={handleUpload}
       />
