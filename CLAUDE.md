@@ -42,12 +42,13 @@
 
 ### 色彩系統
 
-**任何修改涉及顏色、樣式、Tailwind className、CSS 變數、視覺呈現時 —— 即使只動一行 —— 必讀**：`UI_style/COLOR_SYSTEM.md`（首段是 AI 自動觸發規則 + token 對照、禁用清單、變數格式、回歸驗證清單）。
+**任何修改涉及顏色、樣式、Tailwind className、CSS 變數、視覺呈現時 —— 即使只動一行 —— 必讀**：`UI_style/COLOR_SYSTEM.md`（A 區是 4 條 AI 自動觸發規則 + 改色 SOP；B 區規則參考；**C 區元件表**按 UI 表面分類列出所有元件 + token + 檔案；D 區回歸清單）。
 
 ### SVG 上色規則
-- stroke-based SVG（如 `arrow.left.svg`）：用 `stroke-` 或 `dark:stroke-white`，**不可用 `fill-`**
-- fill-based SVG：用 `fill-current` 或 `fill-` 系列
+- stroke-based SVG（如 `arrow.left.svg`）：父層用 `stroke-X` token，**禁止用 `fill-`**
+- fill-based SVG：SVG 內用 `fill="currentColor"` + 父層 `text-X` token；若 SVG 寫死 hex 則父層加 `fill-current` 才能覆蓋
 - 右箭頭一律用 `arrow.left.svg` + `rotate-180`，不另用 `arrow.right.svg`
+- 詳見 COLOR_SYSTEM.md C.14「Inline SVG assets」
 
 ### Header icon 尺寸規範
 - 容器：`h-9 w-9 flex-center`
