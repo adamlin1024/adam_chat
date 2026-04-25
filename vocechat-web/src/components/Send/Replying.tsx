@@ -7,6 +7,7 @@ import useSendMessage from "@/hooks/useSendMessage";
 import { getFileIcon, isImage } from "@/utils";
 import { isStickerContent, getStickerUrl } from "@/utils/sticker";
 import IconClose from "@/assets/icons/close.circle.svg";
+import IconReply from "@/assets/icons/reply.svg";
 import pictureIcon from "@/assets/icons/picture.svg?url";
 import { shallowEqual } from "react-redux";
 
@@ -65,7 +66,8 @@ export default function Replying({
   const preview = getPreview(msg, t);
 
   return (
-    <div className="relative flex items-center gap-3 px-3 py-2 mx-1 mb-1 rounded-t-lg bg-bg-elevated border-l-2 border-accent">
+    <div className="relative flex items-center gap-3 px-3 py-2 mx-1 mb-1 rounded-lg bg-bg-surface">
+      <IconReply className="shrink-0 w-4 h-4 fill-fg-secondary" />
       <div className="flex-1 min-w-0">
         <div className="ts-mini text-fg-secondary truncate">
           <Trans
