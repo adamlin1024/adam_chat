@@ -15,7 +15,7 @@ const ForceUpdate = () => {
   return (
     <SettingBlock
       title="立即更新 App"
-      desc="當畫面看起來卡在舊版時，按這裡會去 server 拉最新版本並重整。不會清掉登入、Google Drive 授權、訊息快取等資料。"
+      desc="從 server 拉最新版本並重整，不會動到登入、雲端授權、訊息快取。"
       toggler={
         <button
           type="button"
