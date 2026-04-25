@@ -259,6 +259,9 @@ const Message: FC<IProps> = ({
   return (
     <div
       key={_key}
+      // 手機：整列（含氣泡外的時間 / 空白）長按都觸發 action panel；
+      // nativeSelectMode 時放掉長按避免干擾選字。avatar 用 stopPropagation 排除。
+      {...(readOnly || failed || nativeSelectMode ? {} : longPressHandlers)}
       onContextMenu={readOnly ? undefined : (evt) => {
         // 手機長按改用浮在氣泡上的 action panel；不開桌機右鍵選單（避免長按非氣泡區也跳）
         if (isMobile()) {
@@ -274,6 +277,9 @@ const Message: FC<IProps> = ({
       ref={inViewRef}
       className={clsx(
         `group w-full relative flex items-start gap-2 md:gap-3 px-2 md:px-3 py-1 transition-colors duration-[120ms]`,
+        // 整列擋掉 iOS / Android 原生長按選單與選字（時間、空白等氣泡外區域也納入）；
+        // 桌機 (md:) 與 bubble 內 nativeSelectMode 由各自規則覆蓋。
+        "msg-no-native-touch",
         !readOnly && "hover:bg-bg-hover",
         showExpire && "bg-danger/10",
         pinInfo && "bg-accent-bg !pt-7 border-l-2 border-accent",
@@ -291,7 +297,13 @@ const Message: FC<IProps> = ({
           appendTo={() => document.body}
           content={<Profile uid={fromUid || 0} type="card" cid={context == "dm" ? 0 : contextId} />}
         >
-          <div className="cursor-pointer w-9 h-9 shrink-0 mt-0.5" data-uid={fromUid} ref={avatarRef}>
+          <div
+            className="cursor-pointer w-9 h-9 shrink-0 mt-0.5"
+            data-uid={fromUid}
+            ref={avatarRef}
+            // 阻止 touch 冒泡到外層 row，避免長按頭像時誤觸 message action panel
+            onTouchStart={(e) => e.stopPropagation()}
+          >
             <Avatar
               className="w-9 h-9 rounded-full object-cover"
               width={36}
@@ -369,7 +381,7 @@ const Message: FC<IProps> = ({
             >
             <div
               ref={bubbleRef}
-              {...(nativeSelectMode ? {} : longPressHandlers)}
+              // longPress 已上移到外層 row（line 260）統一處理；事件冒泡上去即可。
               onContextMenu={(e) => {
                 // 攔截 iOS / Android 長按觸發的 contextmenu，避免跳原生 callout
                 if (!nativeSelectMode) e.preventDefault();

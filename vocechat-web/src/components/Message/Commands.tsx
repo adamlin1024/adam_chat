@@ -70,8 +70,12 @@ const Commands: FC<Props> = ({
   const handleTippyVisible = (visible = true) => {
     setTippyVisible(visible);
   };
+  const handleShare = (mid: number) => {
+    dispatch(updateSelectMessages({ context, id: contextId, data: mid, mode: "share" }));
+    hideAll();
+  };
   const handleSelect = (mid: number) => {
-    dispatch(updateSelectMessages({ context, id: contextId, data: mid }));
+    dispatch(updateSelectMessages({ context, id: contextId, data: mid, mode: "select" }));
     hideAll();
   };
   const handleUnpin = () => {
@@ -155,9 +159,15 @@ const Commands: FC<Props> = ({
                     handler: pinned ? handleUnpin : togglePinModal
                   },
                   {
-                    // 「分享」== 進入選取模式（合併原本的選擇 + 轉傳入口）
-                    title: t("action.share"),
+                    // 「分享」→ share mode → 底部 bar 顯示「取消 / 分享 (N)」→ 點分享開 ForwardSheet
+                    title: t("action.share", { ns: "common" }),
                     icon: <IconForward className="icon" />,
+                    handler: handleShare.bind(null, mid)
+                  },
+                  {
+                    // 「選取」→ select mode → 底部 bar 顯示「分享 / 收藏 / 刪除」3 個操作
+                    title: t("action.select"),
+                    icon: <IconSelect className="icon" />,
                     handler: handleSelect.bind(null, mid)
                   },
                   canDelete && {

@@ -175,6 +175,9 @@ export const EmojiInputPanel = forwardRef<HTMLDivElement, PanelProps>(
             title="點擊送出"
           >
             <img
+              // 用 url 當 key 強制重新掛載：APNG 切換時不會卡在舊圖等新檔解碼，
+              // 舊 decoder 立刻拆掉、新 img 從頭播放，預覽切換更跟得上點擊節奏。
+              key={preview.url}
               src={preview.url}
               alt="sticker preview"
               className="w-auto h-auto max-w-[240px] max-h-[90%] object-contain pointer-events-none select-none drop-shadow-lg"
