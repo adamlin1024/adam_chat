@@ -64,6 +64,26 @@ node vocechat-web/scripts/add-sticker.mjs install "<source-path>" <pack-id>
 - 請到 dev server（`/start-dev` 啟動）測試貼圖分頁
 - 確認外觀正常後再 push（遵守 UI 改動規則）
 
+## 快取策略（不可踩的雷）
+
+正式機 Caddyfile 對 `/stickers/*` 必須維持：
+```
+header Cache-Control "public, max-age=300, must-revalidate"
+```
+
+**禁止加 `immutable` directive**。曾經有過慘痛經驗：
+- `immutable` 寫進使用者瀏覽器的快取項目後，瀏覽器**永遠不會回 server 驗證**
+- 即使 server 端 _key.png 重產為高解析度，使用者看到的永遠是舊低解析度版
+- 連 hard reload (Ctrl+Shift+R)、unregister SW 都繞不過
+- 唯一解：**改 URL**（如 `?v=N`）或叫使用者完全清 site data
+
+目前 `sticker-picker.tsx` 留有 `?v=2` cache-buster 是當年那次 immutable 災難的遺產，可以永遠留著（無害），用來繞開歷史快取。
+
+**未來重產 _key.png 後**：
+- 直接 push、等 Railway 部署完
+- 5 分鐘內所有使用者瀏覽器透過 ETag 自動驗證並更新
+- 不需要再 bump 版本號、不需要使用者清快取
+
 ## 注意事項
 
 - **一包一 packId，絕不混合**：每個 LINE 貼圖包必須有獨立 packId，對應 `public/stickers/<packId>/` 獨立資料夾 + `packs.json` 獨立一筆。**不得把兩個包的貼圖裝進同一個 packId**

@@ -8,7 +8,6 @@ import { Ring } from "@uiball/loaders";
 import useFilteredChannels from "@/hooks/useFilteredChannels";
 import useFilteredUsers from "@/hooks/useFilteredUsers";
 import useForwardMessage from "@/hooks/useForwardMessage";
-import useKeyboardOffset from "@/hooks/useKeyboardOffset";
 import useRecentContacts from "@/hooks/useRecentContacts";
 import useSendMessage from "@/hooks/useSendMessage";
 import { useAppSelector } from "@/app/store";
@@ -68,7 +67,6 @@ const ForwardFullSheet: FC<Props> = ({
   const [isDragging, setIsDragging] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
   const dragStartY = useRef(0);
-  const keyboardOffset = useKeyboardOffset();
   const isMobile = window.innerWidth < 768;
 
   const usersById = useAppSelector((s) => s.users.byId, shallowEqual);
@@ -355,7 +353,8 @@ const ForwardFullSheet: FC<Props> = ({
           className="absolute left-0 right-0 bg-bg-elevated flex flex-col overflow-hidden"
           style={{
             borderRadius: "10px 10px 0 0",
-            bottom: `${keyboardOffset}px`,
+            // 不跟 keyboardOffset：鍵盤直接覆蓋下半部，sheet 90vh 高度不變、上方標題列 + 留言框保持可見
+            bottom: 0,
             height: "90vh",
             transform: dragOffset > 0
               ? `translateY(${dragOffset}px)`
