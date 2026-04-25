@@ -30,7 +30,7 @@
 ## 工作流程規則
 - **功能相關改動**（邏輯、hook、API、資料處理等非畫面部分）：改完可直接 push
 - **畫面相關改動**（UI、樣式、Layout、元件外觀，包含顏色、尺寸等小改動）：改完後先讓使用者確認，**不可直接 push**
-- **混合改動**（同時包含功能與畫面）：功能部分可先 push，畫面部分必須先問過使用者再 push
+- **混合改動**（同時包含功能與畫面）：牽涉畫面一律必須先問過使用者再 push
 
 ## 技術細節
 - Docker 多階段建構：Node 20 Alpine 建前端，privoce/vocechat-server 跑後端
@@ -40,14 +40,22 @@
 
 ## UI 慣例
 
-### 色彩系統
+### Design System
 
-**任何下列情況 —— 即使只動一行 —— 必讀** `UI_style/COLOR_SYSTEM.md`：
+**任何下列情況 —— 即使只動一行 —— 必讀** `UI_style/DESIGN_SYSTEM.md`：
 - 修改既有 UI 顏色、樣式、Tailwind className、CSS 變數、視覺呈現
 - **新增元件 / 新增頁面 / 新增畫面**（無論大小，含修改路由表）
 - 動到 token 系統檔案（`index.css` 的 `.dark` / `.light`、`tailwind.config.js`）
 
-文件 A 區有 5 條無條件觸發規則（含 Trigger 5「新增元件必須加進 C 元件表 + 用 token 色」）、B 區規則參考、**C 區元件表**、D 區回歸清單。**新元件落地的同一個 commit 就要把 C 表更新好，否則視同未完成。**
+文件結構：
+- **A 區**：6 條無條件觸發規則 + 改色 SOP
+  - Trigger 5「新增元件必須加進 C 元件表 + 用 token 色」
+  - Trigger 6「優先複用既有元件」（要做新畫面前先掃 C 表找既有外殼複用，不重新發明）
+- **B 區**：檔案位置、token 對照、變數格式、禁用清單
+- **C 區「元件表」**：按 UI 表面分類列出所有元件 + token + 檔案
+- **D 區「回歸驗證清單」**：色票相關修改後必跑的 9 點目視確認
+
+**新元件落地的同一個 commit 就要把 C 表更新好；要做新畫面前必先掃 C 表找既有元件複用，找得到就不另建。否則視同未完成。**
 
 ### 語系一致性規則
 
@@ -76,7 +84,7 @@
 - stroke-based SVG（如 `arrow.left.svg`）：父層用 `stroke-X` token，**禁止用 `fill-`**
 - fill-based SVG：SVG 內用 `fill="currentColor"` + 父層 `text-X` token；若 SVG 寫死 hex 則父層加 `fill-current` 才能覆蓋
 - 右箭頭一律用 `arrow.left.svg` + `rotate-180`，不另用 `arrow.right.svg`
-- 詳見 COLOR_SYSTEM.md C.14「Inline SVG assets」
+- 詳見 DESIGN_SYSTEM.md C.14「Inline SVG assets」
 
 ### Header icon 尺寸規範
 - 容器：`h-9 w-9 flex-center`
