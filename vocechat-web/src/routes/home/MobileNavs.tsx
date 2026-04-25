@@ -38,10 +38,7 @@ const MobileNavs = () => {
   return (
     <ul
       className={clsx(
-        // bg 改用 bg-app 跟 chat list 同色，靠上方 border 區隔，避免 pb-safe 區域
-        // 露出跟內容不同的 bg-elevated 造成視覺斷層（黑色模式黑帶 / 淺色模式 cream 帶）。
-        // 這是 black-translucent 之後 viewport 延伸到 home indicator 才浮現的副作用。
-        "flex justify-around pt-2 pb-safe fixed bottom-0 left-0 w-full bg-bg-app border-t border-border-subtle md:hidden",
+        "flex justify-around pt-2 pb-safe fixed bottom-0 left-0 w-full bg-bg-elevated border-t border-border-subtle md:hidden",
         isChattingPage && "hidden"
       )}
     >

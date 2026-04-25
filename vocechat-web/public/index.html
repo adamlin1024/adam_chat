@@ -262,15 +262,19 @@
       padding-top: env(safe-area-inset-top, 0px);
       box-sizing: border-box;
     }
-    /* iOS safari — use --app-height set by visualViewport JS below */
+    /* iOS safari / PWA — 用 100dvh 而不是 visualViewport-tracked --app-height。
+       原因：iOS PWA 在 apple-mobile-web-app-status-bar-style=black-translucent 模式下，
+       visualViewport.height 的回報會像 Safari 瀏覽器一樣扣掉「假想的」網址列+工具列高度，
+       導致 body 被壓縮 ~80-100px，fixed bottom-0 的 MobileNavs 也跟著浮在螢幕底部上方。
+       100dvh 是純 CSS 不受此 bug 影響，鍵盤彈出時也會 dynamic 縮放。 */
     @supports (-webkit-touch-callout: none) {
       body {
         position: fixed;
         width: 100%;
-        height: var(--app-height, 100svh);
+        height: 100dvh;
       }
       .h-screen {
-        height: var(--app-height, 100svh) !important;
+        height: 100dvh !important;
         overflow: auto;
       }
     }
