@@ -8,6 +8,8 @@
 改完該檔前必做：在該檔自掃禁用清單（`text-white` / `text-black` / `bg-white` / `bg-black`、Tailwind 預設調色盤 `zinc/gray/slate/stone/neutral/red/orange/amber/yellow/lime/green/emerald/teal/cyan/sky/blue/indigo/primary` 等、`bg-[#xxx]` 寫死 hex、`dark:` 前綴覆寫、手寫 `var(--c-x)` 漏包 `rgb()`）。
 有違規 → **當下順手改成 token**，不要留待下一輪、不要寫 TODO、不要分批。
 
+**順帶檢查**：如果該檔 import 了 inline SVG（如 `import X from "./x.svg"`），確認 SVG 檔本身是 `fill="currentColor"` 或 `stroke="currentColor"`，**否則父層 className 的 `text-X` 不會傳進去 SVG**。改 SVG 比改父層省力。
+
 ### Trigger 2：動到 `vocechat-web/src/assets/index.css` 的 `.dark` / `.light` 區塊，或動到 `vocechat-web/tailwind.config.js`
 → 必須在本檔末段「變更歷史」加一筆，記錄改了什麼、為什麼。
 → 改色票時 hex 要先轉 RGB 三元組（例如 `#5eead4` → `94 234 212`）。
@@ -134,6 +136,7 @@ cover.style.cssText = "background:rgb(var(--c-bg-app));"
 - [ ] **Avatar hover 遮罩**：`bg-bg-app/50`
 - [ ] **emoji-input-picker 取消鍵**：`text-fg-primary/90`、`hover:bg-bg-hover`
 - [ ] **shadow-inset-hairline**：active session 行的內框
+- [ ] **訊息底部「捲到最新」浮鈕**：`NewMessageBottomTip` 的箭頭圖示要看得見（無未讀時是淡 accent 底 + accent 箭頭，有未讀時是 accent 底 + accent-on 文字）
 
 ## 元件清單（已通過 token 化稽核）
 
