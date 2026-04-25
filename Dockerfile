@@ -29,6 +29,7 @@ COPY --from=sqlite-source /usr/lib/x86_64-linux-gnu/libsqlite3.so.0 /usr/lib/x86
 COPY --from=sqlite-source /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6 /usr/lib/x86_64-linux-gnu/libsqlite3.so.0.8.6
 COPY --from=sqlite-source /lib/x86_64-linux-gnu/libreadline.so.8 /lib/x86_64-linux-gnu/libreadline.so.8
 COPY --from=sqlite-source /lib/x86_64-linux-gnu/libtinfo.so.6 /lib/x86_64-linux-gnu/libtinfo.so.6
+COPY --from=sqlite-source /lib/x86_64-linux-gnu/libz.so.1 /lib/x86_64-linux-gnu/libz.so.1
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
