@@ -246,6 +246,10 @@
       overflow: hidden;
       width: 100%;
       height: 100%;
+      /* AB test step 2：在 step 1 上加 padding-top + box-sizing。
+         這是當初 8f0422b 為了搭配 black-translucent 加的，疑似元兇。 */
+      padding-top: env(safe-area-inset-top, 0px);
+      box-sizing: border-box;
     }
     /* iOS safari — use --app-height set by visualViewport JS below */
     @supports (-webkit-touch-callout: none) {
