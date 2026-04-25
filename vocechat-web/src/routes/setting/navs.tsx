@@ -6,6 +6,7 @@ import Version from "@/components/Version";
 import APIConfig from "./APIConfig";
 import APIDocument from "./APIDocument";
 import BotConfig from "./BotConfig";
+import GoogleDrive from "./GoogleDrive";
 import ConfigAgora from "./config/Agora";
 import ConfigFirebase from "./config/Firebase";
 import Logins from "./config/Logins";
@@ -40,6 +41,10 @@ const navs = [
       {
         name: "notification",
         component: <NotificationSettings />,
+      },
+      {
+        name: "google_drive",
+        component: <GoogleDrive />,
       },
       {
         name: "members",

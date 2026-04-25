@@ -190,6 +190,7 @@ function Files() {
                 preview={view === "grid"}
                 flex={view === "item"}
                 key={mid}
+                mid={mid}
                 file_type={content_type}
                 content={url}
                 created_at={created_at}

@@ -21,3 +21,6 @@ Thumbs.db
 
 # Local utility scripts
 parse_transcripts.js
+
+# Google OAuth client secret (never commit!)
+client_secret_*.json

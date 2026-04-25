@@ -13,7 +13,7 @@ import {
   VideoPreview,
 } from "./preview";
 import { shallowEqual } from "react-redux";
-import DownloadArea from "../FileMessage/DownloadArea";
+import FileActionBar from "../FileActionBar";
 
 interface Data {
   file_type: string;
@@ -69,6 +69,8 @@ interface Props {
   created_at: number;
   from_uid: number;
   content: string;
+  /** 訊息 mid，用於收藏 */
+  mid?: number;
   onImageClick?: () => void;
 }
 
@@ -81,6 +83,7 @@ const FileBox: FC<Props> = ({
   created_at,
   from_uid,
   content,
+  mid,
   onImageClick,
 }) => {
   const [fetchError, setFetchError] = useState(false);
@@ -120,29 +123,48 @@ const FileBox: FC<Props> = ({
   return (
     <div
       className={clsx(
-        `group rounded-md border border-border bg-bg-surface`,
+        `rounded-md border border-border bg-bg-surface`,
         flex ? "w-full max-w-3xl" : "w-full md:w-[370px]",
-        withPreview ? "relative overflow-hidden h-[281px]" : "h-[66px]",
-        file_type.startsWith("audio") && "h-[125px]"
+        withPreview ? "relative overflow-hidden h-[281px]" : "h-auto",
+        file_type.startsWith("audio") && !withPreview && "h-[125px]"
       )}
     >
-      <div className="w-full p-2 flex items-center justify-between gap-2">
-        {icon}
-        <div className="flex flex-col gap-1 w-full overflow-hidden">
+      {/* Info row */}
+      <div className="w-full px-3 pt-2.5 pb-1.5 flex items-start gap-2.5">
+        <div className="shrink-0">{icon}</div>
+        <div className="flex-1 flex flex-col gap-0.5 min-w-0">
           <span className="font-semibold text-sm text-fg-primary truncate">{name}</span>
-          <em className="text-xs text-fg-subtle flex gap-4 not-italic">
+          <em className="text-xs text-fg-subtle flex flex-wrap gap-x-3 gap-y-0.5 not-italic">
             <span>{formatBytes(size)}</span>
-            <span className="hidden md:block">{fromNowTime(created_at)}</span>
+            <span>{fromNowTime(created_at)}</span>
             <span>
-              by <strong className="font-bold text-fg-secondary">{fromUser?.name || "Deleted User"}</strong>
+              by{" "}
+              <strong className="font-bold text-fg-secondary">
+                {fromUser?.name || "Deleted User"}
+              </strong>
             </span>
           </em>
         </div>
-        <DownloadArea copyLink={content} downloadLink={`${content}&download=true`} />
       </div>
+
+      {/* Action bar */}
+      <div className="w-full px-2 pb-1.5 border-t border-border-subtle">
+        <FileActionBar
+          mid={mid}
+          url={content}
+          fileName={name}
+          mimeType={file_type}
+          className="pt-1.5"
+        />
+      </div>
+
       {withPreview && (
         <div
-          className={clsx("h-[calc(100%_-_64px)] overflow-hidden", isImage && onImageClick && "cursor-pointer")}
+          className={clsx(
+            "border-t border-border-subtle overflow-hidden",
+            isImage && onImageClick && "cursor-pointer"
+          )}
+          style={{ height: "calc(100% - 100px)" }}
           onClick={isImage && onImageClick ? onImageClick : undefined}
         >
           {previewContent}

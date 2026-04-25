@@ -10,6 +10,7 @@ import { notificationApi } from "./services/notification";
 import { serverApi } from "./services/server";
 import { userApi } from "./services/user";
 import authDataReducer from "./slices/auth.data";
+import driveReducer from "./slices/drive";
 import channelsReducer from "./slices/channels";
 import favoritesReducer from "./slices/favorites";
 import footprintReducer from "./slices/footprint";
@@ -41,6 +42,7 @@ const reducer = combineReducers({
   archiveMessage: archiveMsgReducer,
   message: messageReducer,
   files: filesReducer,
+  drive: driveReducer,
   [authApi.reducerPath]: authApi.reducer,
   [messageApi.reducerPath]: messageApi.reducer,
   [userApi.reducerPath]: userApi.reducer,

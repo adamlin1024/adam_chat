@@ -155,13 +155,9 @@ const Commands: FC<Props> = ({
                     handler: pinned ? handleUnpin : togglePinModal
                   },
                   {
-                    title: t("action.forward"),
+                    // 「分享」== 進入選取模式（合併原本的選擇 + 轉傳入口）
+                    title: t("action.share"),
                     icon: <IconForward className="icon" />,
-                    handler: toggleForwardModal
-                  },
-                  {
-                    title: t("action.select"),
-                    icon: <IconSelect className="icon" />,
                     handler: handleSelect.bind(null, mid)
                   },
                   canDelete && {

@@ -107,7 +107,8 @@ const Message: FC<IProps> = ({
     cid: context == "channel" ? contextId : null,
   });
   const handleReply = () => { if (contextId) setReplying(mid); };
-  const handleSelect = () => dispatch(updateSelectMessages({ context, id: contextId, data: mid }));
+  const handleSelect = () => dispatch(updateSelectMessages({ context, id: contextId, data: mid, mode: "select" }));
+  const handleShare = () => dispatch(updateSelectMessages({ context, id: contextId, data: mid, mode: "share" }));
   // 「選取文字」：交還給瀏覽器原生選取行為
   const handleNativeSelect = () => {
     setNativeSelectMode(true);
@@ -144,7 +145,7 @@ const Message: FC<IProps> = ({
       icon: <IconPin className="icon" />,
       handler: op.pinned ? () => op.unPin(mid) : op.togglePinModal,
     },
-    { title: t("action.forward"), icon: <IconForward className="icon" />, handler: op.toggleForwardModal },
+    { title: t("action.share", { ns: "common" }), icon: <IconForward className="icon" />, handler: handleShare },
     { title: t("action.select"), icon: <IconSelect className="icon" />, handler: handleSelect },
     op.canDelete && {
       title: t("action.remove"),
@@ -165,7 +166,9 @@ const Message: FC<IProps> = ({
       handler: handleToggleFav,
     },
     { title: t("action.add_reaction"), icon: <IconReact className="w-6 h-6 fill-current" />, handler: () => setSheetView("reactions"), keepOpen: true },
-    { title: t("action.forward"), icon: <IconForward className="w-6 h-6 fill-current" />, handler: op.toggleForwardModal },
+    // 「分享」進 share mode → 底部 bar 只顯示「取消 / 分享 (N)」→ 點分享開 ForwardSheet
+    { title: t("action.share", { ns: "common" }), icon: <IconForward className="w-6 h-6 fill-current" />, handler: handleShare },
+    // 「選取」進 select mode → 底部 bar 顯示「分享 / 收藏 / 刪除」3 個操作
     { title: t("action.select"), icon: <IconSelect className="w-6 h-6 fill-current" />, handler: handleSelect },
     op.canEdit && { title: t("action.edit_msg"), icon: <IconEdit className="w-6 h-6 fill-current" />, handler: toggleEditMessage },
     op.canPin && {

@@ -38,7 +38,6 @@ const SettingChannelPage = lazy(() => import("./settingChannel"));
 const SettingDMPage = lazy(() => import("./settingDM"));
 const GuestLogin = lazy(() => import("./guest"));
 const SharePage = lazy(() => import("./share"));
-const DriveTestPage = lazy(() => import("./drive-test"));
 
 let toastId: string;
 const PageRoutes = () => {
@@ -60,14 +59,6 @@ const PageRoutes = () => {
   return (
     <HashRouter>
       <Routes>
-        <Route
-          path="/drive-test"
-          element={
-            <LazyIt key="drive-test">
-              <DriveTestPage />
-            </LazyIt>
-          }
-        />
         <Route
           path="/guest_login"
           element={

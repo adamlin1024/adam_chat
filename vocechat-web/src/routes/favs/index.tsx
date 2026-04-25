@@ -147,7 +147,7 @@ function FavsPage() {
                   {tip}
                   {dayjs(created_at).format("YYYY-MM-DD")}
                 </h4>
-                <div className="relative group rounded-md border border-border overflow-hidden">
+                <div className="relative rounded-md border border-border overflow-hidden">
                   <div
                     className={clsx(singleImageMsg && "cursor-pointer")}
                     onClick={singleImageMsg ? () => setPreviewImage({ url: singleImageMsg.content, name: singleImageMsg.properties?.name || "" }) : undefined}
@@ -155,9 +155,10 @@ function FavsPage() {
                     <FavoredMessage key={id} id={id} />
                   </div>
                   <button
-                    className="absolute top-2 right-2 flex-center w-5 h-5 p-1 border border-border bg-bg-surface rounded-sm invisible group-hover:visible hover:border-border-strong transition-colors"
+                    className="absolute top-2 right-2 flex-center w-6 h-6 p-1 border border-border bg-bg-surface rounded-sm hover:border-border-strong transition-colors"
                     data-id={id}
                     onClick={handleRemove}
+                    aria-label="移除收藏"
                   >
                     <IconRemove className="fill-fg-subtle" />
                   </button>

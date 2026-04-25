@@ -26,7 +26,8 @@
     "version": "版本資訊",
     "feedback": "意見回饋",
     "video": "音視訊",
-    "notification": "通知設定"
+    "notification": "通知設定",
+    "google_drive": "Google Drive"
   },
   "channel": {
     "leave": "離開",
