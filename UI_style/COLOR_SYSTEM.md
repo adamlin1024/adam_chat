@@ -13,7 +13,7 @@
 
 ## A. 動手前必看
 
-### A.1 AI 自動執行規則（4 條 trigger，無條件，不需使用者提醒）
+### A.1 AI 自動執行規則（5 條 trigger，無條件，不需使用者提醒）
 
 **Trigger 1 — 動到任何 `.tsx` / `.ts` / `.css` UI 檔**
 改完前自掃該檔，違規 → 當下順手改成 token，不寫 TODO、不分批：
@@ -34,6 +34,14 @@
 
 **Trigger 4 — 批次 UI 改動結束、要回報前**
 對照 D.1「回歸驗證清單」確認沒有壞掉。可疑處先請使用者目視，不要直接收尾。
+
+**Trigger 5 — 新增 UI 元件 / 新增頁面（無條件，無需提醒）**
+建立任何新的 `.tsx` UI 元件、頁面、或畫面時：
+1. **顏色一律走 token 系統**（沿用 B.2 表中 token，禁用清單 B.4 一條都不准踩；新狀態色要先在 B.2 新增並同步 `index.css` + `tailwind.config.js`）。
+2. **必須在 C 元件表加一行**：找最接近的群組（C.1～C.13），補上「表面名稱 / 主要 token / 檔案路徑 / 常見坑」一列。**不要分批、不要 TODO**——元件落地的同一個 commit 就要把表更新好。
+3. **唯一例外**：純臨時頁面（如 OAuth 第三方授權 redirect 頁、第三方整合頁，畫面只在外部回跳期間短暫出現），可不入元件表，但仍要用 token 顏色。例外要記在本檔 E. 已知例外段。
+
+不更新 C 表 = 違反 Trigger 5，視同未完成。
 
 ### A.2 改色 SOP
 
@@ -426,3 +434,4 @@ import 為 React 元件的 SVG（`import X from "./x.svg"`）：
 - **2026-04-25（同日修正）**：CSS 變數從 hex 字串改為 RGB 三元組格式，搭配 `rgb(var() / <alpha-value>)` 包裝，讓 Tailwind alpha 修飾子（`bg-accent/20` 等）能正常運作。先前自己訊息氣泡消失即此問題。**此格式不可再改回 hex**。
 - **2026-04-25（同日 follow-up）**：`double-down.svg`（捲到最新箭頭）改為 `fill="currentColor"`，淺色模式可見。Trigger 1 加註 inline SVG 檢查項。
 - **2026-04-25（文件重構）**：COLOR_SYSTEM.md 結構重整為 A/B/C/D/E/F 四區，新增 C「元件表」按 UI 表面分類列出所有已 token 化元件，避免下次漏改。
+- **2026-04-25（新增 Trigger 5）**：明文規定**新增 UI 元件 / 頁面**時必須同 commit 更新 C 元件表 + 走 token 系統。例外：純臨時頁面（OAuth redirect 等）。CLAUDE.md 觸發詞同步更新。

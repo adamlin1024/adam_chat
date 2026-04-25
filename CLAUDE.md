@@ -42,7 +42,12 @@
 
 ### 色彩系統
 
-**任何修改涉及顏色、樣式、Tailwind className、CSS 變數、視覺呈現時 —— 即使只動一行 —— 必讀**：`UI_style/COLOR_SYSTEM.md`（A 區是 4 條 AI 自動觸發規則 + 改色 SOP；B 區規則參考；**C 區元件表**按 UI 表面分類列出所有元件 + token + 檔案；D 區回歸清單）。
+**任何下列情況 —— 即使只動一行 —— 必讀** `UI_style/COLOR_SYSTEM.md`：
+- 修改既有 UI 顏色、樣式、Tailwind className、CSS 變數、視覺呈現
+- **新增元件 / 新增頁面 / 新增畫面**（無論大小，含修改路由表）
+- 動到 token 系統檔案（`index.css` 的 `.dark` / `.light`、`tailwind.config.js`）
+
+文件 A 區有 5 條無條件觸發規則（含 Trigger 5「新增元件必須加進 C 元件表 + 用 token 色」）、B 區規則參考、**C 區元件表**、D 區回歸清單。**新元件落地的同一個 commit 就要把 C 表更新好，否則視同未完成。**
 
 ### SVG 上色規則
 - stroke-based SVG（如 `arrow.left.svg`）：父層用 `stroke-X` token，**禁止用 `fill-`**
