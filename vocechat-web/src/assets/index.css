@@ -4,6 +4,12 @@
 
 :root { --msg-scale: 1; }
 
+/* AB test step 3：body bg 改走 Design System --c-bg-app token，
+   主 CSS bundle 載入後蓋掉 index.html 裡 splash 期間的硬編碼 fallback */
+body {
+  background-color: rgb(var(--c-bg-app));
+}
+
 /* ── 設計系統色票（深色 / 淺色 雙主題）──
  * 基礎色用「空格分隔 RGB 三元組」格式，搭配 tailwind.config 的
  * `rgb(var(--c-x) / <alpha-value>)` 包裝，讓 `bg-accent/20`、`bg-online/15`
