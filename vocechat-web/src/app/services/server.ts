@@ -536,6 +536,7 @@ export const {
   useLazyClearAllFilesQuery,
   useLazyClearAllMessagesQuery,
   useLazyGetFilesQuery,
+  useGetFilesQuery,
   useGetVocespaceConfigQuery,
   useLazyGetVocespaceConfigQuery,
   useUpdateVocespaceConfigMutation,

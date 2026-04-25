@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import clsx from "clsx";
 import Tippy from "@tippyjs/react";
 import BASE_URL from "@/app/config";
@@ -6,7 +6,7 @@ import { useAppSelector } from "@/app/store";
 import FileBox from "@/components/FileBox";
 import EmptyState from "@/components/EmptyState";
 import FilterChannel from "./Filter/Channel";
-import { useLazyGetFilesQuery } from "@/app/services/server";
+import { useGetFilesQuery } from "@/app/services/server";
 import { shallowEqual, useDispatch } from "react-redux";
 import { updateFileListView } from "@/app/slices/ui";
 import ChannelIcon from "@/components/ChannelIcon";
@@ -34,7 +34,6 @@ const typeFilters = [
 
 function Files() {
   const dispatch = useDispatch();
-  const [getFiles, { data, isFetching }] = useLazyGetFilesQuery();
   const [fileType, setFileType] = useState("");
   const [gid, setGid] = useState<number | undefined>(undefined);
   const [channelMenuVisible, setChannelMenuVisible] = useState(false);
@@ -43,18 +42,23 @@ function Files() {
   const view = useAppSelector((store) => store.ui.fileListView, shallowEqual);
   const channelMap = useAppSelector((store) => store.channels.byId, shallowEqual);
 
-  useEffect(() => {
+  // 用非 lazy 版 + currentData：args 變或還在 refetch 時 currentData 一律 undefined，
+  // 不會把上次的 stale 結果先閃一下（殭屍紀錄會破圖、紅字、再被覆蓋的根因）
+  const queryArgs = useMemo(() => {
     const f: Record<string, unknown> = { page_size: 1000 };
     if (fileType) f.file_type = fileType;
     if (gid) f.gid = gid;
-    getFiles(f);
+    return f;
   }, [fileType, gid]);
+  const { currentData, isFetching } = useGetFilesQuery(queryArgs, {
+    refetchOnMountOrArgChange: true
+  });
 
-  // 拉資料中先不渲染 stale list，避免上次刪檔後仍閃出舊檔造成破圖
+  // 只要在 refetch 中、或還沒拿到 currentData，就不渲染——避免 stale 列表閃一下
   const rawFiles =
-    !data || isFetching
+    isFetching || !currentData
       ? []
-      : [...data.filter((item) => !item.expired)].sort(
+      : [...currentData.filter((item) => !item.expired)].sort(
           (a, b) => b.created_at - a.created_at
         );
 
