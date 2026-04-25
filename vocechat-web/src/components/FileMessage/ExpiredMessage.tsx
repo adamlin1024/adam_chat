@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import clsx from "clsx";
 
-import useExpiredResMap from "@/hooks/useExpiredResMap";
 import IconAudio from "@/assets/icons/file.audio.svg";
 import IconImage from "@/assets/icons/file.image.svg";
 import IconUnknown from "@/assets/icons/file.unknown.svg";
@@ -37,22 +36,15 @@ const InfoMap = {
     icon: <IconVideo className="w-9 shrink-0 h-auto grayscale" />,
   },
 };
-const ExpiredMessage = ({ type = "file", url = "" }: Props) => {
+const ExpiredMessage = ({ type = "file", url: _url = "" }: Props) => {
   const { pathname } = useLocation();
-  console.log("pppp", pathname);
   const [context = "channel", id = 0] = pathname.split("/").slice(-2);
   const removeLocalMessage = useRemoveLocalMessage({
     context: context as ChatContext,
     id: +id,
   });
   const msgRef = useRef<HTMLDivElement | null>(null);
-  const { setExpired } = useExpiredResMap();
   const { title, desc, icon } = InfoMap[type];
-  useEffect(() => {
-    if (url) {
-      setExpired(url);
-    }
-  }, [url]);
   useEffect(() => {
     const msgEle = msgRef.current;
     if (!msgEle) return;

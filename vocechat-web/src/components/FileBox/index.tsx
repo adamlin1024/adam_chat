@@ -1,8 +1,7 @@
-import { FC, ReactElement, useEffect, useState } from "react";
+import { FC, ReactElement } from "react";
 import clsx from "clsx";
 
 import { useAppSelector } from "@/app/store";
-import useExpiredResMap from "@/hooks/useExpiredResMap";
 import { formatBytes, fromNowTime, getFileIcon } from "@/utils";
 import {
   AudioPreview,
@@ -86,38 +85,13 @@ const FileBox: FC<Props> = ({
   mid,
   onImageClick,
 }) => {
-  const [fetchError, setFetchError] = useState(false);
-  const { isExpired, setExpired } = useExpiredResMap();
   const fromUser = useAppSelector((store) => store.users.byId[from_uid], shallowEqual);
   const icon = getFileIcon(file_type, name, "icon w-9 h-12");
-  const expired = isExpired(content);
-  useEffect(() => {
-    const tryFetch = async (url: string) => {
-      try {
-        let statusNum = (await fetch(url)).status;
-        if (statusNum >= 400) {
-          setFetchError(true);
-        }
-      } catch (e) {
-        console.warn(e);
 
-        setFetchError(true);
-      }
-    };
-    if (!expired && content) {
-      tryFetch(content);
-    }
-  }, [content, expired]);
-  useEffect(() => {
-    if (fetchError) {
-      setExpired(content);
-    }
-  }, [fetchError, content]);
-
-  if (!content || expired || fetchError) return null;
+  if (!content) return null;
 
   const previewContent = renderPreview({ file_type, content, name });
-  const withPreview = preview && previewContent && !fetchError && !expired;
+  const withPreview = preview && previewContent;
   const isImage = /^image/gi.test(file_type);
 
   return (
