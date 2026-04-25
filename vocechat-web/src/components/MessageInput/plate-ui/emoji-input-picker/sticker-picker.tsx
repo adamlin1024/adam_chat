@@ -1,10 +1,6 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 
-// 每次 app 載入產生一次的 cache buster；同 session 多次開貼圖選單共用同一個 URL，
-// 瀏覽器快取直接命中。reload 時才重抓。
-const PACKS_CB = Date.now();
-
 /** 貼圖縮圖 + 載入時顯示 spinner，避免清快取後看到一格格慢慢補圖 */
 function StickerThumb({ src }: { src: string }) {
   const [loaded, setLoaded] = useState(false);
@@ -63,12 +59,7 @@ export function StickerPicker({ recents, previewUrl, onTapSticker, modeToggle }:
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    // session-level cache buster：app 每次載入產生一個新的 query string，
-    // session 內 picker 多次開啟會 hit 瀏覽器快取（~0 bytes），
-    // 重新整理 / cold start 時才會重抓 ~50KB。
-    // 這樣同時繞開 SW Workbox precache（precache key 是不帶 query 的原 URL，對不上）
-    // 又避免每次開選單都打 server。
-    fetch(`/stickers/packs.json?v=${PACKS_CB}`)
+    fetch("/stickers/packs.json")
       .then((res) => {
         if (!res.ok) throw new Error("failed");
         return res.json();
