@@ -370,12 +370,16 @@ const Message: FC<IProps> = ({
             <div
               ref={bubbleRef}
               {...(nativeSelectMode ? {} : longPressHandlers)}
+              onContextMenu={(e) => {
+                // 攔截 iOS / Android 長按觸發的 contextmenu，避免跳原生 callout
+                if (!nativeSelectMode) e.preventDefault();
+              }}
               className={clsx(
-                // 手機 select-none 阻止 iOS 長按系統選字 menu；桌機 md:select-text 維持選字
+                // 手機完全擋掉原生長按選單（含子元素）；桌機維持正常行為
                 "vc-msg relative ts-msg text-fg-body wb whitespace-pre-wrap min-w-0",
                 nativeSelectMode
-                  ? "select-text [-webkit-user-select:text] [-webkit-touch-callout:default]"
-                  : "select-none md:select-text [-webkit-touch-callout:none] md:[-webkit-touch-callout:default]",
+                  ? "msg-allow-native-select"
+                  : "msg-no-native-touch",
                 useBubble && [
                   "px-3 py-2 rounded-2xl break-words",
                   alignRight

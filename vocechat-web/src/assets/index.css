@@ -129,6 +129,33 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  /*
+   * 訊息氣泡：手機上完全擋掉 iOS / Android 原生長按選單（拷貝 / 查詢 / 翻譯 / 搜尋網頁）。
+   * 套用到所有子元素（連結 / 圖片 / span 等都不會跳原生 callout）。
+   * 桌機 (md:) 維持正常選字 / 點連結行為。
+   * 進入 native-select 模式時改套 .msg-allow-native-select 釋放選字。
+   */
+  .msg-no-native-touch,
+  .msg-no-native-touch * {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+  @media (min-width: 768px) {
+    .msg-no-native-touch,
+    .msg-no-native-touch * {
+      -webkit-touch-callout: default !important;
+      -webkit-user-select: text !important;
+      user-select: text !important;
+    }
+  }
+  .msg-allow-native-select,
+  .msg-allow-native-select * {
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
   /* word break */
   .wb {
     word-break: break-word;
