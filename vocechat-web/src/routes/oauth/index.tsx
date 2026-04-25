@@ -34,9 +34,7 @@ export default function OAuthPage() {
 
   useEffect(() => {
     if (isSuccess && data) {
-      // 登入成功 → setAuthData → loginUid 變動 → usePreload 的 [loginUid] effect
-      // 會重跑 initCache + rehydrate + 重抓 users / favorites / systemCommon。
-      // 不再需要硬導頁。
+      // 更新本地认证信息
       toast.success(ct("tip.login"));
       dispatch(setAuthData(data));
       const navPath = searchParams.get("path") || "/";
@@ -45,8 +43,8 @@ export default function OAuthPage() {
   }, [isSuccess, data]);
 
   return (
-    <div className="flex-center h-screen bg-bg-app">
-      <span className={clsx("text-fg-primary text-lg", error && "!text-danger")}>
+    <div className="flex-center h-screen dark:bg-gray-900">
+      <span className={clsx("text-gray-900 dark:text-gray-100 text-lg", error && "!text-red-500")}>
         {isLoading ? "loading" : ""}
         {error}
       </span>

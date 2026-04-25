@@ -6,7 +6,6 @@ import i18n from "@/i18n";
 import { getLocalAuthData } from "@/utils";
 import BASE_URL, { tokenHeader, IS_OFFICIAL_DEMO } from "../config";
 import { resetAuthData, updateToken } from "../slices/auth.data";
-import { clearCache } from "../cache";
 
 const whiteList = [
   "guestLogin",
@@ -128,7 +127,6 @@ const baseQueryWithTokenCheck = async (args: any, api: any, extraOptions: any) =
           }
           if (api.endpoint !== "login") {
             api.dispatch(resetAuthData());
-            await clearCache();
             location.href = "/#/login";
             // toast.error("API Not Authenticated");
           }
@@ -166,7 +164,6 @@ const baseQueryWithTokenCheck = async (args: any, api: any, extraOptions: any) =
           if (api.endpoint !== "login") {
             // 退出登录
             api.dispatch(resetAuthData());
-            await clearCache();
             location.href = "/#/login";
           }
           toast.error(result.error.data || "License Error");

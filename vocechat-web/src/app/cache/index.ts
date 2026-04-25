@@ -66,12 +66,5 @@ const initCache = () => {
   });
 };
 
-const clearCache = async () => {
-  if (!window.CACHE) return;
-  await Promise.all(
-    Object.values(window.CACHE).map((t: any) => t?.clear?.().catch(() => {}))
-  );
-};
-
-export { useRehydrate, clearCache };
+export { useRehydrate };
 export default initCache;
