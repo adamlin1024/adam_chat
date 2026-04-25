@@ -39,7 +39,7 @@ import { GroupAnnouncement } from "@/types/sse";
 export const serverApi = createApi({
   reducerPath: "serverApi",
   baseQuery,
-  tagTypes: ["GroupAnnouncements"],
+  tagTypes: ["GroupAnnouncements", "Files"],
   endpoints: (builder) => ({
     getServer: builder.query<Server, void>({
       query: () => ({ url: `/admin/system/organization` }),
@@ -281,6 +281,7 @@ export const serverApi = createApi({
           params as Record<string, string>
         ).toString()}`,
       }),
+      providesTags: ["Files"],
     }),
     updateLoginConfig: builder.mutation<void, Partial<LoginConfig>>({
       query: (data) => ({
@@ -403,17 +404,20 @@ export const serverApi = createApi({
         body: { license },
       }),
     }),
-    clearAllMessages: builder.query<void, void>({
+    clearAllMessages: builder.mutation<void, void>({
       query: () => ({
         url: "/admin/system/message/clear",
         method: "DELETE",
       }),
+      // 訊息清掉後，後端 join 會把對應的檔案紀錄濾掉 → 檔案頁也要 refetch
+      invalidatesTags: ["Files"],
     }),
-    clearAllFiles: builder.query<void, void>({
+    clearAllFiles: builder.mutation<void, void>({
       query: () => ({
         url: "/resource/file/delete",
         method: "DELETE",
       }),
+      invalidatesTags: ["Files"],
     }),
     getWidgetExtCSS: builder.query<string, void>({
       query: () => ({
@@ -533,8 +537,8 @@ export const {
   useGetSystemCommonQuery,
   useGenerateAgoraTokenMutation,
   useLazyGetAgoraUsersByChannelQuery,
-  useLazyClearAllFilesQuery,
-  useLazyClearAllMessagesQuery,
+  useClearAllFilesMutation,
+  useClearAllMessagesMutation,
   useLazyGetFilesQuery,
   useGetFilesQuery,
   useGetVocespaceConfigQuery,
