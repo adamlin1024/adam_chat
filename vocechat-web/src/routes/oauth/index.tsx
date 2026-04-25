@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { useLoginMutation } from "@/app/services/auth";
 import { setAuthData } from "@/app/slices/auth.data";
@@ -15,6 +15,7 @@ export default function OAuthPage() {
   const [searchParams] = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
+  const navigateTo = useNavigate();
   useEffect(() => {
     const startOauth = () => {
       if (!token) {
@@ -33,13 +34,13 @@ export default function OAuthPage() {
 
   useEffect(() => {
     if (isSuccess && data) {
-      // 硬導頁取代 router navigate：強制整個 app 重 mount，讓 usePreload /
-      // useStreaming SSE 連線從乾淨狀態啟動，避免 module-level state 殘留導致
-      // 登入後訊息列空白。
+      // 登入成功 → setAuthData → loginUid 變動 → usePreload 的 [loginUid] effect
+      // 會重跑 initCache + rehydrate + 重抓 users / favorites / systemCommon。
+      // 不再需要硬導頁。
       toast.success(ct("tip.login"));
       dispatch(setAuthData(data));
       const navPath = searchParams.get("path") || "/";
-      window.location.replace(navPath);
+      navigateTo(navPath);
     }
   }, [isSuccess, data]);
 
