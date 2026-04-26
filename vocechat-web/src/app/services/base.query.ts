@@ -29,7 +29,6 @@ const whiteList = [
   "getBotRelatedChannels",
   "sendMessageByBot",
   "getAgoraVoicingList",
-  "preCheckFileFromUrl",
   "passkeyLoginStart",
   "passkeyLoginFinish",
 ];
@@ -40,7 +39,6 @@ const whiteList401 = [
   "getGithubAuthConfig",
 ];
 const errorWhiteList = [
-  "preCheckFileFromUrl",
   "getFavoriteDetails",
   "getOGInfo",
   "getArchiveMessage",
@@ -52,7 +50,6 @@ const errorWhiteList = [
 const whiteList404 = [
   "login",
   "getArchiveMessage",
-  "preCheckFileFromUrl",
   "deleteMessage",
   "deleteMessages",
   "getWidgetExtCSS",

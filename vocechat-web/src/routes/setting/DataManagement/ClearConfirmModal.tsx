@@ -28,6 +28,13 @@ async function purgeImageCaches() {
   } catch {
     /* 不致命，吞掉 */
   }
+  // 清掉本機累積的「已知 404 file_path」名單；server 清完後若殭屍紀錄被一併移除，
+  // 不要再用過期名單擋掉新的同 path 紀錄。reload 後重新探測即可。
+  try {
+    localStorage.removeItem("EXPIRED_FILES_MAP");
+  } catch {
+    /* 不致命，吞掉 */
+  }
 }
 
 const ClearConfirmModal: FC<Props> = ({ context, title, desc, closeModal }) => {

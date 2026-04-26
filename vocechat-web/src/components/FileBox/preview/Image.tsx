@@ -1,9 +1,8 @@
-import { FC, useEffect, useState } from "react";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import { FC, useState } from "react";
 import { LineWobble } from "@uiball/loaders";
 import clsx from "clsx";
 
-import { useLazyPreCheckFileFromUrlQuery } from "@/app/services/message";
+import useExpiredResMap from "@/hooks/useExpiredResMap";
 
 interface Props {
   url: string;
@@ -11,60 +10,39 @@ interface Props {
 }
 
 const ImageBox: FC<Props> = ({ url, alt }) => {
-  const [loadFile, { error, isSuccess }] = useLazyPreCheckFileFromUrlQuery();
-  const [status, setStatus] = useState<"loading" | "loaded" | "error" | number>("loading");
+  const { isExpired, setExpired } = useExpiredResMap();
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">(
+    isExpired(url) ? "error" : "loading"
+  );
 
-  useEffect(() => {
-    if (url) {
-      loadFile(url);
-    }
-  }, [url]);
-  useEffect(() => {
-    // 预检成功
-    if (isSuccess && url) {
-      const img = new Image();
-      img.onload = () => {
-        setStatus("loaded");
-      };
-      img.onerror = () => {
-        setStatus("error");
-      };
-      img.src = url;
-    }
-    // 预检失败
-    if (error) {
-      const errNum = (error as FetchBaseQueryError).status;
-      console.log("error num", errNum);
-      switch (errNum) {
-        case 404:
-          setStatus(404);
-          break;
-
-        default:
-          // setStatus("error");
-          break;
-      }
-    }
-  }, [isSuccess, error, url]);
+  if (status === "error") {
+    return (
+      <div className="h-[218px] flex-center bg-danger/20">
+        <span className="text-lg text-danger">File not found, removed maybe</span>
+      </div>
+    );
+  }
 
   return (
-    <div
-      className={clsx(
-        "h-[218px] overflow-hidden flex-center",
-        status == "error" && "bg-danger/20"
-      )}
-    >
-      {status == "loaded" ? (
-        <img className="w-full h-full object-cover" src={url} alt={alt} />
-      ) : status == "loading" ? (
-        <span>
+    <div className="h-[218px] overflow-hidden flex-center relative">
+      {status === "loading" && (
+        <span className="absolute">
           <LineWobble color="rgb(21,91,117)" />
         </span>
-      ) : status == 404 ? (
-        <span className="text-lg text-danger">File not found, removed maybe</span>
-      ) : (
-        <span className="text-lg text-danger">Load image error</span>
       )}
+      <img
+        className={clsx(
+          "w-full h-full object-cover",
+          status !== "loaded" && "invisible"
+        )}
+        src={url}
+        alt={alt}
+        onLoad={() => setStatus("loaded")}
+        onError={() => {
+          setExpired(url);
+          setStatus("error");
+        }}
+      />
     </div>
   );
 };

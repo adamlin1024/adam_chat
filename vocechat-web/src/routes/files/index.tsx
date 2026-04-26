@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import clsx from "clsx";
 import Tippy from "@tippyjs/react";
 import BASE_URL from "@/app/config";
@@ -11,6 +11,7 @@ import { shallowEqual, useDispatch } from "react-redux";
 import { updateFileListView } from "@/app/slices/ui";
 import ChannelIcon from "@/components/ChannelIcon";
 import ImagePreviewModal from "@/components/ImagePreviewModal";
+import useExpiredResMap from "@/hooks/useExpiredResMap";
 
 import IconUnknown from "@/assets/icons/file.unknown.svg";
 import IconImage from "@/assets/icons/file.image.svg";
@@ -41,6 +42,7 @@ function Files() {
   const [previewImage, setPreviewImage] = useState<{ url: string; name: string } | null>(null);
   const view = useAppSelector((store) => store.ui.fileListView, shallowEqual);
   const channelMap = useAppSelector((store) => store.channels.byId, shallowEqual);
+  const { isExpired } = useExpiredResMap();
 
   // 用非 lazy 版 + currentData：args 變或還在 refetch 時 currentData 一律 undefined，
   // 不會把上次的 stale 結果先閃一下（殭屍紀錄會破圖、紅字、再被覆蓋的根因）
@@ -65,52 +67,21 @@ function Files() {
   // 同一個 file_path（content）會被多則 message 共用（轉發 / 複製訊息），
   // 列表預設按 message 列出 → 一張圖顯示 N 次。
   // 這裡按 thumbnail || content 去重，保留最新那一筆，視覺乾淨。
-  const dedupedFiles = useMemo(() => {
+  // 同時用 useExpiredResMap 過濾掉本機已知 404 的殭屍紀錄（避免再次嘗試載入），
+  // 使用者按下 ImagePreview 內部 onError 一次後即記錄、之後永久略過。
+  const files = useMemo(() => {
     const seen = new Map<string, typeof rawFiles[number]>();
     for (const f of rawFiles) {
       const key = (f.thumbnail || f.content) as string;
+      const url = `${BASE_URL}/resource/file?file_path=${encodeURIComponent(key)}`;
+      if (isExpired(url)) continue;
       const existing = seen.get(key);
       if (!existing || (f.created_at ?? 0) > (existing.created_at ?? 0)) {
         seen.set(key, f);
       }
     }
     return Array.from(seen.values());
-  }, [rawFiles]);
-
-  // 並行 HEAD 驗證每個檔案 URL，過濾掉伺服器已 404 的「殭屍訊息紀錄」。
-  // 為什麼放在這層 batch 做、不寫進 FileBox：
-  //  - 集中處理，避免每張卡片各自先冒出來、再 async 隱藏（畫面跳動）
-  //  - in-memory state，不再用 localStorage（不會跨清除動作累積、跨裝置不同步）
-  //  - 全部驗證完才把結果灌進 files state → 渲染當下就是「全乾淨」狀態
-  const [files, setFiles] = useState<typeof dedupedFiles>([]);
-  const [validating, setValidating] = useState(false);
-  useEffect(() => {
-    if (dedupedFiles.length === 0) {
-      setFiles([]);
-      return;
-    }
-    let cancelled = false;
-    setValidating(true);
-    Promise.all(
-      dedupedFiles.map(async (f) => {
-        const path = (f.thumbnail || f.content) as string;
-        const url = `${BASE_URL}/resource/file?file_path=${encodeURIComponent(path)}`;
-        try {
-          const r = await fetch(url, { method: "HEAD", cache: "no-cache" });
-          return r.ok ? f : null;
-        } catch {
-          return null;
-        }
-      })
-    ).then((results) => {
-      if (cancelled) return;
-      setFiles(results.filter((x): x is NonNullable<typeof x> => x !== null));
-      setValidating(false);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [dedupedFiles]);
+  }, [rawFiles, isExpired]);
 
   const selectedTypeLabel = typeFilters.find((f) => f.type === fileType)?.title ?? "全部";
 
@@ -234,14 +205,14 @@ function Files() {
                 : "grid gap-x-3 gap-y-1.5 auto-rows-[281px] grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
           )}
         >
-          {files.length === 0 && !isFetching && !validating && (
+          {files.length === 0 && !isFetching && (
             <EmptyState
               icon={<IconUnknown className="w-7 h-7" />}
               title="沒有檔案"
               desc="這個頻道 / 篩選條件下還沒有任何上傳的檔案"
             />
           )}
-          {files.length === 0 && (isFetching || validating) && (
+          {files.length === 0 && isFetching && (
             <div className="text-sm text-fg-muted">載入中…</div>
           )}
           {files.map((file) => {
