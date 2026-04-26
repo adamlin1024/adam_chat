@@ -57,7 +57,7 @@ export default function UpdateBanner() {
           <button
             onClick={onApply}
             disabled={applying}
-            className="px-3 py-1.5 text-xs font-medium text-white bg-accent hover:bg-accent/90 rounded-md transition-colors disabled:opacity-40"
+            className="px-3 py-1.5 text-xs font-medium text-accent-on bg-accent hover:bg-accent-hover rounded-md transition-colors disabled:opacity-40"
           >
             {applying ? "套用中…" : "重新載入"}
           </button>

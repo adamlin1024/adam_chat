@@ -90,7 +90,7 @@ export default function GoogleDriveSetting() {
   const button =
     "px-3 py-2 rounded-md text-sm font-medium border border-border text-fg-primary bg-bg-canvas hover:bg-bg-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
   const buttonPrimary =
-    "px-3 py-2 rounded-md text-sm font-medium text-white bg-accent hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
+    "px-3 py-2 rounded-md text-sm font-medium text-accent-on bg-accent hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
   const buttonDanger =
     "px-3 py-2 rounded-md text-sm font-medium border border-danger/40 text-danger bg-bg-canvas hover:bg-danger/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors";
 
