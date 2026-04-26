@@ -118,9 +118,15 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     // 結尾的 mid 變了 + 開頭的 mid 沒變 → append；反之為 prepend（或同時改、罕見）
     const isAppend =
       curr[curr.length - 1] !== prev[prev.length - 1] && curr[0] === prev[0];
+    const isPrepend = !isAppend && curr[0] !== prev[0];
 
     if (isAppend && !stickToBottomRef.current) {
       setWindowEndOffset((p) => p + growth);
+    }
+    // Prepend（loadMoreMessage 拉舊訊息）：要擴大 windowSize，不然新拉進來的訊息
+    // 不會進視窗 → 使用者看不到捲動效果。
+    if (isPrepend) {
+      setWindowSize((p) => p + growth);
     }
   }, [allMids]);
 
@@ -292,7 +298,8 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     if (offset < NEAR_EDGE_THRESHOLD) {
       if (windowStartIdx > 0) {
         isPrependRef.current = true;
-        setWindowSize((prev) => prev + WINDOW_GROW_CHUNK);
+        // 上限是 allMids.length，避免 onScroll 連續觸發無限長大
+        setWindowSize((prev) => Math.min(prev + WINDOW_GROW_CHUNK, allMids.length));
       } else if (historyMid !== "reached") {
         let lastMid = allMids[0];
         if (historyMid) {
