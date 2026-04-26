@@ -22,6 +22,15 @@ const initialState: State = {
   byId: {}
 };
 
+// vocechat-server 對「被刪除的使用者」採軟刪除：保留 user 紀錄但把 name 清掉（空字串）
+// 或改成 "Deleted User"。前端在 share / member / 更多 等列表把這類記錄整筆過濾掉，
+// 避免出現「DU」頭像佔位的孤兒項。
+const isDeletedShell = (u: { name?: string } | undefined | null) => {
+  if (!u) return true;
+  const n = (u.name ?? "").trim();
+  return n === "" || n === "Deleted User";
+};
+
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -30,7 +39,7 @@ const usersSlice = createSlice({
       return initialState;
     },
     fillUsers(state, action: PayloadAction<StoredUser[]>) {
-      const users = action.payload || [];
+      const users = (action.payload || []).filter((u) => !isDeletedShell(u));
       state.ids = users.map(({ uid }) => uid);
       state.byId = Object.fromEntries(
         users.map((c) => {
@@ -58,10 +67,19 @@ const usersSlice = createSlice({
                   state.byId[uid]!.avatar = `${BASE_URL}/resource/avatar?uid=${uid}&t=${vals[k]}`;
                 }
               });
+              // update 把 name 改成空 / "Deleted User" 即視同刪除，從 byId 拔掉
+              if (isDeletedShell(state.byId[uid])) {
+                const idx = state.ids.findIndex((i) => i == uid);
+                if (idx > -1) state.ids.splice(idx, 1);
+                delete state.byId[uid];
+              }
             }
             break;
           }
           case "create": {
+            // server 重播舊事件或推送軟刪除使用者時可能帶 name 為空 / "Deleted User"
+            // 直接拒絕灌入，避免 share / member 列表又長出 DU
+            if (isDeletedShell(rest)) break;
             state.byId[uid] = {
               uid,
               avatar:
