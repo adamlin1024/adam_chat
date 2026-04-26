@@ -18,6 +18,9 @@ interface Props {
 // 清除完成後一併把 Service Worker Cache Storage 內含 neko-talk 命名空間的快取整批刪掉。
 // 即使 SW 對 /api/resource/file 已強制 conditional revalidation，先前已 put 進 cache 的
 // 舊回應仍可能在離線 / 失敗時被當 fallback 餵出來，所以一併清乾淨。
+//
+// 注意：EXPIRED_FILES_MAP 不在這裡清。file_path 都是 UUID-like 路徑、不會跟新紀錄
+// collision；保留名單可避免 reload 後又一輪「紅塊閃出再標 expired」的視覺噪音。
 async function purgeImageCaches() {
   if (!("caches" in window)) return;
   try {
@@ -25,13 +28,6 @@ async function purgeImageCaches() {
     await Promise.all(
       keys.filter((k) => k.startsWith("neko-talk")).map((k) => caches.delete(k))
     );
-  } catch {
-    /* 不致命，吞掉 */
-  }
-  // 清掉本機累積的「已知 404 file_path」名單；server 清完後若殭屍紀錄被一併移除，
-  // 不要再用過期名單擋掉新的同 path 紀錄。reload 後重新探測即可。
-  try {
-    localStorage.removeItem("EXPIRED_FILES_MAP");
   } catch {
     /* 不致命，吞掉 */
   }
