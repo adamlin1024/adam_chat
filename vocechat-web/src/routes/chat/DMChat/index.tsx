@@ -15,6 +15,7 @@ import Layout from "../Layout";
 import { VirtualMessageFeedHandle } from "../Layout/VirtualMessageFeed";
 import VoiceChat from "../VoiceChat";
 import { shallowEqual } from "react-redux";
+import useChannelGapFill from "@/hooks/useChannelGapFill";
 
 type Props = {
   uid: number;
@@ -28,6 +29,8 @@ const DMChat: FC<Props> = ({ uid = 0, dropFiles }) => {
   const dispatch = useDispatch();
   const feedRef = useRef<VirtualMessageFeedHandle>(null);
   const currUser = useAppSelector((store) => store.users.byId[uid], shallowEqual);
+  // 進 DM 時把離線期間錯過的訊息從 server 補回本機 cache（兩端裝置同步）
+  useChannelGapFill("dm", uid);
 
   useEffect(() => {
     if (!currUser) {

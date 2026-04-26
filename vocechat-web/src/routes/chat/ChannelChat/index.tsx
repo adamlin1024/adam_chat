@@ -28,6 +28,7 @@ import { KEY_ADMIN_SEE_CHANNEL_MEMBERS } from "@/app/config";
 import useServerExtSetting from "@/hooks/useServerExtSetting";
 import useIsAnnouncementSupported from "@/hooks/useIsAnnouncementSupported";
 import useAnnouncementDisplay from "@/hooks/useAnnouncementDisplay";
+import useChannelGapFill from "@/hooks/useChannelGapFill";
 
 type Props = {
   cid?: number;
@@ -47,6 +48,8 @@ function ChannelChat({ cid = 0, dropFiles = [] }: Props) {
   const userIds = useAppSelector((store) => store.users.ids, shallowEqual);
   const data = useAppSelector((store) => store.channels.byId[cid], shallowEqual);
   const isAnnouncementSupported = useIsAnnouncementSupported();
+  // 進頻道時把離線期間錯過的訊息從 server 補回本機 cache（兩端裝置同步）
+  useChannelGapFill("channel", cid);
 
   const { data: announcementResponse } = useGetGroupAnnouncementQuery(cid, {
     skip: !cid || !isAnnouncementSupported,
