@@ -526,7 +526,10 @@ module.exports = function (webpackEnv) {
         new WorkboxWebpackPlugin.InjectManifest({
           swSrc,
           dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
-          exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
+          // packs.json 是會變的固定檔名（新增貼圖包就會改），不適合進 precache：
+          // 一旦 precache 進 IndexedDB 就鎖死，使用者必須按「立即更新」橫幅才會換掉。
+          // 改由 service-worker.ts 用 NetworkFirst route 處理。
+          exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/, /stickers\/packs\.json$/],
           // Bump up the default maximum size (2mb) that's precached,
           // to make lazy-loading failure scenarios less likely.
           // See https://github.com/cra-template/pwa/issues/13#issuecomment-722667270
