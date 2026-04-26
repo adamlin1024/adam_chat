@@ -34,11 +34,24 @@ export interface VirtualMessageFeedHandle {
   notifyFileSending: () => void;
 }
 
+// 滑動視窗常數：永遠只 render 視窗範圍內的訊息，避免大頻道一次塞 5000+ 進 React tree
+// 觸發白屏 / 卡死。
+const WINDOW_DEFAULT_SIZE = 50;       // 預設視窗大小（最近的 N 筆）
+const WINDOW_GROW_CHUNK = 50;         // 每次往上 / 往下擴展的步長
+const SEARCH_TARGET_BACKWARD = 200;   // 跳到搜尋結果時，target 上方保留多少筆
+const SEARCH_TARGET_FORWARD = 50;     // 跳到搜尋結果時，target 下方保留多少筆
+const NEAR_EDGE_THRESHOLD = 100;      // 接近邊緣的 px 門檻
+
 const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ context, id }, ref) => {
   const dispatch = useDispatch();
   const [atBottom, setAtBottom] = useState(true);
   const stickToBottomRef = useRef(true);
-  const [visibleCount, setVisibleCount] = useState(50);
+  // 視窗狀態：mids = allMids.slice(allMids.length - windowEndOffset - windowSize, allMids.length - windowEndOffset)
+  //   windowEndOffset = 0 → 視窗底端對齊 allMids 結尾（最新訊息）
+  //   windowEndOffset > 0 → 視窗底端往上偏移 N 筆（停在中段，例如跳到搜尋結果）
+  //   windowSize → 視窗包含多少筆訊息
+  const [windowSize, setWindowSize] = useState(WINDOW_DEFAULT_SIZE);
+  const [windowEndOffset, setWindowEndOffset] = useState(0);
   // Track prepend operations so virtua's shift prop can compensate scroll position
   const isPrependRef = useRef(false);
   const [loadMoreMessage, { isLoading: loadingMore, isSuccess, data: historyData }] =
@@ -64,10 +77,13 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     shallowEqual
   );
 
+  // 滑動視窗：從 allMids 切出實際 render 範圍。windowEndOffset 控制底端對齊位置，
+  // windowSize 控制寬度。永遠不超過 windowSize 筆，避免 5000+ 訊息一次塞進 React tree。
+  const windowEndIdx = Math.max(0, allMids.length - windowEndOffset);
+  const windowStartIdx = Math.max(0, windowEndIdx - windowSize);
   const mids = useMemo(() => {
-    if (allMids.length <= visibleCount) return allMids;
-    return allMids.slice(-visibleCount);
-  }, [allMids, visibleCount]);
+    return allMids.slice(windowStartIdx, windowEndIdx);
+  }, [allMids, windowStartIdx, windowEndIdx]);
 
   const prevMidsRef = useRef<number[]>([]);
   const prevMidsLenRef = useRef(0);
@@ -86,19 +102,27 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     return mids;
   }, [mids]);
 
-  // Detect whether the data change is a prepend (items added at start)
-  // or an append (items added at end). When not at bottom and new messages
-  // arrive, allMids grows but slice(-visibleCount) slides the window,
-  // removing items from the start. We need to grow visibleCount to prevent this.
+  // 偵測 allMids 變動方向。Prepend（loadMoreMessage 拉舊訊息）windowEndOffset 不需動，
+  // 因為 offset 是從 end 算的、prepend 不影響尾端。Append（新訊息進來）若使用者沒在
+  // stick-to-bottom，要把 windowEndOffset 加 growth，視窗才會停在原本看的位置不被推走。
+  const prevAllMidsRef = useRef<number[]>([]);
   useEffect(() => {
-    if (!stickToBottomRef.current && allMids.length > prevMidsLenRef.current) {
-      // New messages arrived while scrolled up — grow visibleCount so the
-      // slice window doesn't slide and remove items from the top
-      const growth = allMids.length - prevMidsLenRef.current;
-      setVisibleCount((prev) => prev + growth);
+    const prev = prevAllMidsRef.current;
+    const curr = allMids;
+    prevAllMidsRef.current = curr;
+    prevMidsLenRef.current = curr.length;
+
+    if (prev.length === 0 || curr.length <= prev.length) return;
+
+    const growth = curr.length - prev.length;
+    // 結尾的 mid 變了 + 開頭的 mid 沒變 → append；反之為 prepend（或同時改、罕見）
+    const isAppend =
+      curr[curr.length - 1] !== prev[prev.length - 1] && curr[0] === prev[0];
+
+    if (isAppend && !stickToBottomRef.current) {
+      setWindowEndOffset((p) => p + growth);
     }
-    prevMidsLenRef.current = allMids.length;
-  }, [allMids.length]);
+  }, [allMids]);
 
   const selects = useAppSelector(
     (store) => store.ui.selectMessages[`${context}_${id}`],
@@ -139,10 +163,12 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
 
   // Reset on conversation switch
   useEffect(() => {
-    setVisibleCount(50);
+    setWindowSize(WINDOW_DEFAULT_SIZE);
+    setWindowEndOffset(0);
     stickToBottomRef.current = true;
     setAtBottom(true);
     isPrependRef.current = false;
+    prevAllMidsRef.current = [];
   }, [id]);
 
   // Scroll to bottom after conversation switch (after render)
@@ -175,58 +201,64 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     isPrependRef.current = false;
   });
 
-  // Handle scrollToMessage custom event
+  // 用 ref 抓 allMids，讓 scrollToMessageInternal callback 不必每次 allMids 變動就重建
+  const allMidsRef = useRef(allMids);
+  allMidsRef.current = allMids;
+
+  // 跳到指定 mid 的核心邏輯（搜尋結果點擊 / 點 reply 跳轉共用）
+  // 關鍵：只把視窗移到 target 周圍 ~250 筆，不再 setVisibleCount(allMids.length)
+  // 整個歷史塞進 React tree → 不會白屏。
+  const scrollToMessageInternal = useCallback((mid: number) => {
+    const list = allMidsRef.current;
+    const idx = list.findIndex((m) => m === mid);
+    if (idx === -1) return;
+
+    const newEnd = Math.min(list.length, idx + 1 + SEARCH_TARGET_FORWARD);
+    const newStart = Math.max(0, idx - SEARCH_TARGET_BACKWARD);
+    const newSize = newEnd - newStart;
+    const newEndOffset = list.length - newEnd;
+
+    setWindowSize(newSize);
+    setWindowEndOffset(newEndOffset);
+    stickToBottomRef.current = false;
+    isPrependRef.current = false;
+
+    // 等視窗 state 套用 + virtua 重排，再捲到 target 的索引位置
+    const targetIndexInWindow = idx - newStart;
+    setTimeout(() => {
+      vRef.current?.scrollToIndex(extraItemCountRef.current + targetIndexInWindow, {
+        align: "center",
+        smooth: true,
+      });
+      setTimeout(() => {
+        const msgEle = document.querySelector<HTMLDivElement>(`[data-msg-mid='${mid}']`);
+        if (msgEle) {
+          const _class1 = `md:dark:bg-bg-elevated`;
+          const _class2 = `md:bg-bg-elevated`;
+          msgEle.classList.add(_class1);
+          msgEle.classList.add(_class2);
+          setTimeout(() => {
+            msgEle.classList.remove(_class1);
+            msgEle.classList.remove(_class2);
+          }, 3000);
+        }
+      }, 500);
+    }, 100);
+  }, []);
+
+  // 點 Reply 內的引用觸發的 custom event（vocechat-web 既有 pattern）
   useEffect(() => {
     const feedId = `VOCECHAT_FEED_${context}_${id}`;
     const feedEle = document.getElementById(feedId);
-
-    const handleScrollToMessage = (evt: CustomEvent) => {
-      const { mid } = evt.detail;
-      const index = stableMids.findIndex((m) => m === mid);
-      if (index !== -1 && vRef.current) {
-        vRef.current.scrollToIndex(extraItemCountRef.current + index, { align: "center", smooth: true });
-        setTimeout(() => {
-          const msgEle = document.querySelector<HTMLDivElement>(`[data-msg-mid='${mid}']`);
-          if (msgEle) {
-            const _class1 = `md:dark:bg-bg-elevated`;
-            const _class2 = `md:bg-bg-elevated`;
-            msgEle.classList.add(_class1);
-            msgEle.classList.add(_class2);
-            setTimeout(() => {
-              msgEle.classList.remove(_class1);
-              msgEle.classList.remove(_class2);
-            }, 3000);
-          }
-        }, 500);
-      } else if (allMids.includes(mid)) {
-        setVisibleCount(allMids.length);
-        setTimeout(() => {
-          const idx = allMids.findIndex((m) => m === mid);
-          if (idx !== -1 && vRef.current) {
-            vRef.current.scrollToIndex(extraItemCountRef.current + idx, { align: "center", smooth: true });
-            setTimeout(() => {
-              const msgEle = document.querySelector<HTMLDivElement>(`[data-msg-mid='${mid}']`);
-              if (msgEle) {
-                const _class1 = `md:dark:bg-bg-elevated`;
-                const _class2 = `md:bg-bg-elevated`;
-                msgEle.classList.add(_class1);
-                msgEle.classList.add(_class2);
-                setTimeout(() => {
-                  msgEle.classList.remove(_class1);
-                  msgEle.classList.remove(_class2);
-                }, 3000);
-              }
-            }, 500);
-          }
-        }, 100);
-      }
+    const handler = (evt: Event) => {
+      const detail = (evt as CustomEvent).detail;
+      if (detail?.mid != null) scrollToMessageInternal(Number(detail.mid));
     };
-
-    feedEle?.addEventListener("scrollToMessage", handleScrollToMessage as EventListener);
+    feedEle?.addEventListener("scrollToMessage", handler);
     return () => {
-      feedEle?.removeEventListener("scrollToMessage", handleScrollToMessage as EventListener);
+      feedEle?.removeEventListener("scrollToMessage", handler);
     };
-  }, [context, id, stableMids, allMids]);
+  }, [context, id, scrollToMessageInternal]);
 
   useEffect(() => {
     if (isSuccess && historyData) {
@@ -239,22 +271,30 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     }
   }, [isSuccess, historyData, stableMids, context, id]);
 
-  // onScroll: detect atBottom state
+  // onScroll: detect atBottom state + 視窗滑動
   const handleScroll = useCallback((offset: number) => {
     if (!vRef.current) return;
     const handle = vRef.current;
-    const isAtBottom = offset - handle.scrollSize + handle.viewportSize >= -50;
-    stickToBottomRef.current = isAtBottom;
-    setAtBottom(isAtBottom);
+    const isAtBottomOfRender = offset - handle.scrollSize + handle.viewportSize >= -50;
 
-    // Load more when near top
-    if (offset < 100) {
-      if (allMids.length > visibleCount) {
+    // 整體底端 = 渲染底端 + 視窗底端對齊 allMids 結尾。只有這時才該設 stickToBottom
+    const atOverallBottom = isAtBottomOfRender && windowEndOffset === 0;
+    stickToBottomRef.current = atOverallBottom;
+    setAtBottom(atOverallBottom);
+
+    // 滑到渲染底端但視窗還沒對齊 allMids 結尾（之前跳搜尋結果停在中段）→ 視窗往下滑
+    if (isAtBottomOfRender && windowEndOffset > 0) {
+      isPrependRef.current = false;
+      setWindowEndOffset((p) => Math.max(0, p - WINDOW_GROW_CHUNK));
+    }
+
+    // 滑到渲染頂端 → 先擴大視窗（往上加），視窗已涵蓋 allMids[0] 才向 server 拉舊訊息
+    if (offset < NEAR_EDGE_THRESHOLD) {
+      if (windowStartIdx > 0) {
         isPrependRef.current = true;
-        setVisibleCount((prev) => Math.min(prev + 50, allMids.length));
-      } else {
-        if (historyMid === "reached") return;
-        let lastMid = allMids.slice(0, 1)[0];
+        setWindowSize((prev) => prev + WINDOW_GROW_CHUNK);
+      } else if (historyMid !== "reached") {
+        let lastMid = allMids[0];
         if (historyMid) {
           lastMid = +historyMid;
         }
@@ -262,29 +302,24 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
         loadMoreMessage({ context, id, mid: lastMid });
       }
     }
-  }, [allMids, visibleCount, historyMid, context, id, loadMoreMessage]);
+  }, [allMids, windowStartIdx, windowEndOffset, historyMid, context, id, loadMoreMessage]);
 
   const handleScrollBottom = useCallback(() => {
+    // 用戶按「跳到最新」：視窗強制對齊到 allMids 結尾 + stick to bottom
+    setWindowEndOffset(0);
+    setWindowSize(WINDOW_DEFAULT_SIZE);
     stickToBottomRef.current = true;
-    scrollToBottom();
+    isPrependRef.current = false;
+    // 等視窗套用後再捲到底
+    setTimeout(() => scrollToBottom(), 50);
   }, [scrollToBottom]);
 
   useImperativeHandle(ref, () => ({
-    scrollToMessage: (mid: number) => {
-      const index = stableMids.findIndex((m) => m === mid);
-      if (index !== -1 && vRef.current) {
-        vRef.current.scrollToIndex(extraItemCountRef.current + index, { align: "center", smooth: true });
-      } else if (allMids.includes(mid)) {
-        setVisibleCount(allMids.length);
-        setTimeout(() => {
-          const idx = allMids.findIndex((m) => m === mid);
-          if (idx !== -1 && vRef.current) {
-            vRef.current.scrollToIndex(extraItemCountRef.current + idx, { align: "center", smooth: true });
-          }
-        }, 100);
-      }
-    },
+    scrollToMessage: scrollToMessageInternal,
     notifyFileSending: () => {
+      // 送檔案：跳回視窗底端 + stick to bottom，確保送出後看得到自己的訊息
+      setWindowEndOffset(0);
+      setWindowSize(WINDOW_DEFAULT_SIZE);
       stickToBottomRef.current = true;
       requestAnimationFrame(() => {
         scrollToBottom();
