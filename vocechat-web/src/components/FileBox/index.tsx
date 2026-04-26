@@ -1,8 +1,9 @@
-import { FC, ReactElement } from "react";
+import { FC, ReactElement, useEffect } from "react";
 import clsx from "clsx";
 
 import { useAppSelector } from "@/app/store";
 import { formatBytes, fromNowTime, getFileIcon } from "@/utils";
+import useExpiredResMap from "@/hooks/useExpiredResMap";
 import {
   AudioPreview,
   CodePreview,
@@ -24,13 +25,16 @@ const renderPreview = (data: Data) => {
   const { file_type, name = "", content } = data;
   let preview: null | ReactElement = null;
 
+  // 不用 /g 旗標 —— 重複 .test() 會記住 lastIndex 造成 alternating true/false 的詭異行為。
+  // 不需要 case-insensitive 的 anchor 搜尋也不該用 /i 配 ^（content_type 來源都是
+  // 標準小寫 mime），但保留 /i 作為防禦。
   const checks = {
-    image: /^image/gi,
-    audio: /^audio/gi,
-    video: /^video/gi,
-    code: /(json|javascript|java|rb|c|php|xml|css|html)$/gi,
-    doc: /^text/gi,
-    pdf: /\/pdf$/gi,
+    image: /^image/i,
+    audio: /^audio/i,
+    video: /^video/i,
+    code: /(json|javascript|java|rb|c|php|xml|css|html)$/i,
+    doc: /^text/i,
+    pdf: /\/pdf$/i,
   };
   const _arr = name.split(".");
   const _type = file_type || _arr[_arr.length - 1];
@@ -86,13 +90,40 @@ const FileBox: FC<Props> = ({
   onImageClick,
 }) => {
   const fromUser = useAppSelector((store) => store.users.byId[from_uid], shallowEqual);
+  const { isExpired, isValidated, setExpired, setValidated } = useExpiredResMap();
   const icon = getFileIcon(file_type, name, "icon w-9 h-12");
 
+  // 上層一處統一偵測檔案是否還存在 — 不論 image / video / pdf / zip / 任何 mime 都
+  // 走同一條路：HEAD 探測 → 404 標 expired → return null（卡片消失）/ 200 標 validated
+  // → 後續永不再探測。preview 子元件不需各自處理 404，因為這裡已經先擋掉了。
+  useEffect(() => {
+    if (!content) return;
+    if (isExpired(content) || isValidated(content)) return;
+    let cancelled = false;
+    fetch(content, { method: "HEAD" })
+      .then((r) => {
+        if (cancelled) return;
+        if (r.ok) {
+          setValidated(content);
+        } else {
+          setExpired(content);
+        }
+      })
+      .catch(() => {
+        // 網路斷線 / CORS 錯誤 — 不要當 404 處理（避免暫時性錯誤永久標 expired），
+        // 留待下次再探測
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [content, isExpired, isValidated, setExpired, setValidated]);
+
   if (!content) return null;
+  if (isExpired(content)) return null;
 
   const previewContent = renderPreview({ file_type, content, name });
   const withPreview = preview && previewContent;
-  const isImage = /^image/gi.test(file_type);
+  const isImage = /^image/i.test(file_type);
 
   return (
     <div

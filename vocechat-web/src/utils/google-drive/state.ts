@@ -14,6 +14,10 @@ export type DriveSavedFile = {
 export type DriveAppState = {
   version: 1;
   savedFiles: Record<string, DriveSavedFile>;
+  // 跨裝置同步「已知 404 / 已驗證 200」的檔案 path → discoveredAt timestamp
+  // 這樣手機標過的 expired，桌機進來就不用再探測一次。
+  expiredFiles?: Record<string, number>;
+  validatedFiles?: Record<string, number>;
 };
 
 const EMPTY_STATE: DriveAppState = { version: 1, savedFiles: {} };
@@ -52,7 +56,9 @@ export async function loadDriveState(folderId: string): Promise<DriveAppState> {
   if (!parsed || typeof parsed !== "object") return { ...EMPTY_STATE };
   return {
     version: 1,
-    savedFiles: parsed.savedFiles ?? {}
+    savedFiles: parsed.savedFiles ?? {},
+    expiredFiles: parsed.expiredFiles ?? {},
+    validatedFiles: parsed.validatedFiles ?? {}
   };
 }
 

@@ -17,6 +17,7 @@ import InvitePrivate from "./invitePrivate";
 import LazyIt from "./lazy";
 import InviteInMobile from "./reg/InviteInMobile";
 import usePrefetchData from "@/hooks/usePrefetchData";
+import useDriveExpiredSync from "@/hooks/useDriveExpiredSync";
 
 import HomePage from "./home";
 import UpdateBanner from "@/components/UpdateBanner";
@@ -49,6 +50,8 @@ const PageRoutes = () => {
   useDeviceToken(vapidKey);
   // 初始化元信息
   usePrefetchData();
+  // 跨裝置同步 expired / validated 檔案名單（已連動 Drive 才生效）
+  useDriveExpiredSync();
   // 掉线检测
   useEffect(() => {
     if (!online) {
