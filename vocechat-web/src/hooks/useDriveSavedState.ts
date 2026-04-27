@@ -20,6 +20,7 @@ import {
 import {
   deleteDriveFile,
   getStoredToken,
+  requestAccessToken,
   type PickedFolder
 } from "@/utils/google-drive";
 
@@ -65,30 +66,47 @@ export function useDriveSavedState() {
   }, [folder, drive.folder?.id, drive.folder?.name, dispatch]);
 
   // folder 改變時自動 refresh
-  const refresh = useCallback(async () => {
-    if (!folder?.id) {
-      dispatch(setDriveSavedFiles({}));
-      return;
-    }
-    if (!getStoredToken()) {
-      dispatch(setDriveSavedFiles({}));
-      return;
-    }
-    dispatch(setDriveLoading(true));
-    dispatch(setDriveError(null));
-    try {
-      const next = await loadDriveState(folder.id);
-      dispatch(setDriveSavedFiles(next.savedFiles));
-      channel?.postMessage({
-        type: "snapshot",
-        map: next.savedFiles
-      } as BroadcastMsg);
-    } catch (e: any) {
-      dispatch(setDriveError(e?.message ?? String(e)));
-    } finally {
-      dispatch(setDriveLoading(false));
-    }
-  }, [folder?.id, dispatch]);
+  // 注意：refresh 可能在 useEffect 自動觸發（folder 變動）或使用者點按鈕觸發。
+  // token 過期時：
+  //   - useEffect 自動觸發 → 不能彈 popup（沒 user gesture），靜默放著
+  //   - 使用者點按鈕觸發 → 可以彈 popup，主動 requestAccessToken
+  // 用 caller 傳的 fromUserGesture 區分這兩種情境。
+  const refresh = useCallback(
+    async (opts: { fromUserGesture?: boolean } = {}) => {
+      if (!folder?.id) {
+        dispatch(setDriveSavedFiles({}));
+        return;
+      }
+      if (!getStoredToken()) {
+        if (!opts.fromUserGesture) {
+          // 自動觸發 + 過期 → 不打擾使用者
+          return;
+        }
+        // 使用者主動點 → 嘗試拿新 token（會跳 popup 一次）
+        try {
+          await requestAccessToken();
+        } catch {
+          // 使用者取消 popup 或拿不到 token，當作什麼都沒發生
+          return;
+        }
+      }
+      dispatch(setDriveLoading(true));
+      dispatch(setDriveError(null));
+      try {
+        const next = await loadDriveState(folder.id);
+        dispatch(setDriveSavedFiles(next.savedFiles));
+        channel?.postMessage({
+          type: "snapshot",
+          map: next.savedFiles
+        } as BroadcastMsg);
+      } catch (e: any) {
+        dispatch(setDriveError(e?.message ?? String(e)));
+      } finally {
+        dispatch(setDriveLoading(false));
+      }
+    },
+    [folder?.id, dispatch]
+  );
 
   useEffect(() => {
     if (lastFolderId.current === (folder?.id ?? null)) return;

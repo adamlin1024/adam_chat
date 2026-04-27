@@ -27,7 +27,7 @@ export default function GoogleDriveSetting() {
       await requestAccessToken({ prompt: "consent" });
       setTokenStatus("已授權");
       toast.success("已連動 Google Drive");
-      await refresh();
+      await refresh({ fromUserGesture: true });
     } catch (e: any) {
       toast.error(`連動失敗：${e.message ?? e}`);
     } finally {
@@ -160,7 +160,7 @@ export default function GoogleDriveSetting() {
                 </button>
                 <button
                   className={button}
-                  onClick={refresh}
+                  onClick={() => refresh({ fromUserGesture: true })}
                   disabled={busy || !folder}
                 >
                   從 Drive 重新載入
