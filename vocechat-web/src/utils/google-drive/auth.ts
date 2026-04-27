@@ -26,8 +26,14 @@ export function getStoredToken(): DriveToken | null {
   }
 }
 
-/** 是否有「曾經授權過」的 raw 資料（不論是否過期） — 用來判斷要不要嘗試 silent refresh */
-function hasRawStoredToken(): boolean {
+/**
+ * 是否有「曾經授權過」的 raw 資料（不論是否過期）。
+ * 用來判斷 UI 顯示已 / 未授權 — 純 JS 前端在 Chrome 第三方 cookies 限制下
+ * 沒有真正的 silent refresh 能力（GIS popup 在無 user gesture 環境會被擋），
+ * 所以只要 raw 還在就視為「已連動」，等使用者操作 Drive 時再由 user gesture
+ * 觸發 popup 續約（grant 還在的話通常一閃即逝）。
+ */
+export function hasRawStoredToken(): boolean {
   try {
     const raw = localStorage.getItem(TOKEN_KEY);
     if (!raw) return false;
@@ -98,24 +104,16 @@ export async function silentRefresh(): Promise<void> {
 }
 
 /**
- * App 載入時呼叫一次：
- *  - 已有有效 token → 排續約
- *  - 有過期的 raw token（曾授權過）→ 嘗試 silent refresh，成功就排續約、失敗靜默放棄
+ * App 載入時呼叫一次：若已有有效 token，安排自動續約。
  *
- * Google access token 只活 1 小時；關閉 App 後 setTimeout 隨進程結束，續約鏈會斷。
- * 重啟時若不主動 silent refresh，使用者會看到「未授權」即使 Google 端其實還記得授權。
+ * 不在這裡嘗試「raw 還在但過期」的 silent refresh —— GIS 在沒有 user gesture
+ * 的環境裡 popup 會被瀏覽器擋掉（Chrome 第三方 cookies 政策也讓 hidden iframe
+ * silent flow 失效），徒增 console error 沒有幫助。
+ * 真正的續約由 `requestAccessToken` 在使用者點按鈕時（user gesture）觸發。
  */
 export function initDriveAutoRenew() {
   const t = getStoredToken();
-  if (t) {
-    scheduleSilentRenew(t);
-    return;
-  }
-  if (hasRawStoredToken()) {
-    silentRefresh().catch(() => {
-      // 靜默失敗 — 使用者下次手動點「連動」會走完整 OAuth flow
-    });
-  }
+  if (t) scheduleSilentRenew(t);
 }
 
 /**

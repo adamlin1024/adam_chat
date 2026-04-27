@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 import {
   clearStoredToken,
-  getStoredToken,
+  hasRawStoredToken,
   pickFolder,
   requestAccessToken,
   revokeAccess
@@ -13,28 +13,13 @@ import { useDriveSavedState } from "@/hooks/useDriveSavedState";
 export default function GoogleDriveSetting() {
   const { folder, setFolder, state, loading, refresh, unmarkSaved, reset } =
     useDriveSavedState();
+  // 只要 raw token 還在就視為「已連動」，不論是否在 1 小時內。
+  // GIS 沒有真正的前端 silent refresh 能力（Chrome 第三方 cookies + popup blocker），
+  // 過期續約交給使用者下一次操作（user gesture 內 popup 通常一閃即逝）。
   const [tokenStatus, setTokenStatus] = useState(() =>
-    getStoredToken() ? "已授權" : "未授權"
+    hasRawStoredToken() ? "已授權" : "未授權"
   );
   const [busy, setBusy] = useState(false);
-
-  // App 啟動時的 silent refresh 是非同步的：進設定頁的瞬間 token 可能還沒拿到、
-  // 但幾秒後就到了。輪詢一下 localStorage 把 UI 推到「已授權」，避免使用者看到
-  // 假的「未授權」而誤點重新連動。
-  useEffect(() => {
-    if (tokenStatus === "已授權") return;
-    const id = setInterval(() => {
-      if (getStoredToken()) {
-        setTokenStatus("已授權");
-        clearInterval(id);
-      }
-    }, 500);
-    const stop = setTimeout(() => clearInterval(id), 10_000);
-    return () => {
-      clearInterval(id);
-      clearTimeout(stop);
-    };
-  }, [tokenStatus]);
 
   const onConnect = async () => {
     setBusy(true);

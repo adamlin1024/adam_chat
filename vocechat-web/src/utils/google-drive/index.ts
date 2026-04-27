@@ -3,6 +3,7 @@ export { deleteDriveFile } from "./api";
 export {
   requestAccessToken,
   getStoredToken,
+  hasRawStoredToken,
   clearStoredToken,
   revokeAccess,
   initDriveAutoRenew,
