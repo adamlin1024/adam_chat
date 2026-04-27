@@ -146,8 +146,8 @@
     "sending": "傳送中…",
     "drive_account_mismatch_title": "Drive 帳號不一致",
     "drive_account_mismatch_desc": "目前綁定的是「{{bound}}」，但你剛剛選了「{{picked}}」。請重新嘗試並選擇「{{bound}}」，或先到設定頁中斷連動再以新帳號重新連動。",
-    "drive_folder_not_accessible_title": "Drive 資料夾無法存取",
-    "drive_folder_not_accessible_desc": "目前 Google 帳號看不到綁定的資料夾，可能原因：（1）帳號跟當初綁定的不同；（2）資料夾已被刪除。請到設定頁「中斷連動」後重新連動到正確帳號。"
+    "drive_folder_not_accessible_title": "Google 帳號錯誤",
+    "drive_folder_not_accessible_desc": "目前帳號跟綁定的資料夾不符，請重新點上傳，並在彈窗中選擇正確的 Google 帳號（資料夾擁有者）。若仍失敗，可能是資料夾已被刪除，需到設定頁重新選擇。"
   },
   "new_version": "有<0>新版本</0>",
   "mobile_app": "歡迎下載使用<0>手機 APP</0>",

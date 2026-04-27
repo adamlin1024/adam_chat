@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { useDriveSavedState } from "@/hooks/useDriveSavedState";
 import {
+  clearStoredToken,
   DriveAccountMismatchError,
   DriveFolderNotAccessibleError,
   pickFolder,
@@ -124,6 +125,9 @@ const SaveToCloudButton = ({
           { duration: 6000 }
         );
       } else if (e instanceof DriveFolderNotAccessibleError) {
+        // 帳號跟綁定資料夾對不到 → 清掉錯帳號的 token + bound_user，
+        // 使用者再點一次上傳就會重新跳 popup、可以挑正確帳號。
+        clearStoredToken();
         toast.error(
           `${t("tip.drive_folder_not_accessible_title")} — ${t("tip.drive_folder_not_accessible_desc")}`,
           { duration: 8000 }
