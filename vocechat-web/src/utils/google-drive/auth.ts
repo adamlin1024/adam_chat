@@ -2,6 +2,7 @@ import { GOOGLE_CLIENT_ID, GOOGLE_DRIVE_SCOPE } from "./config";
 import { loadGIS } from "./loader";
 
 const TOKEN_KEY = "google_drive_token";
+const BOUND_USER_KEY = "google_drive_bound_user";
 // token 過期前提早多少 ms 嘗試 silent refresh（5 分鐘）
 const RENEW_BEFORE_MS = 5 * 60 * 1000;
 
@@ -10,6 +11,27 @@ export type DriveToken = {
   expires_at: number; // ms timestamp
   scope: string;
 };
+
+export type BoundUser = {
+  permissionId: string;
+  displayName: string;
+};
+
+/**
+ * 帳號不一致：使用者綁定的是 A，但 popup 中選了 B。
+ * 上層 catch 後可顯示 i18n 提示讓使用者重試或切換。
+ */
+export class DriveAccountMismatchError extends Error {
+  readonly code = "DRIVE_ACCOUNT_MISMATCH" as const;
+  readonly boundName: string;
+  readonly pickedName: string;
+  constructor(boundName: string, pickedName: string) {
+    super(`Drive account mismatch: bound "${boundName}", picked "${pickedName}"`);
+    this.name = "DriveAccountMismatchError";
+    this.boundName = boundName;
+    this.pickedName = pickedName;
+  }
+}
 
 let renewTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -46,10 +68,44 @@ export function hasRawStoredToken(): boolean {
 
 export function clearStoredToken() {
   localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(BOUND_USER_KEY);
   if (renewTimer) {
     clearTimeout(renewTimer);
     renewTimer = null;
   }
+}
+
+function getBoundUser(): BoundUser | null {
+  try {
+    const raw = localStorage.getItem(BOUND_USER_KEY);
+    if (!raw) return null;
+    const u = JSON.parse(raw) as Partial<BoundUser>;
+    if (!u.permissionId || !u.displayName) return null;
+    return u as BoundUser;
+  } catch {
+    return null;
+  }
+}
+
+function setBoundUser(u: BoundUser) {
+  localStorage.setItem(BOUND_USER_KEY, JSON.stringify(u));
+}
+
+/** 用 access token 拉一次 Drive about，拿目前帳號的 permissionId + displayName */
+async function fetchDriveUser(accessToken: string): Promise<BoundUser> {
+  const res = await fetch(
+    "https://www.googleapis.com/drive/v3/about?fields=user(permissionId,displayName)",
+    { headers: { Authorization: `Bearer ${accessToken}` } }
+  );
+  if (!res.ok) throw new Error(`fetch drive user failed: ${res.status}`);
+  const json = (await res.json()) as { user?: Partial<BoundUser> };
+  if (!json.user?.permissionId || !json.user?.displayName) {
+    throw new Error("drive about response missing user fields");
+  }
+  return {
+    permissionId: json.user.permissionId,
+    displayName: json.user.displayName
+  };
 }
 
 function storeToken(t: DriveToken) {
@@ -119,6 +175,11 @@ export function initDriveAutoRenew() {
 /**
  * 觸發 Google OAuth popup，取得 access token。
  * 若已有有效 token，直接回傳；否則彈窗讓使用者授權。
+ *
+ * 帳號驗證：popup 後使用者可能選了「不同 Google 帳號」（例如綁定 A、選了 B）。
+ * callback 拿到新 token 後會先打 Drive about 拿 permissionId，跟綁定使用者比對：
+ *   - 不一致 → 不存新 token、reject DriveAccountMismatchError
+ *   - 一致或第一次 → 存 token + 更新 bound_user
  */
 export async function requestAccessToken(opts: { prompt?: "" | "consent" } = {}): Promise<DriveToken> {
   const cached = getStoredToken();
@@ -132,7 +193,7 @@ export async function requestAccessToken(opts: { prompt?: "" | "consent" } = {})
       client_id: GOOGLE_CLIENT_ID,
       scope: GOOGLE_DRIVE_SCOPE,
       prompt: opts.prompt ?? "",
-      callback: (response) => {
+      callback: async (response) => {
         if (response.error) {
           reject(new Error(response.error));
           return;
@@ -143,6 +204,20 @@ export async function requestAccessToken(opts: { prompt?: "" | "consent" } = {})
           expires_at: Date.now() + expiresIn * 1000,
           scope: response.scope ?? GOOGLE_DRIVE_SCOPE
         };
+        try {
+          const newUser = await fetchDriveUser(t.access_token);
+          const bound = getBoundUser();
+          if (bound && bound.permissionId !== newUser.permissionId) {
+            // 帳號不一致 — 不存新 token，讓使用者重試
+            reject(new DriveAccountMismatchError(bound.displayName, newUser.displayName));
+            return;
+          }
+          // 第一次或一致 → 寫 / 更新 bound_user
+          setBoundUser(newUser);
+        } catch (e) {
+          // 拿不到使用者資訊（API 失敗等）— 不擋正常流程，但記錄到 console
+          console.warn("[Drive] fetch user failed, skip identity check", e);
+        }
         storeToken(t);
         resolve(t);
       },

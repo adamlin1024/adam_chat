@@ -143,7 +143,9 @@
     "unpin_success": "已取消置頂",
     "min_length_6": "至少 6 個字元",
     "updated": "已更新",
-    "sending": "傳送中…"
+    "sending": "傳送中…",
+    "drive_account_mismatch_title": "Drive 帳號不一致",
+    "drive_account_mismatch_desc": "目前綁定的是「{{bound}}」，但你剛剛選了「{{picked}}」。請重新嘗試並選擇「{{bound}}」，或先到設定頁中斷連動再以新帳號重新連動。"
   },
   "new_version": "有<0>新版本</0>",
   "mobile_app": "歡迎下載使用<0>手機 APP</0>",

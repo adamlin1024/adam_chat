@@ -7,7 +7,9 @@ export {
   clearStoredToken,
   revokeAccess,
   initDriveAutoRenew,
-  type DriveToken
+  DriveAccountMismatchError,
+  type DriveToken,
+  type BoundUser
 } from "./auth";
 export { pickFolder, type PickedFolder } from "./picker";
 export { uploadToDrive, type UploadResult } from "./upload";

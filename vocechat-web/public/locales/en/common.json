@@ -143,7 +143,9 @@
     "unpin_success": "Unpinned successfully",
     "min_length_6": "Minimum length is 6",
     "updated": "Updated",
-    "sending": "Sending…"
+    "sending": "Sending…",
+    "drive_account_mismatch_title": "Drive account mismatch",
+    "drive_account_mismatch_desc": "Currently bound to \"{{bound}}\", but you just picked \"{{picked}}\". Please retry and choose \"{{bound}}\", or disconnect in settings to switch accounts."
   },
   "new_version": "<0>New Version</0> Available",
   "mobile_app": "Check out our <0>Mobile APP</0>",

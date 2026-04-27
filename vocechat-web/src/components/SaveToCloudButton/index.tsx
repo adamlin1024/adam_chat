@@ -1,9 +1,11 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 import { useDriveSavedState } from "@/hooks/useDriveSavedState";
 import {
+  DriveAccountMismatchError,
   pickFolder,
   requestAccessToken,
   uploadToDrive
@@ -53,6 +55,7 @@ const SaveToCloudButton = ({
   className,
   iconClassName = "size-6"
 }: Props) => {
+  const { t } = useTranslation("common");
   const { folder, setFolder, isSaved, getSaved, markSaved } = useDriveSavedState();
   const [status, setStatus] = useState<Status>("idle");
 
@@ -111,7 +114,17 @@ const SaveToCloudButton = ({
     } catch (e: any) {
       console.error("[SaveToCloudButton]", e);
       setStatus("error");
-      toast.error(`儲存失敗：${e.message ?? e}`);
+      if (e instanceof DriveAccountMismatchError) {
+        toast.error(
+          `${t("tip.drive_account_mismatch_title")} — ${t("tip.drive_account_mismatch_desc", {
+            bound: e.boundName,
+            picked: e.pickedName
+          })}`,
+          { duration: 6000 }
+        );
+      } else {
+        toast.error(`儲存失敗：${e.message ?? e}`);
+      }
       setTimeout(() => setStatus("idle"), 2000);
     }
   };
