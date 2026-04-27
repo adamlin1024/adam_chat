@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import {
   clearStoredToken,
+  getStoredToken,
   hasRawStoredToken,
   pickFolder,
   requestAccessToken,
@@ -20,6 +21,21 @@ export default function GoogleDriveSetting() {
     hasRawStoredToken() ? "已授權" : "未授權"
   );
   const [busy, setBusy] = useState(false);
+
+  // 進入設定頁時自動觸發一次 refresh（等同自動點「從 Drive 重新載入」）。
+  // 點 tab 進來的 click 在瀏覽器 transient activation 窗口（~5s）內，
+  // 過期 token 觸發的 popup 不會被擋。
+  // 已授權 + 有效 token → 內部 useEffect 已處理，這裡不重複。
+  // 已授權 + 過期 token → 這裡 fromUserGesture: true 觸發 popup 拿新 token。
+  const autoRefreshDoneRef = useRef(false);
+  useEffect(() => {
+    if (autoRefreshDoneRef.current) return;
+    if (tokenStatus !== "已授權") return;
+    if (!folder?.id) return;
+    autoRefreshDoneRef.current = true;
+    if (getStoredToken()) return; // 還有效 → 交給內部 useEffect 載入，避免重複
+    refresh({ fromUserGesture: true });
+  }, [tokenStatus, folder?.id, refresh]);
 
   const onConnect = async () => {
     setBusy(true);
