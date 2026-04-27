@@ -33,6 +33,21 @@ export class DriveAccountMismatchError extends Error {
   }
 }
 
+/**
+ * 資料夾在當前 access_token 帳號下無法存取。
+ * 典型原因：token 帳號 ≠ 資料夾擁有者（drive.file scope 只能看自己建的檔案）；
+ * 或資料夾已被使用者在 Drive 介面手動刪除。
+ */
+export class DriveFolderNotAccessibleError extends Error {
+  readonly code = "DRIVE_FOLDER_NOT_ACCESSIBLE" as const;
+  readonly folderId: string;
+  constructor(folderId: string) {
+    super(`Drive folder not accessible: ${folderId}`);
+    this.name = "DriveFolderNotAccessibleError";
+    this.folderId = folderId;
+  }
+}
+
 let renewTimer: ReturnType<typeof setTimeout> | null = null;
 
 export function getStoredToken(): DriveToken | null {

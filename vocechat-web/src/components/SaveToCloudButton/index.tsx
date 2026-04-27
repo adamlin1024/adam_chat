@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useDriveSavedState } from "@/hooks/useDriveSavedState";
 import {
   DriveAccountMismatchError,
+  DriveFolderNotAccessibleError,
   pickFolder,
   requestAccessToken,
   uploadToDrive
@@ -121,6 +122,11 @@ const SaveToCloudButton = ({
             picked: e.pickedName
           })}`,
           { duration: 6000 }
+        );
+      } else if (e instanceof DriveFolderNotAccessibleError) {
+        toast.error(
+          `${t("tip.drive_folder_not_accessible_title")} — ${t("tip.drive_folder_not_accessible_desc")}`,
+          { duration: 8000 }
         );
       } else {
         toast.error(`儲存失敗：${e.message ?? e}`);

@@ -1,4 +1,4 @@
-import { requestAccessToken } from "./auth";
+import { DriveFolderNotAccessibleError, requestAccessToken } from "./auth";
 
 const UPLOAD_ENDPOINT =
   "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
@@ -60,6 +60,11 @@ export async function uploadToDrive(opts: {
 
   if (!res.ok) {
     const text = await res.text();
+    // 404 + fileId parameter 通常是 folderId 找不到（drive.file scope 看不到非當前帳號建的檔案，
+    // 或資料夾已被使用者手動刪除）。轉成 typed error 讓 UI 顯示精準提示。
+    if (res.status === 404 && /fileId/.test(text) && /not[\s_]?[Ff]ound/.test(text)) {
+      throw new DriveFolderNotAccessibleError(folderId);
+    }
     throw new Error(`Drive upload failed: ${res.status} ${text}`);
   }
 

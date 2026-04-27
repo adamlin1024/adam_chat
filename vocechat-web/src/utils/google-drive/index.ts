@@ -8,6 +8,7 @@ export {
   revokeAccess,
   initDriveAutoRenew,
   DriveAccountMismatchError,
+  DriveFolderNotAccessibleError,
   type DriveToken,
   type BoundUser
 } from "./auth";

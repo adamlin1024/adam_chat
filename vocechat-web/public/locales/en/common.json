@@ -145,7 +145,9 @@
     "updated": "Updated",
     "sending": "Sending…",
     "drive_account_mismatch_title": "Drive account mismatch",
-    "drive_account_mismatch_desc": "Currently bound to \"{{bound}}\", but you just picked \"{{picked}}\". Please retry and choose \"{{bound}}\", or disconnect in settings to switch accounts."
+    "drive_account_mismatch_desc": "Currently bound to \"{{bound}}\", but you just picked \"{{picked}}\". Please retry and choose \"{{bound}}\", or disconnect in settings to switch accounts.",
+    "drive_folder_not_accessible_title": "Drive folder not accessible",
+    "drive_folder_not_accessible_desc": "The current Google account can't see the bound folder. Possible reasons: (1) different account from the one originally bound; (2) folder was deleted. Please disconnect in settings and reconnect to the correct account."
   },
   "new_version": "<0>New Version</0> Available",
   "mobile_app": "Check out our <0>Mobile APP</0>",
