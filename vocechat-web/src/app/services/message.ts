@@ -225,22 +225,37 @@ export const messageApi = createApi({
         const { data: messages } = await queryFulfilled;
         const fromHistory = true;
         if (messages?.length) {
+          // handleChatMessage 期望扁平的 CurrentState（loginUid / readUsers / readChannels / ready / afterMid）。
+          // 之前直接把整個 RootState 餵進去，loginUid 會是 undefined → handler 內 `self = from_uid == undefined`
+          // 永遠 false → 自己發的 DM 訊息全部被路由到 byId[loginUid]（自己對自己的 bucket），既出現在對的
+          // bucket、又被多寫一份到 self-DM。SSE 路徑（useStreaming/index.ts）有手動組好正確 currState 才沒踩到。
+          const buildCurrState = () => {
+            const root = getState() as RootState;
+            return {
+              afterMid: root.footprint.afterMid,
+              ready: root.ui.ready,
+              loginUid: root.authData.user?.uid ?? 0,
+              readUsers: root.footprint.readUsers,
+              readChannels: root.footprint.readChannels,
+            };
+          };
           // 分批处理消息，避免阻塞主线程
           const batchSize = 20;
           const processBatch = (startIndex: number) => {
             const endIndex = Math.min(startIndex + batchSize, messages.length);
+            const currState = buildCurrState();
             batch(() => {
               for (let i = startIndex; i < endIndex; i++) {
-                handleChatMessage(messages[i], dispatch, getState() as RootState, fromHistory);
+                handleChatMessage(messages[i], dispatch, currState, fromHistory);
               }
             });
-            
+
             if (endIndex < messages.length) {
               // 使用 setTimeout 让出主线程，继续处理下一批
               setTimeout(() => processBatch(endIndex), 0);
             }
           };
-          
+
           processBatch(0);
         }
       }
