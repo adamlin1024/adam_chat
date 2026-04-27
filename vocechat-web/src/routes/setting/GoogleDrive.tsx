@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import {
@@ -17,6 +17,24 @@ export default function GoogleDriveSetting() {
     getStoredToken() ? "已授權" : "未授權"
   );
   const [busy, setBusy] = useState(false);
+
+  // App 啟動時的 silent refresh 是非同步的：進設定頁的瞬間 token 可能還沒拿到、
+  // 但幾秒後就到了。輪詢一下 localStorage 把 UI 推到「已授權」，避免使用者看到
+  // 假的「未授權」而誤點重新連動。
+  useEffect(() => {
+    if (tokenStatus === "已授權") return;
+    const id = setInterval(() => {
+      if (getStoredToken()) {
+        setTokenStatus("已授權");
+        clearInterval(id);
+      }
+    }, 500);
+    const stop = setTimeout(() => clearInterval(id), 10_000);
+    return () => {
+      clearInterval(id);
+      clearTimeout(stop);
+    };
+  }, [tokenStatus]);
 
   const onConnect = async () => {
     setBusy(true);

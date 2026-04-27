@@ -26,6 +26,18 @@ export function getStoredToken(): DriveToken | null {
   }
 }
 
+/** 是否有「曾經授權過」的 raw 資料（不論是否過期） — 用來判斷要不要嘗試 silent refresh */
+function hasRawStoredToken(): boolean {
+  try {
+    const raw = localStorage.getItem(TOKEN_KEY);
+    if (!raw) return false;
+    const t = JSON.parse(raw) as Partial<DriveToken>;
+    return Boolean(t.access_token && t.expires_at);
+  } catch {
+    return false;
+  }
+}
+
 export function clearStoredToken() {
   localStorage.removeItem(TOKEN_KEY);
   if (renewTimer) {
@@ -55,7 +67,7 @@ function scheduleSilentRenew(t: DriveToken) {
 }
 
 /** 不彈窗、強制重拿一份 token（前提是使用者仍登入 Google + 已授權過） */
-async function silentRefresh(): Promise<void> {
+export async function silentRefresh(): Promise<void> {
   await loadGIS();
   const google = window.google!;
   return new Promise<void>((resolve, reject) => {
@@ -85,10 +97,25 @@ async function silentRefresh(): Promise<void> {
   });
 }
 
-/** App 載入時呼叫一次：若已有有效 token，安排自動續約 */
+/**
+ * App 載入時呼叫一次：
+ *  - 已有有效 token → 排續約
+ *  - 有過期的 raw token（曾授權過）→ 嘗試 silent refresh，成功就排續約、失敗靜默放棄
+ *
+ * Google access token 只活 1 小時；關閉 App 後 setTimeout 隨進程結束，續約鏈會斷。
+ * 重啟時若不主動 silent refresh，使用者會看到「未授權」即使 Google 端其實還記得授權。
+ */
 export function initDriveAutoRenew() {
   const t = getStoredToken();
-  if (t) scheduleSilentRenew(t);
+  if (t) {
+    scheduleSilentRenew(t);
+    return;
+  }
+  if (hasRawStoredToken()) {
+    silentRefresh().catch(() => {
+      // 靜默失敗 — 使用者下次手動點「連動」會走完整 OAuth flow
+    });
+  }
 }
 
 /**
