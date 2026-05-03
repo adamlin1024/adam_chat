@@ -1,13 +1,10 @@
 import { FC, useEffect, useState } from "react";
 
-interface Props {
-  url: string;
-}
+import useExpiredResMap from "@/hooks/useExpiredResMap";
 
-// 404 由 FileBox 上層的 HEAD probe 統一處理；走到這裡的 url 已經 validated。
-// 這裡單純拉檔案內容渲染，不再做 resp.ok 檢查。
-const Code: FC<Props> = ({ url }) => {
+const Code: FC<{ url: string }> = ({ url }) => {
   const [content, setContent] = useState("");
+  const { setExpired } = useExpiredResMap();
 
   useEffect(() => {
     let cancelled = false;
@@ -15,16 +12,21 @@ const Code: FC<Props> = ({ url }) => {
       if (!url) return;
       try {
         const resp = await fetch(url);
+        // 4xx/5xx 才標 expired；fetch reject（catch）視為網路問題不標
+        if (!resp.ok) {
+          if (!cancelled) setExpired(url);
+          return;
+        }
         const txt = await resp.text();
         if (!cancelled) setContent(txt);
       } catch {
-        /* 上層已 validated 仍 fetch 失敗（網路斷線等），靜默忽略 */
+        /* 網路斷線等，靜默 */
       }
     })();
     return () => {
       cancelled = true;
     };
-  }, [url]);
+  }, [url, setExpired]);
 
   if (!content) return null;
 

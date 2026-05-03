@@ -1,20 +1,33 @@
 import { FC, useEffect, useState } from "react";
 
-interface Props {
-  url: string;
-}
+import useExpiredResMap from "@/hooks/useExpiredResMap";
 
-const Doc: FC<Props> = ({ url }) => {
+const Doc: FC<{ url: string }> = ({ url }) => {
   const [content, setContent] = useState("");
+  const { setExpired } = useExpiredResMap();
+
   useEffect(() => {
-    const getContent = async (url: string) => {
+    let cancelled = false;
+    (async () => {
       if (!url) return;
-      const resp = await fetch(url);
-      const txt = await resp.text();
-      setContent(txt);
+      try {
+        const resp = await fetch(url);
+        // 4xx/5xx 才標 expired；fetch reject（catch）視為網路問題不標
+        if (!resp.ok) {
+          if (!cancelled) setExpired(url);
+          return;
+        }
+        const txt = await resp.text();
+        if (!cancelled) setContent(txt);
+      } catch {
+        /* 網路斷線等，靜默 */
+      }
+    })();
+    return () => {
+      cancelled = true;
     };
-    getContent(url);
-  }, [url]);
+  }, [url, setExpired]);
+
   if (!content) return null;
 
   return (

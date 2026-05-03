@@ -9,8 +9,9 @@ const SYNC_EVENT = "expired-files-map-changed";
 
 // validated cache 加 TTL：避免 cache 變成 source of truth 然後 drift。
 //   expired：死了就是死了，永久（server 端 file path 是 UUID-like 不會被別人 reuse）
-//   validated：已驗證 200，但 7 天後重新驗證一次，捕捉「驗過後又被刪」的漂移
-const VALIDATED_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+//   validated：已驗證 200，但 1 天後重新驗證一次，捕捉後台「定時刪除」造成的漂移
+//   （後台定時刪除週期是 7 天，TTL 必須短於它，否則 validated 會在刪除窗口內守著舊資訊）
+const VALIDATED_TTL_MS = 1 * 24 * 60 * 60 * 1000;
 
 type Map = Record<string, number>;
 

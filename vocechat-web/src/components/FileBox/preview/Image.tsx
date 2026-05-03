@@ -2,17 +2,20 @@ import { FC, useState } from "react";
 import { LineWobble } from "@uiball/loaders";
 import clsx from "clsx";
 
+import useExpiredResMap from "@/hooks/useExpiredResMap";
+
 interface Props {
   url: string;
   alt?: string;
 }
 
-// 注意：404 在 FileBox 上層已經先擋掉了（HEAD probe → setExpired → return null），
-// 走到這裡的 url 已經是 validated 過或還在探測中。所以 ImagePreview 只負責畫面顯示，
-// 不再做 404 / setExpired 處理。
 const ImageBox: FC<Props> = ({ url, alt }) => {
   const [loaded, setLoaded] = useState(false);
+  const { setExpired } = useExpiredResMap();
 
+  // FileBox 上層的 HEAD probe 走 fetch，可能命中 SW / CDN cache 的 stale 200；
+  // 真正的 <img> GET 才是 source of truth — 失敗就回報 expired，FileBox 下一輪
+  // render 會把整張卡片移掉，避免永遠卡 loading。
   return (
     <div className="h-[218px] overflow-hidden flex-center relative">
       {!loaded && (
@@ -25,6 +28,7 @@ const ImageBox: FC<Props> = ({ url, alt }) => {
         src={url}
         alt={alt}
         onLoad={() => setLoaded(true)}
+        onError={() => setExpired(url)}
       />
     </div>
   );

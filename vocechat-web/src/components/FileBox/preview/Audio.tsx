@@ -1,15 +1,19 @@
 import { FC, ReactEventHandler, useState } from "react";
 
+import useExpiredResMap from "@/hooks/useExpiredResMap";
+
 interface Props {
   url: string;
 }
 
 const Audio: FC<Props> = ({ url }) => {
   const [err, setErr] = useState(false);
+  const { setExpired } = useExpiredResMap();
 
-  const handleError: ReactEventHandler<HTMLAudioElement> = (err) => {
-    console.error("audio err", err);
+  const handleError: ReactEventHandler<HTMLAudioElement> = (e) => {
+    console.error("audio err", e);
     setErr(true);
+    setExpired(url);
   };
 
   if (!url) return null;

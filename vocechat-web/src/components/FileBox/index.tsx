@@ -1,5 +1,6 @@
-import { FC, ReactElement, useEffect } from "react";
+import { FC, ReactElement, useEffect, useState } from "react";
 import clsx from "clsx";
+import { LineWobble } from "@uiball/loaders";
 
 import { useAppSelector } from "@/app/store";
 import { formatBytes, fromNowTime, getFileIcon } from "@/utils";
@@ -93,12 +94,23 @@ const FileBox: FC<Props> = ({
   const { isExpired, isValidated, setExpired, setValidated } = useExpiredResMap();
   const icon = getFileIcon(file_type, name, "icon w-9 h-12");
 
+  // probing：HEAD 探測中。為 true 時 preview 區顯示 loading，不渲染 preview 子元件，
+  // 避免子元件提前 GET 殭屍 URL 噴一堆 404 / ERR_ABORTED。
+  // 已 expired / validated 的不需 probe，直接 false。
+  const [probing, setProbing] = useState(
+    () => !!content && !isExpired(content) && !isValidated(content)
+  );
+
   // 上層一處統一偵測檔案是否還存在 — 不論 image / video / pdf / zip / 任何 mime 都
   // 走同一條路：HEAD 探測 → 404 標 expired → return null（卡片消失）/ 200 標 validated
-  // → 後續永不再探測。preview 子元件不需各自處理 404，因為這裡已經先擋掉了。
+  // → 後續永不再探測。
   useEffect(() => {
     if (!content) return;
-    if (isExpired(content) || isValidated(content)) return;
+    if (isExpired(content) || isValidated(content)) {
+      setProbing(false);
+      return;
+    }
+    setProbing(true);
     let cancelled = false;
     fetch(content, { method: "HEAD" })
       .then((r) => {
@@ -112,6 +124,9 @@ const FileBox: FC<Props> = ({
       .catch(() => {
         // 網路斷線 / CORS 錯誤 — 不要當 404 處理（避免暫時性錯誤永久標 expired），
         // 留待下次再探測
+      })
+      .finally(() => {
+        if (!cancelled) setProbing(false);
       });
     return () => {
       cancelled = true;
@@ -167,12 +182,18 @@ const FileBox: FC<Props> = ({
         <div
           className={clsx(
             "border-t border-border-subtle overflow-hidden",
-            isImage && onImageClick && "cursor-pointer"
+            isImage && onImageClick && !probing && "cursor-pointer"
           )}
           style={{ height: "calc(100% - 100px)" }}
-          onClick={isImage && onImageClick ? onImageClick : undefined}
+          onClick={isImage && onImageClick && !probing ? onImageClick : undefined}
         >
-          {previewContent}
+          {probing ? (
+            <div className="h-full flex-center">
+              <LineWobble color="rgb(21,91,117)" />
+            </div>
+          ) : (
+            previewContent
+          )}
         </div>
       )}
     </div>
