@@ -154,11 +154,29 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
   const extraItemCountRef = useRef(extraItemCount);
   extraItemCountRef.current = extraItemCount;
 
+  // 用 ref 同步 stableMids 長度，scrollToBottom 才能正確算出 last index 而不重建
+  const stableMidsLenRef = useRef(0);
+
+  // Bug 1 修法：原本 scrollTo(scrollSize) 在切換對話時會踩 timing race —
+  // virtua 還沒 measure 完所有 item 高度（圖片 / 附件 / reply 預覽未 layout），
+  // 此時的 scrollSize 嚴重低估，捲到那個值之後容器再撐高、但沒人補一次
+  // → 結果停在中段。改用 scrollToIndex(lastIdx, align:"end") 由 virtua
+  // 自己處理 incremental measure，配合切對話的 rAF + 100/300ms 雙保險再追。
   const scrollToBottom = useCallback(() => {
-    if (vRef.current) {
-      vRef.current.scrollTo(vRef.current.scrollSize);
+    const handle = vRef.current;
+    if (!handle) return;
+    const lastIndex = extraItemCountRef.current + stableMidsLenRef.current - 1;
+    if (lastIndex < 0) {
+      handle.scrollTo(handle.scrollSize);
+      return;
     }
+    handle.scrollToIndex(lastIndex, { align: "end" });
   }, []);
+
+  // 同步 stableMidsLenRef（layout phase 內，先於 paint）
+  useLayoutEffect(() => {
+    stableMidsLenRef.current = stableMids.length;
+  }, [stableMids]);
 
   // Scroll to bottom when sticking and new messages arrive
   useEffect(() => {
@@ -177,13 +195,52 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     prevAllMidsRef.current = [];
   }, [id]);
 
-  // Scroll to bottom after conversation switch (after render)
+  // Scroll to bottom after conversation switch (rAF + 100/300ms 雙保險：
+  // 第一次在 layout 後對齊；100/300ms 之後再追兩次，涵蓋圖片載入完成 / virtua
+  // 把後面 item 補 measure 完成造成的高度變化。100/300ms 仍受 stickToBottomRef
+  // 保護，使用者切回後若立即手動往上滑，不會被強制拉回底。
   useEffect(() => {
-    const timer = setTimeout(() => {
+    let timer1: ReturnType<typeof setTimeout> | null = null;
+    let timer2: ReturnType<typeof setTimeout> | null = null;
+    const raf = requestAnimationFrame(() => {
       scrollToBottom();
-    }, 0);
-    return () => clearTimeout(timer);
+      timer1 = setTimeout(() => {
+        if (stickToBottomRef.current) scrollToBottom();
+      }, 100);
+      timer2 = setTimeout(() => {
+        if (stickToBottomRef.current) scrollToBottom();
+      }, 300);
+    });
+    return () => {
+      cancelAnimationFrame(raf);
+      if (timer1) clearTimeout(timer1);
+      if (timer2) clearTimeout(timer2);
+    };
   }, [id, scrollToBottom]);
+
+  // Bug 2 修法：偵測 stableMids 中有 mid 但 messageData[mid] 拿不到（PWA 重啟後
+  // IDB 的 message table rehydrate 不完整、或某些路徑寫了 mid 沒寫 body），
+  // 主動透過 history endpoint 拉一段回來補洞。用 ref 防止重複觸發。
+  const missingFetchedRef = useRef(false);
+  useEffect(() => {
+    if (stableMids.length === 0) {
+      missingFetchedRef.current = false;
+      return;
+    }
+    const missingMids: number[] = [];
+    for (const mid of stableMids) {
+      if (!messageData[mid]) missingMids.push(mid);
+    }
+    if (missingMids.length === 0) {
+      missingFetchedRef.current = false;
+      return;
+    }
+    if (missingFetchedRef.current) return;
+    missingFetchedRef.current = true;
+    const maxMissingMid = Math.max(...missingMids);
+    const limit = Math.min(missingMids.length + 50, 200);
+    loadMoreMessage({ context, id, mid: maxMissingMid + 1, limit });
+  }, [stableMids, messageData, context, id, loadMoreMessage]);
 
   // Keep last message visible when keyboard appears/disappears (mobile)
   useEffect(() => {
