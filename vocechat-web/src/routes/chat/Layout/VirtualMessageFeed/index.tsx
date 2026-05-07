@@ -46,6 +46,11 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
   const dispatch = useDispatch();
   const [atBottom, setAtBottom] = useState(true);
   const stickToBottomRef = useRef(true);
+  // 切對話後的「初始化期」（0~350ms）：virtua 還在 incrementally measure item 高度，
+  // scrollSize 持續長大，期間 onScroll 觸發會誤把 stickToBottomRef 設成 false，
+  // 把後續 100/300ms 的補救擋掉 → 停中段。期間內 handleScroll 完全 return、
+  // 不動 stickToBottomRef；100/300ms timer 無條件 scrollToBottom 強制對齊。
+  const isInitializingRef = useRef(true);
   // 視窗狀態：mids = allMids.slice(allMids.length - windowEndOffset - windowSize, allMids.length - windowEndOffset)
   //   windowEndOffset = 0 → 視窗底端對齊 allMids 結尾（最新訊息）
   //   windowEndOffset > 0 → 視窗底端往上偏移 N 筆（停在中段，例如跳到搜尋結果）
@@ -195,26 +200,32 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     prevAllMidsRef.current = [];
   }, [id]);
 
-  // Scroll to bottom after conversation switch (rAF + 100/300ms 雙保險：
-  // 第一次在 layout 後對齊；100/300ms 之後再追兩次，涵蓋圖片載入完成 / virtua
-  // 把後面 item 補 measure 完成造成的高度變化。100/300ms 仍受 stickToBottomRef
-  // 保護，使用者切回後若立即手動往上滑，不會被強制拉回底。
+  // Scroll to bottom after conversation switch (rAF + 100/300ms 三段對齊)
+  // 不再用 stickToBottomRef 守門，改用 isInitializingRef 區分初始化期 vs 正常期：
+  //   - 0~350ms：handleScroll return、stickToBottomRef 保持 true、timer 無條件對齊
+  //   - 350ms 後：解鎖、handleScroll 恢復正常職責（atBottom 偵測、視窗滑動）
+  // 為什麼放棄 stickToBottomRef 守門：virtua 在 measure 期間會觸發 onScroll、
+  // 因為 scrollSize 持續長大，isAtBottomOfRender 會誤判為 false，把 stickToBottomRef
+  // 設成 false → 後續 100/300ms 的 scrollToBottom 全被擋掉、停在中段。
   useEffect(() => {
+    isInitializingRef.current = true;
     let timer1: ReturnType<typeof setTimeout> | null = null;
     let timer2: ReturnType<typeof setTimeout> | null = null;
+    let timer3: ReturnType<typeof setTimeout> | null = null;
     const raf = requestAnimationFrame(() => {
       scrollToBottom();
-      timer1 = setTimeout(() => {
-        if (stickToBottomRef.current) scrollToBottom();
-      }, 100);
-      timer2 = setTimeout(() => {
-        if (stickToBottomRef.current) scrollToBottom();
-      }, 300);
+      timer1 = setTimeout(() => scrollToBottom(), 100);
+      timer2 = setTimeout(() => scrollToBottom(), 300);
+      // 比 timer2 晚一點再解鎖，確保最後一次對齊不會被 onScroll 干擾
+      timer3 = setTimeout(() => {
+        isInitializingRef.current = false;
+      }, 350);
     });
     return () => {
       cancelAnimationFrame(raf);
       if (timer1) clearTimeout(timer1);
       if (timer2) clearTimeout(timer2);
+      if (timer3) clearTimeout(timer3);
     };
   }, [id, scrollToBottom]);
 
@@ -337,6 +348,10 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
   // onScroll: detect atBottom state + 視窗滑動
   const handleScroll = useCallback((offset: number) => {
     if (!vRef.current) return;
+    // 初始化期（切對話後 350ms 內）整個 return：避免 virtua 仍在 measure、
+    // scrollSize 長大導致 isAtBottomOfRender 誤判，把 stickToBottomRef 設成 false、
+    // 把切對話後的 100/300ms 補救擋掉。
+    if (isInitializingRef.current) return;
     const handle = vRef.current;
     const isAtBottomOfRender = offset - handle.scrollSize + handle.viewportSize >= -50;
 
