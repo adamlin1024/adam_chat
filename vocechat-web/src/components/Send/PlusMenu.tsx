@@ -68,7 +68,7 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
     },
     {
       key: "photo",
-      label: "相片",
+      label: "相片 / 影片",
       icon: <IconImage className="w-5 h-5 fill-current" />,
       htmlFor: photoId,
     },
@@ -156,16 +156,15 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
         onChange={handleUpload}
       />
       {/*
-        相片：用最標準的 PHPicker invocation pattern（image/* + multiple）。
-        iOS 14+ Safari 會走 PHPicker 直接開圖庫；PWA (WKWebView) 整合受限，
-        但搭配 <label> 觸發（不靠 JS .click()）user gesture chain 較完整，
-        較有機會直接走 PHPicker。
+        相片 / 影片：accept 同時涵蓋 image/* 與 video/*，iOS 圖庫本來就同時顯示
+        照片與影片，使用者預期一致。PHPicker invocation 模式維持（multiple +
+        <label> 觸發保 user gesture chain）。
       */}
       <input
         id={photoId}
         type="file"
         style={VISUALLY_HIDDEN}
-        accept="image/*"
+        accept="image/*,video/*"
         multiple
         onChange={handleUpload}
       />
@@ -176,7 +175,7 @@ const PlusMenu: FC<Props> = ({ context, to, isMarkdown, toggleMode }) => {
         id={fileId}
         type="file"
         style={VISUALLY_HIDDEN}
-        accept="application/pdf,application/zip,application/x-zip-compressed,application/x-rar-compressed,application/x-7z-compressed,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/csv,text/markdown,application/json,application/xml,audio/mpeg,audio/wav,audio/mp4,audio/aac"
+        accept="application/pdf,application/zip,application/x-zip-compressed,application/x-rar-compressed,application/x-7z-compressed,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain,text/csv,text/markdown,application/json,application/xml,audio/mpeg,audio/wav,audio/mp4,audio/aac,video/mp4,video/quicktime,video/webm,video/x-matroska"
         multiple
         onChange={handleUpload}
       />
