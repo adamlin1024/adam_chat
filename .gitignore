@@ -24,3 +24,20 @@ parse_transcripts.js
 
 # Google OAuth client secret (never commit!)
 client_secret_*.json
+
+# 開發過程的臨時檔（底線開頭一律當作臨時物排除）
+_*
+
+# 大型素材（暫不上 git）
+sticker/
+
+# vocechat-data 內額外排除（除既有規則外）
+vocechat-data/archive_msgs/
+
+# LINE 匯入工具：保留腳本，排除資料 / 憑證 / 快取
+import-line/.env
+import-line/.env.template
+import-line/.import_cache.json
+import-line/__pycache__/
+import-line/backup_*.json
+
