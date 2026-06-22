@@ -479,3 +479,14 @@ import 為 React 元件的 SVG（`import X from "./x.svg"`）：
 - **2026-04-25（status bar 顏色跟主題切換）**：抽出 `utils/themeColor.ts` 統一控制 `meta[name=theme-color]`。先前手機 PWA / Safari 上方狀態列鎖死深色 `#08090b`（`index.html` 寫死 + JS 主題切換沒同步），淺色模式下顯得突兀。修正後：bootstrap 與 `DarkMode.tsx` 切換主題時都呼叫 `applyThemeColor(isDark)`；系統色彩偏好變動（auto 模式）也跟著切。`apple-mobile-web-app-status-bar-style` 從 `black` 改為 `default` 讓 iOS PWA 跟著 theme-color。
 
 - **2026-04-26（themeColor.ts 重構 + AB test 確認 iOS PWA 限制）**：跑了一輪 AB test 想徹底解決「iOS PWA session 內切主題後瀏海區不變色」。一條一條疊上去測（black-translucent meta、body padding-top、body bg token、MutationObserver-based meta sync、body 高度 100dvh），全部對 session 內重繪都無效。**結論**：iOS WKWebView 不會在 session 內重新繪製 status bar，這是 Apple 系統限制，web 端無解。詳見 E.1「已知技術限制」段。重構效果：`themeColor.ts` 改成 runtime 從 `--c-bg-app` token 讀色（不再硬編碼）+ MutationObserver 自動 sync，code 比原本乾淨；但實際使用者體感跟舊版（每處手動 `applyThemeColor(isDark)`）一樣。`apple-mobile-web-app-status-bar-style` 維持 `default` 不變。
+
+### 早期里程碑（從 CLAUDE.md「專案進度」搬入，原文保留）
+
+以下為專案前期的「已完成」清單，原本記在 `CLAUDE.md` 的「專案進度」段，2026-06-23 文件瘦身時搬到此處集中保存（一字未刪）：
+
+- 本機環境建置（前端 dev server 3001、後端 Docker 3009）
+- 多語系繁體中文化
+- 元件改寫完成
+- 上架方案：PWA
+- 雲端部署：Railway（前後端一體，GitHub 連結自動部署，Persistent Volume 掛載 `/data`）
+- PWA 安裝測試通過

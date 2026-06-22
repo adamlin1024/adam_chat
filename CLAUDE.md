@@ -12,24 +12,22 @@
 ## 本機開發環境
 用 `/start-dev` 啟動（skill 內含完整步驟與排錯知識）。
 
-## 專案進度
+## 資源地圖（情境 → 看哪裡）
+- **要改畫面 / 顏色 / 樣式（UI 規範）** → `UI_style/DESIGN_SYSTEM.md`
+- **要在本機把服務跑起來** → 用 `/start-dev`（skill 內含完整步驟與排錯知識）
+- **想知道系統現況與過去做了什麼（歷史紀錄）** → `UI_style/DESIGN_SYSTEM.md` 末段「F. 變更歷史」
 
-**已完成：**
-- 本機環境建置（前端 dev server 3001、後端 Docker 3009）
-- 多語系繁體中文化
-- 元件改寫完成
-- 上架方案：PWA
-- 雲端部署：Railway（前後端一體，GitHub 連結自動部署，Persistent Volume 掛載 `/data`）
-- PWA 安裝測試通過
+## 進行中事項
+- UI / 功能優化（已上線、持續打磨）
 
-**進行中：**
-- UI / 功能優化
+> 已穩定的事實：本機環境已建好（前端 dev server 3001、後端 Docker 3009）；已上架為 PWA、安裝測試通過。更早的逐項完成紀錄已搬到 `UI_style/DESIGN_SYSTEM.md` 的「F. 變更歷史」。
 
-## 部署架構
-- **平台：** Railway，免費方案約 $1–2/月
-- **Domain：** Railway 免費子網域（`xxx.railway.app`）
-- **前端：** Docker 多階段建構打包進 image，`REACT_APP_RELEASE=true`
-- **後端：** `privoce/vocechat-server:latest`
+## 部署與環境
+一句話：Railway 雲端代管、前後端打包成一個容器（Docker image）、GitHub 連結後自動部署，費用約略落在每月個位數美元（會變，以平台帳單為準）。
+- **平台 / 網址：** Railway，對外用免費子網域（`xxx.railway.app`），HTTPS 對外 443，內部 Port 由 Railway 自動分配。
+- **容器建構（Docker 多階段建構）：** 用 Node 20 Alpine 建前端、`privoce/vocechat-server:latest` 跑後端，打包進同一個 image。
+- **前端設定：** build 時設 `REACT_APP_RELEASE=true`，接口（API）自動走 `location.origin`，不必硬寫網址。
+- **資料存放：** SQLite 資料庫，放在掛載的持久磁碟（Persistent Volume）`/data`（資料庫在 `/data/db/`）。
 
 ## 改 code 前掃影響範圍（本專案重點）
 
@@ -37,16 +35,13 @@
 - **Serena 根目錄**：`C:\Users\User\Desktop\Adam_lab\Adam_chat`（索引已於 2026-05-29 建好、typescript/python，直接用、不用重建）。
 - **符號層查不到的踩雷點**：共用的 state / context / localStorage key / Service Worker——Serena 的 `find_references` 抓不到這些，仍要照三步驟**自己再掃一次**。
 
-## 工作流程規則
+## 跟 CONVENTIONS 不一樣的地方（本專案特例）
+
+### 畫面改動要先問才推上去
+本專案在「跨專案慣例（`Adam_lab/CONVENTIONS.md`）」之外，多一條自己的 push 規則：
 - **功能相關改動**（邏輯、hook、API、資料處理等非畫面部分）：改完可直接 push
 - **畫面相關改動**（UI、樣式、Layout、元件外觀，包含顏色、尺寸等小改動）：改完後先讓使用者確認，**不可直接 push**
 - **混合改動**（同時包含功能與畫面）：牽涉畫面一律必須先問過使用者再 push
-
-## 技術細節
-- Docker 多階段建構：Node 20 Alpine 建前端，privoce/vocechat-server 跑後端
-- 前端 build 時設定 `REACT_APP_RELEASE=true`，API 自動使用 `location.origin`，不需硬寫網址
-- 資料庫：SQLite，存放於 `/data/db/`
-- Port：Railway 自動分配，對外 443（HTTPS）
 
 ## UI 慣例
 
