@@ -253,21 +253,12 @@ const VirtualMessageFeed = forwardRef<VirtualMessageFeedHandle, Props>(({ contex
     loadMoreMessage({ context, id, mid: maxMissingMid + 1, limit });
   }, [stableMids, messageData, context, id, loadMoreMessage]);
 
-  // 鍵盤顯示 / 收合（手機）時維持底部可見。
-  // 關鍵：只在鍵盤「收合」（可見區變大）時才主動捲動；鍵盤「彈出」（可見區變小）
-  // 時絕不動捲軸。因為使用者是在「點下輸入框、focus 剛建立」的當下把鍵盤頂上來的，
-  // 此時若程式去捲訊息列表，iOS 會把剛拿到的 focus 丟掉（點一次卻不能打字）。
-  // 彈出時輸入框已由外層 --app-height 撐在鍵盤正上方，本來就不需要再捲。
+  // Keep last message visible when keyboard appears/disappears (mobile)
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
     let timer: ReturnType<typeof setTimeout>;
-    let prevHeight = vv.height;
     const handleResize = () => {
-      const currHeight = vv.height;
-      const keyboardClosing = currHeight > prevHeight + 1; // 可見區變大 = 鍵盤收合
-      prevHeight = currHeight;
-      if (!keyboardClosing) return;        // 鍵盤彈出 / 微幅變動：不碰捲軸，保住 focus
       if (!stickToBottomRef.current) return;
       clearTimeout(timer);
       timer = setTimeout(() => scrollToBottom(), 50);
