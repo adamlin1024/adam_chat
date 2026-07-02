@@ -10,6 +10,23 @@ body {
   background-color: rgb(var(--c-bg-app));
 }
 
+/* iOS 聊天鍵盤修正（見 hooks/useChatViewportLock.ts）：
+   聊天頁掛載期間把整份文件鎖成 position:fixed 的 app 外殼，讓 iOS 無法為了露出
+   輸入框而把整頁往上捲（實測 log 的 SCROLL html top=414 → 0，害輸入框落到鍵盤後面）。
+   關鍵是 position:fixed —— iOS 對聚焦捲動會無視 overflow:hidden。
+   內層訊息列表自己的 overflow-y-scroll 不受影響。 */
+html.kb-lock,
+html.kb-lock body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+html.kb-lock body {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+}
+
 /* ── 設計系統色票（深色 / 淺色 雙主題）──
  * 基礎色用「空格分隔 RGB 三元組」格式，搭配 tailwind.config 的
  * `rgb(var(--c-x) / <alpha-value>)` 包裝，讓 `bg-accent/20`、`bg-online/15`
