@@ -3,7 +3,6 @@ import { useMatch, useParams } from "react-router-dom";
 import clsx from "clsx";
 
 import { useAppSelector } from "@/app/store";
-import useChatViewportLock from "@/hooks/useChatViewportLock";
 import KbFocusDebug from "@/components/KbFocusDebug";
 import BlankPlaceholder from "@/components/BlankPlaceholder";
 import ChannelModal from "@/components/ChannelModal";
@@ -110,8 +109,6 @@ function ChatPage() {
   const dmChatVisible = user_id != 0 && aside !== "voice_fullscreen";
   const isMainPath = isHomePath || isChatHomePath;
   const context = channel_id !== 0 ? "channel" : "dm";
-  // iOS 鍵盤修正：聊天期間鎖住整頁不被 iOS 亂捲 + 外殼高度跟著可見區縮
-  useChatViewportLock();
   const isDesktop = window.matchMedia("(min-width: 768px)").matches;
   const leftStyle = isDesktop ? { width: sideWidth, minWidth: sideWidth, maxWidth: sideWidth } : undefined;
   const contextId = (+channel_id || callingTo) ?? 0;
@@ -126,7 +123,7 @@ function ChatPage() {
       {usersModalVisible && <UsersModal closeModal={toggleUsersModalVisible} />}
       <div
         className={clsx(
-          `flex h-[var(--app-height,100dvh)] md:h-full md:pt-2 md:pb-2.5 md:pr-1`,
+          `flex h-screen md:h-full md:pt-2 md:pb-2.5 md:pr-1`,
           isGuest ? "guest-container md:px-1" : "md:pr-12"
         )}
       >
