@@ -22,7 +22,7 @@ import MessageInput from "../MessageInput";
 import { Emoji } from "@udecode/plate-emoji";
 import { EmojiInputButton, EmojiInputPanel } from "../MessageInput/plate-ui/emoji-input-picker";
 import { MessageWithMentions } from "@/types/message";
-import { PlateEditor } from "@udecode/plate-common";
+import { PlateEditor, focusEditor } from "@udecode/plate-common";
 import { Transforms, Editor as SlateEditor } from "slate";
 import { VirtualMessageFeedHandle } from "@/routes/chat/Layout/VirtualMessageFeed";
 
@@ -125,6 +125,42 @@ const Send: FC<IProps> = ({
       document.removeEventListener("touchstart", handler);
     };
   }, [emojiOpen]);
+  // iOS 鍵盤修正：鍵盤彈出時 iOS 會為了露出輸入框把整頁捲動，那一下會清掉
+  // contenteditable 的游標(選取) → 焦點還在但打不了字、要再點一次。
+  // （偵測 log 實證：VVresize 當下 sel 從 rc1 掉到 rc0，直到使用者再點一次才回來。）
+  // 這裡在鍵盤開合後、若編輯器仍是焦點但游標被清掉，就自動把游標補回，
+  // 等於幫使用者自動「再點一次」，消掉那段打不了字的空窗。
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const restoreCaret = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const e = editorRef.current as any;
+        if (!e) return;
+        const active = document.activeElement as HTMLElement | null;
+        // 只在「編輯器仍是焦點、但游標被清掉」時補；游標還在就別動，免得打斷使用者
+        if (!active || !active.isContentEditable) return;
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0) return;
+        try {
+          if (!e.selection) {
+            Transforms.select(e, SlateEditor.end(e, []));
+          }
+          focusEditor(e); // 把 Slate 記得的選取重新套回 DOM → 游標回來
+        } catch {
+          // ignore
+        }
+      }, 200);
+    };
+    vv.addEventListener("resize", restoreCaret);
+    return () => {
+      vv.removeEventListener("resize", restoreCaret);
+      clearTimeout(timer);
+    };
+  }, []);
+
   const handleSendMessage = async () => {
     if (!id || sendingRef.current) return;
     sendingRef.current = true;
