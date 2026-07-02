@@ -3,7 +3,6 @@ import { useMatch, useParams } from "react-router-dom";
 import clsx from "clsx";
 
 import { useAppSelector } from "@/app/store";
-import KbFocusDebug from "@/components/KbFocusDebug";
 import BlankPlaceholder from "@/components/BlankPlaceholder";
 import ChannelModal from "@/components/ChannelModal";
 import ErrorCatcher from "@/components/ErrorCatcher";
@@ -116,7 +115,6 @@ function ChatPage() {
 
   return (
     <ErrorCatcher>
-      <KbFocusDebug />
       {channelModalVisible && (
         <ChannelModal closeModal={toggleChannelModalVisible} personal={true} />
       )}

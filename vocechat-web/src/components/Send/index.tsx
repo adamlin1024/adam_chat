@@ -134,29 +134,35 @@ const Send: FC<IProps> = ({
     const vv = window.visualViewport;
     if (!vv) return;
     let timer: ReturnType<typeof setTimeout>;
-    const restoreCaret = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        const e = editorRef.current as any;
-        if (!e) return;
-        const active = document.activeElement as HTMLElement | null;
-        // 只在「編輯器仍是焦點、但游標被清掉」時補；游標還在就別動，免得打斷使用者
-        if (!active || !active.isContentEditable) return;
-        const sel = window.getSelection();
-        if (sel && sel.rangeCount > 0) return;
-        try {
-          if (!e.selection) {
-            Transforms.select(e, SlateEditor.end(e, []));
-          }
-          focusEditor(e); // 把 Slate 記得的選取重新套回 DOM → 游標回來
-        } catch {
-          // ignore
+    let tries = 0;
+    const attempt = () => {
+      const e = editorRef.current as any;
+      if (!e) return;
+      const active = document.activeElement as HTMLElement | null;
+      // 編輯器不是焦點就停（例如鍵盤收合、已失焦）
+      if (!active || !active.isContentEditable) return;
+      const sel = window.getSelection();
+      // 游標已經回來 → 補好了、收工，別打斷使用者
+      if (sel && sel.rangeCount > 0) return;
+      try {
+        if (!e.selection) {
+          Transforms.select(e, SlateEditor.end(e, []));
         }
-      }, 200);
+        focusEditor(e); // 把 Slate 記得的選取重新套回 DOM → 游標回來
+      } catch {
+        // ignore
+      }
+      // 首試沒補上（後續捲動可能又把游標清掉）→ 短間隔再試幾次直到補上
+      if (tries++ < 6) timer = setTimeout(attempt, 50);
     };
-    vv.addEventListener("resize", restoreCaret);
+    const onResize = () => {
+      clearTimeout(timer);
+      tries = 0;
+      timer = setTimeout(attempt, 30); // 鍵盤一開就搶補（原 200ms → 30ms，明顯更快）
+    };
+    vv.addEventListener("resize", onResize);
     return () => {
-      vv.removeEventListener("resize", restoreCaret);
+      vv.removeEventListener("resize", onResize);
       clearTimeout(timer);
     };
   }, []);

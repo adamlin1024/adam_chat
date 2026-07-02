@@ -480,6 +480,8 @@ import 為 React 元件的 SVG（`import X from "./x.svg"`）：
 
 - **2026-04-26（themeColor.ts 重構 + AB test 確認 iOS PWA 限制）**：跑了一輪 AB test 想徹底解決「iOS PWA session 內切主題後瀏海區不變色」。一條一條疊上去測（black-translucent meta、body padding-top、body bg token、MutationObserver-based meta sync、body 高度 100dvh），全部對 session 內重繪都無效。**結論**：iOS WKWebView 不會在 session 內重新繪製 status bar，這是 Apple 系統限制，web 端無解。詳見 E.1「已知技術限制」段。重構效果：`themeColor.ts` 改成 runtime 從 `--c-bg-app` token 讀色（不再硬編碼）+ MutationObserver 自動 sync，code 比原本乾淨；但實際使用者體感跟舊版（每處手動 `applyThemeColor(isDark)`）一樣。`apple-mobile-web-app-status-bar-style` 維持 `default` 不變。
 
+- **2026-07-02（iOS 手機鍵盤：輸入框游標消失修正）**：手機（iOS PWA）在訊息量大、畫面已捲到底的對話中，點輸入框後鍵盤彈出，iOS 為了露出輸入框而捲動整頁的那一下，會清掉 contenteditable 的選取（游標）→ 焦點仍在但打不了字、要再點一次才恢復（短對話畫面沒被塞滿故無此問題）。以臨時偵測工具在正式機實測確認：`activeElement` 全程是輸入框、`focusout` 未觸發，真正掉的是 DOM selection（`sel rc1 → rc0`）。修法：`components/Send` 監聽 `visualViewport` resize，鍵盤開合後若編輯器仍是焦點但 DOM 選取被清掉，用 Plate `focusEditor` 把 Slate 記得的選取重新套回 DOM（30ms 首試、每 50ms 重試直到補上），自動補回游標、消掉打不了字的空窗。**踩雷紀錄**：曾往「改外殼高度吃 visualViewport」「position:fixed 鎖頁防捲」方向修，皆為誤判（輸入框從未被藏、focus 也沒真的掉，真兇是 selection 被清），已全數撤回、不要再走這條。
+
 ### 早期里程碑（從 CLAUDE.md「專案進度」搬入，原文保留）
 
 以下為專案前期的「已完成」清單，原本記在 `CLAUDE.md` 的「專案進度」段，2026-06-23 文件瘦身時搬到此處集中保存（一字未刪）：
