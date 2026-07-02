@@ -38,6 +38,7 @@ export default function KbFocusDebug() {
 
   const [lines, setLines] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
+  const [copied, setCopied] = useState(false);
   const t0 = useRef(0);
 
   useEffect(() => {
@@ -134,6 +135,32 @@ export default function KbFocusDebug() {
     cursor: "pointer",
   };
 
+  // 傳圖走遠端會掉，所以提供「複製成文字」→ 使用者貼成文字訊息傳回來（文字這條通）
+  const copyLog = async () => {
+    const text = lines.join("\n");
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch {
+        ok = false;
+      }
+    }
+    setCopied(ok);
+    setTimeout(() => setCopied(false), 1800);
+  };
+
   if (collapsed) {
     return (
       <button
@@ -176,6 +203,9 @@ export default function KbFocusDebug() {
     >
       <div style={{ display: "flex", gap: 8, marginBottom: 3, color: "#0ff" }}>
         <span>KB-FOCUS 偵測</span>
+        <button style={{ ...barBtn, color: copied ? "#0f0" : "#0ff", fontWeight: 700 }} onClick={copyLog}>
+          {copied ? "✓已複製" : "複製"}
+        </button>
         <button style={{ ...barBtn, color: "#ff0" }} onClick={() => setLines([])}>
           clear
         </button>
