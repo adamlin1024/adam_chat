@@ -45,10 +45,26 @@ export default function KbFocusDebug() {
     if (location.hash.indexOf("kbdebug") !== -1) localStorage.setItem("KB_DEBUG", "1");
     t0.current = performance.now();
 
+    // 游標(選取)狀態：rc = range 數（0 = 沒有游標/選取＝caret 不見了）；
+    // ^ = collapsed（單純游標）、~ = 有選字；@ = 游標落在哪個元素
+    const selStr = () => {
+      try {
+        const s = window.getSelection();
+        if (!s) return "sel:none";
+        const an: any = s.anchorNode;
+        const anEl = an && an.nodeType === 3 ? an.parentElement : an;
+        return `sel:rc${s.rangeCount}${s.rangeCount ? (s.isCollapsed ? "^" : "~") : ""}@${desc(anEl)}`;
+      } catch {
+        return "sel:err";
+      }
+    };
+
     const push = (msg: string) => {
       const t = Math.round(performance.now() - t0.current);
       setLines((prev) => {
-        const next = prev.concat(`+${t} ${msg} | act=${desc(document.activeElement)}`);
+        const next = prev.concat(
+          `+${t} ${msg} | act=${desc(document.activeElement)} | ${selStr()}`
+        );
         return next.slice(-MAX_LINES);
       });
     };
@@ -74,11 +90,18 @@ export default function KbFocusDebug() {
       }, 120);
       push(`SELchange`);
     };
+    // 打字有沒有真的進到輸入框：beforeinput/input 有觸發＝按鍵有到；沒觸發＝完全沒收到
+    const onBeforeInput = (e: any) => push(`BEFOREINPUT "${(e.data ?? "").toString().slice(0, 6)}"`);
+    const onInput = (e: any) => push(`INPUT "${(e.data ?? "").toString().slice(0, 6)}"`);
+    const onKeyDown = (e: any) => push(`KEYDOWN ${e.key}`);
 
     document.addEventListener("focusin", onFocusIn, true);
     document.addEventListener("focusout", onFocusOut, true);
     document.addEventListener("scroll", onScroll, true);
     document.addEventListener("selectionchange", onSelChange, true);
+    document.addEventListener("beforeinput", onBeforeInput, true);
+    document.addEventListener("input", onInput, true);
+    document.addEventListener("keydown", onKeyDown, true);
     if (vv) {
       vv.addEventListener("resize", onVVResize);
       vv.addEventListener("scroll", onVVScroll);
@@ -90,6 +113,9 @@ export default function KbFocusDebug() {
       document.removeEventListener("focusout", onFocusOut, true);
       document.removeEventListener("scroll", onScroll, true);
       document.removeEventListener("selectionchange", onSelChange, true);
+      document.removeEventListener("beforeinput", onBeforeInput, true);
+      document.removeEventListener("input", onInput, true);
+      document.removeEventListener("keydown", onKeyDown, true);
       if (vv) {
         vv.removeEventListener("resize", onVVResize);
         vv.removeEventListener("scroll", onVVScroll);
