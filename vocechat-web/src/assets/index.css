@@ -11,20 +11,18 @@ body {
 }
 
 /* iOS 聊天鍵盤修正（見 hooks/useChatViewportLock.ts）：
-   聊天頁掛載期間把整份文件鎖成 position:fixed 的 app 外殼，讓 iOS 無法為了露出
-   輸入框而把整頁往上捲（實測 log 的 SCROLL html top=414 → 0，害輸入框落到鍵盤後面）。
-   關鍵是 position:fixed —— iOS 對聚焦捲動會無視 overflow:hidden。
+   實測 log 顯示 —— 點輸入框後 iOS 先把整頁往上捲露出輸入框（SCROLL html top=414），
+   接著捲動被重設回 0，輸入框就落到鍵盤後面「整個不見」，要再點一次才回來。
+   根治：不靠捲動露出輸入框（那一直被重設），改讓整個 app 外殼直接縮到「可見區高度」
+   (--app-height = visualViewport.height)，輸入框天生就在鍵盤正上方、不需捲也不會被藏。
+   注意：不可用 position:fixed —— 它本身會把捲動重設成 0，反而把輸入框推回鍵盤後面。
    內層訊息列表自己的 overflow-y-scroll 不受影響。 */
 html.kb-lock,
-html.kb-lock body {
-  height: 100%;
+html.kb-lock body,
+html.kb-lock .vocechat-container {
+  height: var(--app-height, 100dvh);
   overflow: hidden;
   overscroll-behavior: none;
-}
-html.kb-lock body {
-  position: fixed;
-  inset: 0;
-  width: 100%;
 }
 
 /* ── 設計系統色票（深色 / 淺色 雙主題）──
